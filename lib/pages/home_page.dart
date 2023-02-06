@@ -51,17 +51,8 @@ class _HomePageState extends State<HomePage> {
           Expanded(
               flex: 3,
               child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.asset('assets/images/logo_loading.png'))),
-          Expanded(
-              flex: 2,
-              child: Align(
-
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Image.asset('assets/images/loading.png'),
-                  ))),
+                  alignment: Alignment.center,
+                  child: Image.asset('assets/images/logo_loading.png')))
         ],
       ),
     );
