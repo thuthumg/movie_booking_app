@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/cities_location_page.dart';
 import 'package:movie_booking_app/pages/get_otp_page.dart';
 import 'package:movie_booking_app/pages/home_page.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: HomePage() ,
+      home: CitiesLocationPage() ,
     );
   }
 }

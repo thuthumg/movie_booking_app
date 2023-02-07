@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.center,
                   child: Image.asset('assets/images/logo_loading.png')))
         ],
+
       ),
     );
   }
