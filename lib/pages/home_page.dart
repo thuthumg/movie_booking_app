@@ -1,61 +1,56 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:movie_booking_app/pages/get_otp_page.dart';
-import 'package:movie_booking_app/pages/log_in_page.dart';
+import 'package:movie_booking_app/resources/colors.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool _taskCompleted = false;
-
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _runDelayedTask();
-  }
-
-  Future<void> _runDelayedTask() async {
-    print('Starting the delayed task');
-    await Future.delayed(Duration(seconds: 5));
-    print('Delayed task completed');
-    setState(() {
-      _taskCompleted = true;
-      _navigateToLogin(context);
-
-    });
-  }
-  Future<dynamic> _navigateToLogin(BuildContext context) {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginPage(),
-      ),
-    );
-  }
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color.fromRGBO(19, 19, 19, 1.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-         // Expanded(child: Text(_taskCompleted? 'Delayed task completed':'Running delayed task...')),
-          Expanded(
-              flex: 3,
-              child: Align(
-                  alignment: Alignment.center,
-                  child: Image.asset('assets/images/logo_loading.png')))
-        ],
+    return  Scaffold(
+      backgroundColor: PRIMARY_COLOR,
+      appBar: AppBar(
+        backgroundColor: PRIMARY_COLOR,
+        title:  Text(
+          "Yangon",
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Color.fromRGBO(0,255,106,1),
+              fontSize: 16,
+              shadows: [
+                Shadow(
+                  offset: Offset(0, 0), //position of shadow
+                  blurRadius: 40,//blur intensity of shadow
+                  color: Color.fromRGBO(0,255,106,1), //color of shadow with opacity
+                ),
+
+                //add more shadow with different position offset here
+              ]),
+        ),
+
+        leading:  Flexible(
+          child: ImageIcon(
+            AssetImage("assets/icons/ic_location_arrow.png"),
+
+          ),
+        ),
+        actions: [
+          ImageIcon(
+            AssetImage("assets/icons/ic_search.png"),
+
+          ),
+          ImageIcon(
+            AssetImage('assets/icons/ic_noti.png'),
+
+          ),
+          ImageIcon(
+            AssetImage('assets/icons/ic_scanner.png'),
+
+          )
+          ],
 
       ),
+
+
     );
   }
 }
