@@ -37,6 +37,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   pinput: ^2.2.21
+  carousel_slider: ^4.0.0
+  dots_indicator: ^2.1.0
   #pin_code_fields: ^7.4.0
 
 dev_dependencies:
@@ -62,6 +64,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

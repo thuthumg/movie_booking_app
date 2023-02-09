@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking_app/pages/home_page.dart';
+import 'package:movie_booking_app/pages/movie_page.dart';
+import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/city_view.dart';
@@ -85,7 +86,7 @@ class CitiesLocationPage extends StatelessWidget {
 Future<dynamic> _navigateToHomeScreen(BuildContext context) {
 
 return Navigator.push(context,
-MaterialPageRoute(builder: (context)=> HomePage()));
+MaterialPageRoute(builder: (context)=> MainPage()));
 }
 
 class SearchSection extends StatelessWidget {
