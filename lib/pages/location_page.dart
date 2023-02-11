@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking_app/pages/movie_page.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -41,11 +40,11 @@ class LocationPage extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+           // mainAxisSize: MainAxisSize.min,
             children: [
               const SearchSection(),
               const SizedBox(
-                height: 20,
+                height: MARGIN_CARD_MEDIUM_2,
               ),
               Align(
                 alignment: Alignment.bottomRight,
@@ -85,7 +84,7 @@ class CitiesTitleView extends StatelessWidget {
           child: Text(
             "Cities",
             style: TextStyle(
-                fontSize: TEXT_REGULAR_1X,
+                fontSize: TEXT_REGULAR_2X,
                 color: Colors.white,
                 fontWeight: FontWeight.w400),
           ),
@@ -107,24 +106,64 @@ class SearchSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: MARGIN_LARGE, right: MARGIN_LARGE, top: MARGIN_LARGE),
-      child: Row(
-        children: [
-          Expanded(flex: 5, child: SearchBoxGradientView()),
-          const SizedBox(
-            width: 10,
+    return Row(
+      children: [
+        Expanded(
+          flex: 5,
+          child: Padding(
+              padding: const EdgeInsets.only(
+                  left: MARGIN_LARGE, right: MARGIN_LARGE, top: MARGIN_LARGE),
+              child: Container(
+                height: 50,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Color.fromRGBO(102, 102, 102, 0.8),
+                      Color.fromRGBO(85, 85, 85, 0.4),
+                      Color.fromRGBO(85, 85, 85, 0.4)
+                    ],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(MARGIN_MEDIUM),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(right: MARGIN_SMALL),
+                        width: 30,
+                        height: 30,
+                        child: Icon(Icons.search,color: SECONDARY_COLOR,),
+                      ),
+                      const Text(
+                        'Search your location',
+                        style: TextStyle(
+                          color: SEARCH_HINT_COLOR,
+                          fontSize: TEXT_REGULAR_2X,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(
+            margin: const EdgeInsets.only(
+                 right: MARGIN_LARGE, top: MARGIN_LARGE),
+            child: Image.asset(
+              'assets/images/ic_location_search.png',
+              height: 50,
+              width: 50,
+            ),
           ),
-          Expanded(
-              flex: 1,
-              child: Image.asset(
-                'assets/images/ic_location_search.png',
-                height: 44,
-                width: 44,
-              ))
-        ],
-      ),
+        )
+      ],
     );
   }
 }
@@ -149,58 +188,13 @@ class CitiesListView extends StatelessWidget {
         scrollDirection: Axis.vertical,
         itemCount: citiesPopulate.length,
         itemBuilder: (BuildContext context, int index) {
-          return CityView(citiesPopulate.elementAt(index), () {
-            this.onTapCity();
-          });
+          return GestureDetector(
+            onTap: (){
+              onTapCity();
+            },
+            child: CityView(citiesPopulate.elementAt(index)),
+          );
         },
-      ),
-    );
-  }
-}
-
-class SearchBoxGradientView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Color.fromRGBO(102, 102, 102, 0.8),
-                Color.fromRGBO(85, 85, 85, 0.4),
-                Color.fromRGBO(85, 85, 85, 0.4)
-              ])),
-      child: const TextField(
-        minLines: 1,
-        decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            /* enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: const BorderSide(
-                width: 1.0,
-                color: Colors.black,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-             borderRadius:BorderRadius.all(Radius.circular(8)),
-              borderSide: const BorderSide(
-                width: 1.0,
-                color: Colors.black,
-              ),
-            ),*/
-            prefixIcon: Icon(
-              Icons.search,
-              color: SECONDARY_COLOR,
-            ),
-            hintText: "Search your location",
-            hintStyle: TextStyle(
-                color: SEARCH_HINT_COLOR,
-                fontSize: TEXT_REGULAR_1X,
-                fontWeight: FontWeight.w400)),
-        style: TextStyle(color: Colors.white),
       ),
     );
   }

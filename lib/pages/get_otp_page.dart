@@ -3,6 +3,8 @@ import 'package:movie_booking_app/pages/location_page.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/widgets/custom_button_view.dart';
+
 //import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pinput/pinput.dart';
 
@@ -14,11 +16,11 @@ class GetOTPPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
-          backgroundColor: PRIMARY_COLOR,
-          leading: const Icon(
-            Icons.chevron_left,
-            size: MARGIN_XLARGE,
-          )),
+        backgroundColor: PRIMARY_COLOR,
+        leading: BackButtonView(
+          () => Navigator.pop(context),
+        ),
+      ),
       body: SingleChildScrollView(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -32,16 +34,32 @@ class GetOTPPage extends StatelessWidget {
               ),
               OTPTextView(),
               SizedBox(
-                height: MARGIN_XXLARGE,
+                height: MARGIN_XLARGE,
               ),
               ResendCodeTextView(),
-              SizedBox(
-                height: MARGIN_XXLARGE,
-              ),
               ConfirmOTPBtnView()
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BackButtonView extends StatelessWidget {
+  final Function onTapBack;
+
+  const BackButtonView(this.onTapBack);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onTapBack();
+      },
+      child: const Icon(
+        Icons.chevron_left,
+        size: MARGIN_XLARGE,
       ),
     );
   }
@@ -55,26 +73,42 @@ class ConfirmOTPBtnView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: MARGIN_LARGE, right: MARGIN_LARGE),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: SECONDARY_COLOR, minimumSize: const Size.fromHeight(49)),
-        child: const Padding(
-          padding: EdgeInsets.only(top: 15, bottom: 15),
-          child: Text(
-            "Confirm OTP",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-        onPressed: () {
-          _navigateToLocationPage(context);
-        },
-      ),
+      padding: const EdgeInsets.all(31),
+      child: CustomButtonView(
+          buttonContainerBgColor: SECONDARY_COLOR,
+          buttonContainerHeight: LOGIN_PAGE_BUTTON_HEIGHT,
+          buttonContainerRadius: BORDER_RADIUS,
+          iconPadding: 0,
+          iconWidthHeight: 0,
+          textColor: Colors.black,
+          textDesc: "Confirm OTP",
+          textFontSize: TEXT_REGULAR_2X,
+          iconPath: '',
+          isShowIcon: false,
+          () => _navigateToLocationPage(context)),
     );
+
+    //   Padding(
+    //   padding: const EdgeInsets.only(left: MARGIN_LARGE, right: MARGIN_LARGE),
+    //   child: ElevatedButton(
+    //     style: ElevatedButton.styleFrom(
+    //         primary: SECONDARY_COLOR, minimumSize: const Size.fromHeight(49)),
+    //     child: const Padding(
+    //       padding: EdgeInsets.only(top: 15, bottom: 15),
+    //       child: Text(
+    //         "Confirm OTP",
+    //         style: TextStyle(
+    //           color: Colors.black,
+    //           fontSize: 16,
+    //           fontWeight: FontWeight.w400,
+    //         ),
+    //       ),
+    //     ),
+    //     onPressed: () {
+    //       _navigateToLocationPage(context);
+    //     },
+    //   ),
+    // );
   }
 }
 

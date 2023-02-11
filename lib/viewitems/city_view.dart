@@ -4,11 +4,11 @@ import 'package:movie_booking_app/resources/dimens.dart';
 
 class CityView extends StatelessWidget {
  final String cityName;
- final Function onTapCity;
+ //final Function onTapCity;
 
  CityView(
      this.cityName,
-     this.onTapCity
+    // this.onTapCity
      );
 
   @override
@@ -17,21 +17,16 @@ class CityView extends StatelessWidget {
       height: 60,
       child: Column(
         children:  [
-          GestureDetector(
-            onTap: (){
-              onTapCity();
-            },
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: MARGIN_LARGE,right: MARGIN_LARGE),
-                child: Text(cityName,
-                  style: const TextStyle(
-                      fontSize: TEXT_REGULAR_1X,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400
-                  ),),
-              ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: MARGIN_LARGE,right: MARGIN_LARGE),
+              child: Text(cityName,
+                style: const TextStyle(
+                    fontSize: TEXT_REGULAR_2X,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400
+                ),),
             ),
           ),
 
