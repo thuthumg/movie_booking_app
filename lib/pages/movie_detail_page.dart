@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+
 //import 'package:flick_video_player/flick_video_player.dart';
 import 'package:movie_booking_app/videoplayer/default_player.dart';
 import 'package:movie_booking_app/widgets/circle_image_view.dart';
@@ -8,10 +9,7 @@ import 'package:movie_booking_app/widgets/circle_image_view.dart';
 
 class MovieDetailPage extends StatelessWidget {
 
-  final List<String> genreList = ["Action", "Adventure", "Drama","Animation"];
-
-
-
+  final List<String> genreList = ["Action", "Adventure", "Drama", "Animation"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,77 +18,74 @@ class MovieDetailPage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             MovieDetailsSliverAppBarView(
-                  ()=> Navigator.pop(context),
+              () => Navigator.pop(context),
             ),
             SliverList(
-                delegate: SliverChildListDelegate([
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-
-                      child: Row(
+              delegate: SliverChildListDelegate([
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  child: Row(
+                    children: [
+                      // Image.asset(
+                      //   'assets/images/sample_grid_img_2.png',
+                      //   width: 150,
+                      //   height: 160,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      SizedBox(
+                        width: MARGIN_CARD_MEDIUM_2,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset(
-                            'assets/images/sample_grid_img_2.png',
-                            width: 150,
-                            height: 160,
-                            fit: BoxFit.cover,),
-                          SizedBox(width: MARGIN_CARD_MEDIUM_2,),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Black Widow",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: TEXT_REGULAR_1X,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  SizedBox(
-                                      height: 30,
-                                      child: Image.asset(
-                                          'assets/images/ic_imbd.png')),
-                                  const Text(
-                                    "7.1",
-                                    style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.white,
-                                        fontSize: TEXT_REGULAR_1X,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ],
-                              ),
                               const Text(
-                                "2D, 3D, 3D IMAX, 3D, DBOX",
+                                "Black Widow",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: TEXT_REGULAR_1X,
                                     fontWeight: FontWeight.w500),
                               ),
-                              Row(
-                                children: genreList
-                                    .map(
-                                      (genre) => GenreChipView(genre),
-                                )
-                                    .toList(),
+                              SizedBox(
+                                  height: 30,
+                                  child:
+                                      Image.asset('assets/images/ic_imbd.png')),
+                              const Text(
+                                "7.1",
+                                style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.white,
+                                    fontSize: TEXT_REGULAR_1X,
+                                    fontWeight: FontWeight.w700),
                               ),
-
                             ],
-                          )
-
+                          ),
+                          const Text(
+                            "2D, 3D, 3D IMAX, 3D, DBOX",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Row(
+                            children: genreList
+                                .map(
+                                  (genre) => GenreChipView(genre),
+                                )
+                                .toList(),
+                          ),
                         ],
-                      ),
-                    ),
+                      )
+                    ],
                   ),
-
-                  StoryLineView(),
-                  CastSectionView()
-
-
-
-                  ]))
+                ),
+              ),
+              StoryLineView(),
+              SizedBox(height: MARGIN_MEDIUM_2,),
+              CastSectionView(),
+            ]))
           ],
         ),
       ),
@@ -106,47 +101,41 @@ class CastSectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child:
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: MARGIN_MEDIUM,
-          ),
-          Text(
-            "Cast",
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: TEXT_REGULAR_1X,
-                fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: MARGIN_MEDIUM,
-          ),
-         HorizontalCastListView(),
-        ],
-      )
-
-    );
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Cast",
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: TEXT_REGULAR_1X,
+              fontWeight: FontWeight.bold),
+        ),
+        HorizontalCastListView(),
+      ],
+    ));
   }
 }
+
 class HorizontalCastListView extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MOVIE_LIST_HEIGHT,
+      height: 100,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2),
           itemCount: 10,
           itemBuilder: (BuildContext context, int index) {
-            return CircleImageView();
+            return Padding(
+              padding: const EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2),
+              child: CircleImageView(),
+            );
           }),
     );
   }
 }
+
 class GenreChipView extends StatelessWidget {
   final String genreText;
 
@@ -160,9 +149,8 @@ class GenreChipView extends StatelessWidget {
             backgroundColor: SECONDARY_COLOR,
             label: Text(
               genreText,
-              style:
-              const TextStyle(color: Colors.black,
-                  fontWeight: FontWeight.w400),
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w400),
             )),
         const SizedBox(
           width: MARGIN_SMALL,
@@ -173,11 +161,9 @@ class GenreChipView extends StatelessWidget {
 }
 
 class MovieDetailsSliverAppBarView extends StatelessWidget {
-
   final Function onTapBack;
 
   MovieDetailsSliverAppBarView(this.onTapBack);
-
 
   @override
   Widget build(BuildContext context) {
@@ -191,27 +177,31 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
-            const Positioned.fill(
+             Positioned.fill(
               child: MovieDetailsAppBarVideoView(),
             ),
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding:
-                const EdgeInsets.only(top: MARGIN_XXLARGE, left: MARGIN_MEDIUM_2),
-                child: BackButtonView(()=> onTapBack()),
+                padding: const EdgeInsets.only(
+                    top: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                child: BackButtonView(() => onTapBack()),
               ),
             ),
-
-
-
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: MARGIN_MEDIUM_3, right: MARGIN_MEDIUM_3),
+                child: ShareButtonView(() => onTapBack()),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
 
 class BackButtonView extends StatelessWidget {
   final Function onTapBack;
@@ -221,16 +211,12 @@ class BackButtonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         onTapBack();
       },
       child: Container(
-        width: MARGIN_XXLARGE,
-        height: MARGIN_XXLARGE,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.black54,
-        ),
+         width: MARGIN_XLARGE,
+         height: MARGIN_XLARGE,
         child: const Icon(
           Icons.chevron_left,
           color: Colors.white,
@@ -241,18 +227,86 @@ class BackButtonView extends StatelessWidget {
   }
 }
 
+class ShareButtonView extends StatelessWidget {
+  final Function onTapBack;
+
+  const ShareButtonView(this.onTapBack);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onTapBack();
+      },
+      child: Container(
+        width: MARGIN_LARGE,
+        height: MARGIN_LARGE,
+        child: const Icon(
+          Icons.share,
+          color: Colors.white,
+          size: MARGIN_LARGE,
+        ),
+      ),
+    );
+  }
+}
+
 class MovieDetailsAppBarVideoView extends StatelessWidget {
-  const MovieDetailsAppBarVideoView({
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Image.asset('assets/images/sample_grid_img_2.png',
-      fit: BoxFit.cover,),
+      alignment: Alignment.center,
+      // padding: EdgeInsets.all(20),
+      child: Stack(
+        fit: StackFit.expand,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+
+          Positioned.fill(
+              child: Container(
+            child: Image.asset(
+              'assets/images/sample_grid_img_2.png',
+              fit: BoxFit.cover,
+            ),
+          )),
+
+          Positioned(
+            bottom: -100,
+           // right: 20,
+            left: 10,
+            child: Container(
+              color: Colors.transparent,
+              child: Row(
+                children: [
+                Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                  image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      'assets/images/sample_grid_img_2.png',
+                    ),
+                  ),
+
+                ),),
+
+                  SizedBox(
+                    width: MARGIN_CARD_MEDIUM_2,
+                  ),
+
+                ],
+              ),
+
+            ),
+          ),
+        ],
+      ),
     );
-      //SafeArea(child: DefaultPlayer());
   }
 }
 
@@ -265,26 +319,25 @@ class StoryLineView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
+      children: const [
+        SizedBox(
           height: MARGIN_MEDIUM,
         ),
         Text(
-        "Story Line",
-        style: const TextStyle(
-        color: Colors.white,
-        fontSize: TEXT_REGULAR,
-        fontWeight: FontWeight.bold),
+          "Story Line",
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: TEXT_REGULAR,
+              fontWeight: FontWeight.bold),
         ),
-        const SizedBox(
+        SizedBox(
           height: MARGIN_MEDIUM,
         ),
-        const Text(
-          "Seventy years before Harry Potter reading a book by Newt Scamander, author experiencing extraordinary adventures in the mysterious, the New York Association of witches.",
+        Text(
+          "In the 1970s, young Gru tries to join a group of supervillains called the Vicious 6 after they outst their leader-- the legendary figher Wild Kunckles.When the interview truns disastrous,Gru and his Minions go on the run with the Vicious 6 hot on their tails.Luckily, he finds an unlikely source of guidance-- Wild Kunckles himself-- and sonn discouvers that even bad guys need a little help from their friends.",
           style: TextStyle(color: Colors.white, fontSize: TEXT_REGULAR_2X),
         ),
       ],
     );
   }
 }
-

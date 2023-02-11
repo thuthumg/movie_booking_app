@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: MovieDetailPage()
-      //LoadingPage() ,
+      home: LoadingPage()
+
     );
   }
 }

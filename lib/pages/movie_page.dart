@@ -5,8 +5,15 @@ import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 
-class MoviePage extends StatelessWidget {
-//  bool _nowShowingMovie = true;
+class MoviePage extends StatefulWidget {
+
+  @override
+  State<MoviePage> createState() => _MoviePageState();
+}
+
+class _MoviePageState extends State<MoviePage> {
+
+  bool _uiChangeFlag = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,12 +29,136 @@ class MoviePage extends StatelessWidget {
                 [
                   BannerSectionView(),
                   const SizedBox(height: MARGIN_SMALL),
-                  NowShowingAndComingSoonButtonView(),
+                //  NowShowingAndComingSoonButtonView(),
+                  Container(
+                    height: 60,
+                    margin: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color.fromRGBO(102, 102, 102, 0.8),
+                              Color.fromRGBO(85, 85, 85, 0.4),
+                              Color.fromRGBO(85, 85, 85, 0.4)
+                            ])),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: MARGIN_MEDIUM,right: MARGIN_MEDIUM),
+                      child: Row(
+                        children: [
+                          _uiChangeFlag
+                              ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: SECONDARY_COLOR),
+                            onPressed: () {
+                              setState(() {
+                                if (_uiChangeFlag) {
+                                  _uiChangeFlag = false;
+                                } else {
+                                  _uiChangeFlag = true;
+                                }
+                              });
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25, right: 25, top: 10, bottom: 10),
+                              child: Text(
+                                "Now Showing",
+                                style: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          )
+                              : TextButton(
+                              style: ElevatedButton.styleFrom(),
+                              onPressed: () {
+                                setState(() {
+                                  if (!_uiChangeFlag) {
+                                    _uiChangeFlag = true;
+                                  } else {
+                                    _uiChangeFlag = false;
+                                  }
+                                });
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25, right: 25, top: 10, bottom: 10),
+                                child: Text(
+                                  textAlign:TextAlign.center,
+                                  "Now Showing",
+
+                                  style: TextStyle(
+                                    color:  Color.fromRGBO(85, 85, 85, 1),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              )),
+                          Spacer(),
+                          !_uiChangeFlag
+                              ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: SECONDARY_COLOR),
+                            onPressed: () {
+                              setState(() {
+                                if (_uiChangeFlag) {
+                                  _uiChangeFlag = false;
+                                } else {
+                                  _uiChangeFlag = true;
+                                }
+                              });
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25, right: 25, top: 10, bottom: 10),
+                              child: Text(
+                                "Coming Soon",
+                                style: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          )
+                              : TextButton(
+                              style: ElevatedButton.styleFrom(),
+                              onPressed: () {
+                                setState(() {
+                                  if (!_uiChangeFlag) {
+                                    _uiChangeFlag = true;
+                                  } else {
+                                    _uiChangeFlag = false;
+                                  }
+                                });
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25, right: 25, top: 10, bottom: 10),
+                                child: Text(
+                                  textAlign:TextAlign.center,
+                                  "Coming Soon",
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(85, 85, 85, 1),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: MARGIN_SMALL),
                 ],
               ),
             ),
-            GridMoviesListSection(),
+            GridMoviesListSection(_uiChangeFlag)
+            
             // SliverFixedExtentList(
             //   itemExtent: 50.0,
             //   delegate: SliverChildBuilderDelegate(
@@ -101,6 +232,7 @@ class _BannerSectionViewState extends State<BannerSectionView> {
 }
 
 class NowShowingAndComingSoonButtonView extends StatefulWidget {
+
   @override
   State<NowShowingAndComingSoonButtonView> createState() =>
       _NowShowingAndComingSoonButtonViewState();
@@ -247,9 +379,8 @@ MaterialStateProperty<Color> getColor(Color color, Color colorPressed) {
 }
 
 class GridMoviesListSection extends StatelessWidget {
-  const GridMoviesListSection({
-    Key? key,
-  }) : super(key: key);
+  bool _uiChangeFlag;
+  GridMoviesListSection(this._uiChangeFlag);
 
   @override
   Widget build(BuildContext context) {
@@ -263,13 +394,12 @@ class GridMoviesListSection extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: MARGIN_MEDIUM,
           // crossAxisSpacing: 8,
-          childAspectRatio: 2,
-          mainAxisExtent: 300),
+          childAspectRatio: 0.63),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return const Padding(
+          return Padding(
             padding: EdgeInsets.only(left: MARGIN_MEDIUM),
-              child: MovieItemView());
+              child: MovieItemView(_uiChangeFlag));
         },
         childCount: 20,
       ),

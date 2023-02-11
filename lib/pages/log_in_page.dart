@@ -121,7 +121,7 @@ class GoogleButton extends StatelessWidget {
         },
         icon: const ImageIcon(
           AssetImage('assets/images/ic_google.png'),
-          color: Colors.black,
+
         ),
         label: const Text(
           "Continue With Google",

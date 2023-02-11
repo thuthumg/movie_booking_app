@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/resources/dimens.dart';
 
 class CircleImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double _size = 300.0;
+    double _size = 80.0;
 
     return Center(
-      child: new Container(
+      child: Container(
           width: _size,
           height: _size,
-          decoration: new BoxDecoration(
+          decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              image: new DecorationImage(
+              image:  DecorationImage(
                   fit: BoxFit.cover,
                   image: AssetImage(
                       "assets/images/pic_profile.jpg")
