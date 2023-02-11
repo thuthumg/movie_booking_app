@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_booking_app/pages/get_otp_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/widgets/custom_button_view.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -113,25 +114,18 @@ class GoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(31),
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-            primary: Colors.white, minimumSize: const Size.fromHeight(49)),
-        onPressed: () {
-          _navigateToOTPPage(context);
-        },
-        icon: const ImageIcon(
-          AssetImage('assets/images/ic_google.png'),
-
-        ),
-        label: const Text(
-          "Continue With Google",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ),
+      child: CustomButtonView(
+          buttonContainerBgColor: Colors.white,
+          buttonContainerHeight: LOGIN_PAGE_BUTTON_HEIGHT,
+          buttonContainerRadius: BORDER_RADIUS,
+          iconPadding: MARGIN_MEDIUM,
+          iconWidthHeight: 35,
+          textColor: Colors.black,
+          textDesc: "Continue With Google",
+          textFontSize: TEXT_REGULAR_2X,
+          iconPath: 'assets/images/ic_google.png',
+          isShowIcon: true,
+          () => _navigateToOTPPage(context)),
     );
   }
 }
@@ -194,24 +188,18 @@ class VerifyYourPhoneNoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(31),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: SECONDARY_COLOR, minimumSize: const Size.fromHeight(49)),
-        child: const Padding(
-          padding: EdgeInsets.only(top: 15, bottom: 15),
-          child: Text(
-            "Verify Your Phone Number",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-        onPressed: () {
-          _navigateToOTPPage(context);
-        },
-      ),
+      child: CustomButtonView(
+          buttonContainerBgColor: SECONDARY_COLOR,
+          buttonContainerHeight: LOGIN_PAGE_BUTTON_HEIGHT,
+          buttonContainerRadius: BORDER_RADIUS,
+          iconPadding: 0,
+          iconWidthHeight: 0,
+          textColor: Colors.black,
+          textDesc: "Verify Your Phone Number",
+          textFontSize: TEXT_REGULAR_2X,
+          iconPath: '',
+          isShowIcon: false,
+          () => _navigateToOTPPage(context)),
     );
   }
 }
