@@ -24,10 +24,10 @@ class CityView extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: MARGIN_LARGE,right: MARGIN_LARGE),
+                padding: const EdgeInsets.only(left: MARGIN_LARGE,right: MARGIN_LARGE),
                 child: Text(cityName,
-                  style: TextStyle(
-                      fontSize: TEXT_REGULAR,
+                  style: const TextStyle(
+                      fontSize: TEXT_REGULAR_1X,
                       color: Colors.white,
                       fontWeight: FontWeight.w400
                   ),),
@@ -35,7 +35,7 @@ class CityView extends StatelessWidget {
             ),
           ),
 
-          Expanded(flex: 1, child: Divider(color: CITIES_LIST_DIVIDER_COLOR))
+          const Expanded(flex: 1, child: Divider(color: CITIES_LIST_DIVIDER_COLOR))
 
         ],
       ),

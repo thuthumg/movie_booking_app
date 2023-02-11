@@ -24,7 +24,7 @@ class _LoadingPageState extends State<LoadingPage> {
 
   Future<void> _runDelayedTask() async {
     print('Starting the delayed task');
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 3));
     print('Delayed task completed');
     setState(() {
       _taskCompleted = true;

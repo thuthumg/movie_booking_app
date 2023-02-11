@@ -6,6 +6,7 @@ import 'package:movie_booking_app/pages/ticket_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -17,7 +18,7 @@ class _MainPageState extends State<MainPage> {
 
   int _selectedScreenIndex = 0;
   final List _screens = [
-    {"screen": const MoviePage(), "title": "Movies"},
+    {"screen": MoviePage(), "title": "Movies"},
     {"screen": const CinemaPage(), "title": "Cinema"},
     {"screen": const TicketPage(), "title": "Ticket"},
     {"screen": const ProfilePage(), "title": "Profile"}
@@ -32,6 +33,36 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return  Scaffold(
         backgroundColor: PRIMARY_COLOR,
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR,
+          title: const Text(
+            "Yangon",
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              fontStyle: FontStyle.italic,
+              fontSize: 16,
+            ),
+          ),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: MARGIN_XLARGE),
+            child: Image.asset(
+              'assets/icons/ic_location_arrow.png',
+              scale: 3,
+            ),
+          ),
+          actions: [
+            Image.asset(
+              "assets/icons/ic_search.png",
+            ),
+            Image.asset(
+              "assets/icons/ic_noti.png",
+            ),
+            Image.asset(
+              "assets/icons/ic_scanner.png",
+            ),
+          ],
+        ),
         body: _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: PRIMARY_COLOR,
