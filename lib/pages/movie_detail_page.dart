@@ -4,12 +4,11 @@ import 'package:movie_booking_app/resources/dimens.dart';
 
 //import 'package:flick_video_player/flick_video_player.dart';
 import 'package:movie_booking_app/videoplayer/default_player.dart';
+import 'package:movie_booking_app/viewitems/movie_information_item_view.dart';
 import 'package:movie_booking_app/widgets/circle_image_view.dart';
 //import 'package:video_player/video_player.dart';
 
 class MovieDetailPage extends StatelessWidget {
-
-  final List<String> genreList = ["Action", "Adventure", "Drama", "Animation"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,70 +20,31 @@ class MovieDetailPage extends StatelessWidget {
               () => Navigator.pop(context),
             ),
             SliverList(
-              delegate: SliverChildListDelegate([
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  child: Row(
-                    children: [
-                      // Image.asset(
-                      //   'assets/images/sample_grid_img_2.png',
-                      //   width: 150,
-                      //   height: 160,
-                      //   fit: BoxFit.cover,
-                      // ),
-                      SizedBox(
-                        width: MARGIN_CARD_MEDIUM_2,
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                                "Black Widow",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: TEXT_REGULAR_1X,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              SizedBox(
-                                  height: 30,
-                                  child:
-                                      Image.asset('assets/images/ic_imbd.png')),
-                              const Text(
-                                "7.1",
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.white,
-                                    fontSize: TEXT_REGULAR_1X,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            "2D, 3D, 3D IMAX, 3D, DBOX",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: TEXT_REGULAR_1X,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Row(
-                            children: genreList
-                                .map(
-                                  (genre) => GenreChipView(genre),
-                                )
-                                .toList(),
-                          ),
-                        ],
-                      )
-                    ],
+                delegate: SliverChildListDelegate([
+                  Container(
+                    margin: EdgeInsets.only(left: MARGIN_MEDIUM_2),
+                    child: Row(
+                      children:[
+                        MovieInformationItemView("Censor Rating","U/A"),
+                        MovieInformationItemView("Release date","May 8th,2022"),
+                        MovieInformationItemView("Duration","2hr 15min")
+
+                      ] ,
+                    ),
                   ),
-                ),
+
+              Container(
+                margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,
+                right: MARGIN_MEDIUM_2),
+                child: StoryLineView(),
               ),
-              StoryLineView(),
-              SizedBox(height: MARGIN_MEDIUM_2,),
-              CastSectionView(),
+              SizedBox(
+                height: MARGIN_MEDIUM_2,
+              ),
+              Container(
+                  margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,
+                      right: MARGIN_MEDIUM_2),
+                  child: CastSectionView()),
             ]))
           ],
         ),
@@ -124,11 +84,11 @@ class HorizontalCastListView extends StatelessWidget {
       height: 100,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2),
+
           itemCount: 10,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
-              padding: const EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2),
+              padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
               child: CircleImageView(),
             );
           }),
@@ -143,25 +103,23 @@ class GenreChipView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Chip(
-            backgroundColor: SECONDARY_COLOR,
-            label: Text(
-              genreText,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w400),
-            )),
-        const SizedBox(
-          width: MARGIN_SMALL,
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: Chip(
+          backgroundColor: SECONDARY_COLOR,
+          label: Text(
+            genreText,
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w400),
+          )),
     );
   }
 }
 
 class MovieDetailsSliverAppBarView extends StatelessWidget {
   final Function onTapBack;
+
+  final List<String> genreList = ["Action", "Adventure", "Drama", "Animation"];
 
   MovieDetailsSliverAppBarView(this.onTapBack);
 
@@ -170,16 +128,84 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       backgroundColor: PRIMARY_COLOR,
-      expandedHeight: MOVIE_DETAILS_SCREEN_SLIVER_APP_BAR_HEIGHT,
+      expandedHeight: 300,
       // floating: true,
-      pinned: true,
+      pinned: false,
       //  snap: true,
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
-             Positioned.fill(
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
               child: MovieDetailsAppBarVideoView(),
             ),
+            Positioned(
+              left: 15.63,
+              bottom: 15.63,
+              child: Container(
+                width: 125,
+                height: 175,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image:
+                            AssetImage('assets/images/sample_grid_img_3.png'))),
+              ),
+            ),
+            Positioned(
+                bottom: -5,
+                right: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width*0.6,
+                  height: 175,
+                 // height: MediaQuery.of(context).size.height/4,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            "Black Widow",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                              height: 30,
+                              child: Image.asset('assets/images/ic_imbd.png')),
+                          const Text(
+                            "7.1",
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                      const Text(
+                        "2D, 3D, 3D IMAX, 3D, DBOX",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: TEXT_REGULAR_1X,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      Wrap(
+                        direction: Axis.horizontal,
+                        children: genreList
+                            .map(
+                              (genre) => GenreChipView(genre),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                )),
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
@@ -215,8 +241,8 @@ class BackButtonView extends StatelessWidget {
         onTapBack();
       },
       child: Container(
-         width: MARGIN_XLARGE,
-         height: MARGIN_XLARGE,
+        width: MARGIN_XLARGE,
+        height: MARGIN_XLARGE,
         child: const Icon(
           Icons.chevron_left,
           color: Colors.white,
@@ -252,61 +278,14 @@ class ShareButtonView extends StatelessWidget {
 }
 
 class MovieDetailsAppBarVideoView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      // padding: EdgeInsets.all(20),
-      child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        alignment: AlignmentDirectional.bottomCenter,
-        children: [
-
-          Positioned.fill(
-              child: Container(
-            child: Image.asset(
-              'assets/images/sample_grid_img_2.png',
-              fit: BoxFit.cover,
-            ),
-          )),
-
-          Positioned(
-            bottom: -100,
-           // right: 20,
-            left: 10,
-            child: Container(
-              color: Colors.transparent,
-              child: Row(
-                children: [
-                Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  image: const DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      'assets/images/sample_grid_img_2.png',
-                    ),
-                  ),
-
-                ),),
-
-                  SizedBox(
-                    width: MARGIN_CARD_MEDIUM_2,
-                  ),
-
-                ],
-              ),
-
-            ),
-          ),
-        ],
-      ),
-    );
+        height: 155,
+        child: Image.asset(
+          'assets/images/sample_grid_img.png',
+          fit: BoxFit.cover,
+        ));
   }
 }
 

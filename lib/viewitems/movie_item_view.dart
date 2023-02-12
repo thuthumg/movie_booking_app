@@ -5,8 +5,9 @@ import 'package:movie_booking_app/resources/dimens.dart';
 class MovieItemView extends StatelessWidget {
 
   bool uiChangeFlag;
+  Function onTapItemView;
 
-  MovieItemView(this.uiChangeFlag);
+  MovieItemView(this.uiChangeFlag,this.onTapItemView);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,10 @@ class MovieItemView extends StatelessWidget {
       child: SizedBox(
         // height: 212,
         child: Stack(children: [
-          const Positioned.fill(
-            child: MovieItemImageView(),
+          Positioned.fill(
+            child: GestureDetector(
+                onTap: ()=> onTapItemView,
+                child: MovieItemImageView()),
           ),
           const Positioned.fill(
             child: GradientView(),

@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/movie_detail_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
@@ -8,12 +9,21 @@ import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 class MoviePage extends StatefulWidget {
 
   @override
+  void initState() {
+    // TODO: implement initState
+    print("initstate 1");
+
+    print("initstate 2");
+  }
+
+
+  @override
   State<MoviePage> createState() => _MoviePageState();
 }
 
 class _MoviePageState extends State<MoviePage> {
-
   bool _uiChangeFlag = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +39,7 @@ class _MoviePageState extends State<MoviePage> {
                 [
                   BannerSectionView(),
                   const SizedBox(height: MARGIN_SMALL),
-                //  NowShowingAndComingSoonButtonView(),
+                  //  NowShowingAndComingSoonButtonView(),
                   Container(
                     height: 60,
                     margin: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
@@ -44,111 +54,123 @@ class _MoviePageState extends State<MoviePage> {
                               Color.fromRGBO(85, 85, 85, 0.4)
                             ])),
                     child: Padding(
-                      padding: const EdgeInsets.only(left: MARGIN_MEDIUM,right: MARGIN_MEDIUM),
+                      padding: const EdgeInsets.only(
+                          left: MARGIN_MEDIUM, right: MARGIN_MEDIUM),
                       child: Row(
                         children: [
                           _uiChangeFlag
                               ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: SECONDARY_COLOR),
-                            onPressed: () {
-                              setState(() {
-                                if (_uiChangeFlag) {
-                                  _uiChangeFlag = false;
-                                } else {
-                                  _uiChangeFlag = true;
-                                }
-                              });
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25, right: 25, top: 10, bottom: 10),
-                              child: Text(
-                                "Now Showing",
-                                style: TextStyle(
-                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          )
-                              : TextButton(
-                              style: ElevatedButton.styleFrom(),
-                              onPressed: () {
-                                setState(() {
-                                  if (!_uiChangeFlag) {
-                                    _uiChangeFlag = true;
-                                  } else {
-                                    _uiChangeFlag = false;
-                                  }
-                                });
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.only(
-                                    left: 25, right: 25, top: 10, bottom: 10),
-                                child: Text(
-                                  textAlign:TextAlign.center,
-                                  "Now Showing",
-
-                                  style: TextStyle(
-                                    color:  Color.fromRGBO(85, 85, 85, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: SECONDARY_COLOR),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (_uiChangeFlag) {
+                                        _uiChangeFlag = false;
+                                      } else {
+                                        _uiChangeFlag = true;
+                                      }
+                                    });
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25,
+                                        right: 25,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Text(
+                                      "Now Showing",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(85, 85, 85, 1),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              )),
+                                )
+                              : TextButton(
+                                  style: ElevatedButton.styleFrom(),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (!_uiChangeFlag) {
+                                        _uiChangeFlag = true;
+                                      } else {
+                                        _uiChangeFlag = false;
+                                      }
+                                    });
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25,
+                                        right: 25,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      "Now Showing",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(85, 85, 85, 1),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  )),
                           Spacer(),
                           !_uiChangeFlag
                               ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: SECONDARY_COLOR),
-                            onPressed: () {
-                              setState(() {
-                                if (_uiChangeFlag) {
-                                  _uiChangeFlag = false;
-                                } else {
-                                  _uiChangeFlag = true;
-                                }
-                              });
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25, right: 25, top: 10, bottom: 10),
-                              child: Text(
-                                "Coming Soon",
-                                style: TextStyle(
-                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          )
-                              : TextButton(
-                              style: ElevatedButton.styleFrom(),
-                              onPressed: () {
-                                setState(() {
-                                  if (!_uiChangeFlag) {
-                                    _uiChangeFlag = true;
-                                  } else {
-                                    _uiChangeFlag = false;
-                                  }
-                                });
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.only(
-                                    left: 25, right: 25, top: 10, bottom: 10),
-                                child: Text(
-                                  textAlign:TextAlign.center,
-                                  "Coming Soon",
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(85, 85, 85, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: SECONDARY_COLOR),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (_uiChangeFlag) {
+                                        _uiChangeFlag = false;
+                                      } else {
+                                        _uiChangeFlag = true;
+                                      }
+                                    });
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25,
+                                        right: 25,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Text(
+                                      "Coming Soon",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(85, 85, 85, 1),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ))
+                                )
+                              : TextButton(
+                                  style: ElevatedButton.styleFrom(),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (!_uiChangeFlag) {
+                                        _uiChangeFlag = true;
+                                      } else {
+                                        _uiChangeFlag = false;
+                                      }
+                                    });
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25,
+                                        right: 25,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      "Coming Soon",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(85, 85, 85, 1),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ))
                         ],
                       ),
                     ),
@@ -157,20 +179,9 @@ class _MoviePageState extends State<MoviePage> {
                 ],
               ),
             ),
-            GridMoviesListSection(_uiChangeFlag)
-            
-            // SliverFixedExtentList(
-            //   itemExtent: 50.0,
-            //   delegate: SliverChildBuilderDelegate(
-            //     (BuildContext context, int index) {
-            //       return Container(
-            //         alignment: Alignment.center,
-            //         color: Colors.lightBlue[100 * (index % 9)],
-            //         child: Text('List Item $index'),
-            //       );
-            //     },
-            //   ),
-            // ),
+            GridMoviesListSection(_uiChangeFlag,()=>{
+              _navigateToMovieDetailPage(context)
+            })
           ],
         ),
       ),
@@ -218,7 +229,9 @@ class _BannerSectionViewState extends State<BannerSectionView> {
             }).toList(),
           ),
         ),
-        SizedBox(height: MARGIN_SMALL,),
+        SizedBox(
+          height: MARGIN_SMALL,
+        ),
         DotsIndicator(
           dotsCount: 5,
           position: _position,
@@ -232,7 +245,6 @@ class _BannerSectionViewState extends State<BannerSectionView> {
 }
 
 class NowShowingAndComingSoonButtonView extends StatefulWidget {
-
   @override
   State<NowShowingAndComingSoonButtonView> createState() =>
       _NowShowingAndComingSoonButtonViewState();
@@ -241,6 +253,8 @@ class NowShowingAndComingSoonButtonView extends StatefulWidget {
 class _NowShowingAndComingSoonButtonViewState
     extends State<NowShowingAndComingSoonButtonView> {
   bool _nowShowing = true;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -380,16 +394,13 @@ MaterialStateProperty<Color> getColor(Color color, Color colorPressed) {
 
 class GridMoviesListSection extends StatelessWidget {
   bool _uiChangeFlag;
-  GridMoviesListSection(this._uiChangeFlag);
+  Function onTapItemView;
+
+  GridMoviesListSection(this._uiChangeFlag,this.onTapItemView);
 
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
-      //SliverGridDelegateWithMaxCrossAxisExtent
-      //maxCrossAxisExtent: 200.0,
-      //         mainAxisSpacing: 10.0,
-      //         crossAxisSpacing: 10.0,
-      //         childAspectRatio: 4.0,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: MARGIN_MEDIUM,
@@ -398,8 +409,9 @@ class GridMoviesListSection extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           return Padding(
-            padding: EdgeInsets.only(left: MARGIN_MEDIUM),
-              child: MovieItemView(_uiChangeFlag));
+              padding: EdgeInsets.only(left: MARGIN_MEDIUM),
+              child: MovieItemView(_uiChangeFlag,()=>onTapItemView),
+          );
         },
         childCount: 20,
       ),
@@ -536,4 +548,12 @@ class MovieListSliverAppBarView extends StatelessWidget {
       ),
     );
   }
+}
+Future<dynamic> _navigateToMovieDetailPage(BuildContext context) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MovieDetailPage(),
+    ),
+  );
 }
