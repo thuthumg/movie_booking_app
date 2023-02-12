@@ -4,6 +4,7 @@ import 'package:movie_booking_app/pages/get_otp_page.dart';
 import 'package:movie_booking_app/pages/loading_page.dart';
 import 'package:movie_booking_app/pages/movie_detail_page.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/widgets/custom_button_bg_view.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
 
 void main() {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: LoadingPage()
+      home: MovieDetailPage()
 
     );
   }

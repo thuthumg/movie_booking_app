@@ -6,6 +6,8 @@ import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/videoplayer/default_player.dart';
 import 'package:movie_booking_app/viewitems/movie_information_item_view.dart';
 import 'package:movie_booking_app/widgets/circle_image_view.dart';
+import 'package:movie_booking_app/widgets/custom_button_bg_view.dart';
+import 'package:movie_booking_app/widgets/custom_button_view.dart';
 //import 'package:video_player/video_player.dart';
 
 class MovieDetailPage extends StatelessWidget {
@@ -14,40 +16,170 @@ class MovieDetailPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: PRIMARY_COLOR,
-        child: CustomScrollView(
-          slivers: [
-            MovieDetailsSliverAppBarView(
-              () => Navigator.pop(context),
-            ),
-            SliverList(
-                delegate: SliverChildListDelegate([
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                MovieDetailsSliverAppBarView(
+                  () => Navigator.pop(context),
+                ),
+                SliverList(
+                    delegate: SliverChildListDelegate([
                   Container(
                     margin: EdgeInsets.only(left: MARGIN_MEDIUM_2),
                     child: Row(
-                      children:[
-                        MovieInformationItemView("Censor Rating","U/A"),
-                        MovieInformationItemView("Release date","May 8th,2022"),
-                        MovieInformationItemView("Duration","2hr 15min")
-
-                      ] ,
+                      children: [
+                        MovieInformationItemView("Censor Rating", "U/A"),
+                        MovieInformationItemView(
+                            "Release date", "May 8th,2022"),
+                        MovieInformationItemView("Duration", "2hr 15min")
+                      ],
                     ),
                   ),
+                  const SizedBox(
+                    height: MARGIN_MEDIUM_2,
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(
+                          left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
+                      child: ReleaseingNotiView()),
+                  Container(
+                    margin: const EdgeInsets.only(
+                        left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
+                    child: StoryLineView(),
+                  ),
+                  const SizedBox(
+                    height: MARGIN_MEDIUM_2,
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(
+                          left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
+                      child: CastSectionView()),
+                  const SizedBox(
+                    height: MARGIN_MEDIUM_2,
+                  ),
+                ]))
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                //color: Colors.black87,
+                height: 60,
+                padding: const EdgeInsets.only(left: 80, right: 80),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black87,
+                      Colors.black87
+                    ],
+                  ),
+                ),
 
-              Container(
-                margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,
-                right: MARGIN_MEDIUM_2),
-                child: StoryLineView(),
+                child: CustomButtonBgView(
+                  circleTopLeftPadding: 15,
+                  circleTopRightPadding: 15,
+                  circleWH: 28.0,
+                  circleRadius: 14.0,
+                  rectBgHeight: 60.0,
+                  rectBgLeftPadding: 10.5,
+                  rectBgRightPadding: 10.5,
+                  rectBgColor: SECONDARY_COLOR,
+                  rectBorderRadius: 8.0,
+                  circleColor: Colors.black,
+                  textDesc: "Booking",
+                ),
               ),
-              SizedBox(
-                height: MARGIN_MEDIUM_2,
-              ),
-              Container(
-                  margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,
-                      right: MARGIN_MEDIUM_2),
-                  child: CastSectionView()),
-            ]))
+            )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ReleaseingNotiView extends StatelessWidget {
+  const ReleaseingNotiView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        gradient: const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Color.fromRGBO(255, 255, 255, 0.6),
+            Color.fromRGBO(204, 204, 204, 0.6),
+            Color.fromRGBO(221, 221, 221, 0.3)
+          ],
+        ),
+        //more than 50% of width makes circle
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(
+              margin: EdgeInsets.all(MARGIN_MEDIUM_3),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Releasing in 5 days",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: TEXT_REGULAR_2X,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "Get notify as soon as movie \nbooking opens up in your city!",
+                    style: TextStyle(
+                        color: Color.fromRGBO(200, 200, 200, 1),
+                        fontSize: TEXT_REGULAR_1X,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomButtonView(
+                    buttonContainerBgColor: Color.fromRGBO(0, 255, 106, 1),
+                    buttonContainerHeight: 35,
+                    buttonContainerRadius: BORDER_RADIUS,
+                    iconPadding: MARGIN_MEDIUM,
+                    iconWidthHeight: 35,
+                    textColor: Colors.black,
+                    textDesc: "Set Notification",
+                    textFontSize: TEXT_REGULAR_1X,
+                    iconPath: 'assets/icons/ic_notifications.png',
+                    isShowIcon: true,
+                    () {},
+                  )
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              margin: EdgeInsets.all(MARGIN_MEDIUM_3),
+              child: Image.asset(
+                'assets/images/notification_photo.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -84,7 +216,6 @@ class HorizontalCastListView extends StatelessWidget {
       height: 100,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-
           itemCount: 10,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
@@ -159,9 +290,9 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
                 bottom: -5,
                 right: 0,
                 child: Container(
-                  width: MediaQuery.of(context).size.width*0.6,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   height: 175,
-                 // height: MediaQuery.of(context).size.height/4,
+                  // height: MediaQuery.of(context).size.height/4,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

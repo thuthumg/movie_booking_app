@@ -61,9 +61,10 @@ class CustomButtonView extends StatelessWidget {
                     style: TextStyle(
                       color: textColor,
                       fontSize: textFontSize,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+
                 ],
               ),
             ),
