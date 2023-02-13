@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/booking_date_time_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 
@@ -6,8 +7,10 @@ import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/videoplayer/default_player.dart';
 import 'package:movie_booking_app/viewitems/movie_information_item_view.dart';
 import 'package:movie_booking_app/widgets/circle_image_view.dart';
+import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/custom_button_bg_view.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
+import 'package:movie_booking_app/widgets/my_clipper.dart';
 //import 'package:video_player/video_player.dart';
 
 class MovieDetailPage extends StatelessWidget {
@@ -65,7 +68,8 @@ class MovieDetailPage extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Container(
                 //color: Colors.black87,
-                height: 60,
+               // height: 40,
+                width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(left: 80, right: 80),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -79,19 +83,50 @@ class MovieDetailPage extends StatelessWidget {
                   ),
                 ),
 
-                child: CustomButtonBgView(
-                  circleTopLeftPadding: 15,
-                  circleTopRightPadding: 15,
-                  circleWH: 28.0,
-                  circleRadius: 14.0,
-                  rectBgHeight: 60.0,
-                  rectBgLeftPadding: 10.5,
-                  rectBgRightPadding: 10.5,
-                  rectBgColor: SECONDARY_COLOR,
-                  rectBorderRadius: 8.0,
-                  circleColor: Colors.black,
-                  textDesc: "Booking",
-                ),
+                child:
+
+                GestureDetector(
+                  onTap: ()=> _navigateToBookingDateTimePage(context),
+                  child: Container(
+                    height: 50,
+                    margin: EdgeInsets.only(bottom: MARGIN_MEDIUM_2),
+                    child: ClipButton(
+                      clipper: MyClipper(holeRadius: 20),
+                      shadow: Shadow(
+                        color: Colors.grey,
+                        blurRadius: 2,
+                        offset: Offset(0.5, 0.5),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            left: 30, right: 20, top: 15, bottom: 15),
+                        decoration: BoxDecoration(
+                          color: SECONDARY_COLOR,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [Text("Booking", style: TextStyle(color: Colors.black, fontSize: TEXT_REGULAR_2X,
+                                fontWeight: FontWeight.w700),)]),
+                      ),
+                    ),
+                  ),
+                )
+
+                // CustomButtonBgView(
+                //   circleTopLeftPadding: 15,
+                //   circleTopRightPadding: 15,
+                //   circleWH: 28.0,
+                //   circleRadius: 14.0,
+                //   rectBgHeight: 60.0,
+                //   rectBgLeftPadding: 10.5,
+                //   rectBgRightPadding: 10.5,
+                //   rectBgColor: SECONDARY_COLOR,
+                //   rectBorderRadius: 8.0,
+                //   circleColor: Colors.black,
+                //   textDesc: "Booking",
+                // ),
               ),
             )
           ],
@@ -100,7 +135,14 @@ class MovieDetailPage extends StatelessWidget {
     );
   }
 }
-
+Future<dynamic> _navigateToBookingDateTimePage(BuildContext context) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BookingDateTimePage(),
+    ),
+  );
+}
 class ReleaseingNotiView extends StatelessWidget {
   const ReleaseingNotiView({
     Key? key,

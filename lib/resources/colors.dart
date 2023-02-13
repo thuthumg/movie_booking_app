@@ -8,4 +8,9 @@ const CITIES_LIST_DIVIDER_COLOR = Color.fromRGBO(59, 59, 59, 1);
 const SEARCH_HINT_COLOR = Color.fromRGBO(158, 158, 158, 1);
 const HOME_SCREEN_BANNER_DOTS_INACTIVE_COLOR  = Color.fromRGBO(69, 73, 83, 1.0);
 
+const AVAILIBLE_COLOR = Color.fromRGBO(0, 255, 163, 1);
+const FILLING_FAST_COLOR = Color.fromRGBO(255, 122, 0, 1);
+const ALMOST_FULL_COLOR = Color.fromRGBO(255, 0, 184, 1);
+
+
 

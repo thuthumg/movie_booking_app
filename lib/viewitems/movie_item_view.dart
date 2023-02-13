@@ -22,9 +22,7 @@ class MovieItemView extends StatelessWidget {
         // height: 212,
         child: Stack(children: [
           Positioned.fill(
-            child: GestureDetector(
-                onTap: ()=> onTapItemView,
-                child: MovieItemImageView()),
+            child: MovieItemImageView(),
           ),
           const Positioned.fill(
             child: GradientView(),
@@ -39,12 +37,15 @@ class MovieItemView extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Text(
-                          "Venom II",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: TEXT_REGULAR_1X,
-                              fontWeight: FontWeight.w500),
+                        GestureDetector(
+                          onTap: ()=> onTapItemView(),
+                          child: const Text(
+                            "Venom II",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                         const Spacer(),
                         SizedBox(
@@ -126,9 +127,9 @@ class MovieItemView extends StatelessWidget {
 }
 
 class MovieItemImageView extends StatelessWidget {
-  const MovieItemImageView({
-    Key? key,
-  }) : super(key: key);
+ // Function onTapItemView;
+
+ // MovieItemImageView(this.onTapItemView);
 
   @override
   Widget build(BuildContext context) {
@@ -139,16 +140,16 @@ class MovieItemImageView extends StatelessWidget {
         borderRadius:  BorderRadius.all(Radius.circular(8)),
         // BorderRadius.only(topLeft: Radius.circular(8),
         //     topRight: Radius.circular(8),bottomLeft: Radius.circular(8),bottomRight: Radius.circular(8)),
-        image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage(
-                "assets/images/sample_grid_img_2.png",)
-        )
-      )
-      // child: Image.asset(
-      //   "assets/images/sample_grid_img_2.png",
-      //   fit: BoxFit.cover,
-      // ),
+        // image: DecorationImage(
+        //     fit: BoxFit.cover,
+        //     image: AssetImage(
+        //         "assets/images/sample_grid_img_2.png",)
+        // )
+      ),
+      child: Image.asset(
+        "assets/images/sample_grid_img_2.png",
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
