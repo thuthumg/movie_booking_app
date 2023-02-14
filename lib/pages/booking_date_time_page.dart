@@ -73,6 +73,32 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
   }
 }
 
+class TheaterBookingTimeObject{
+
+  final String bookingTime; // 12:30PM
+  final String movieViewType; // 3D IMAX
+  final String screen; // Screen
+  final String bookingTimeStatus;
+  final String availableCountString;
+
+
+  TheaterBookingTimeObject(
+  this.bookingTime,
+  this.movieViewType,
+  this.screen,
+  this.bookingTimeStatus,
+  [this.availableCountString = ""]);
+
+
+
+}
+// enum MovieBookingTimeStatus{
+//   AVAILIBLE,
+//   FILLING_FAST,
+//   ALMOST_FULL,
+//   DISABLE
+// }
+
 class BookingMovieTheaters extends StatefulWidget {
   const BookingMovieTheaters({
     Key? key,
@@ -84,8 +110,40 @@ class BookingMovieTheaters extends StatefulWidget {
 
 class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
   bool _showDetail = false;
+
+  var bookingTimeObjectLists = <TheaterBookingTimeObject>[];
+
   @override
   Widget build(BuildContext context) {
+
+    bookingTimeObjectLists.clear();
+
+    bookingTimeObjectLists.add(
+      TheaterBookingTimeObject("9:30AM",
+          "3D", "Screen1", "Disable","21 Availiable")
+    );
+    bookingTimeObjectLists.add(
+        TheaterBookingTimeObject("12:30PM",
+            "3D IMAX", "Screen 1", "Available")
+
+    );
+    bookingTimeObjectLists.add(
+        TheaterBookingTimeObject("12:30PM",
+            "3D", "Screen 2", "Almost Full","2 Available")
+
+    );
+    bookingTimeObjectLists.add(
+        TheaterBookingTimeObject("3:30PM",
+            "3D", "Screen 2", "Available")
+
+    );
+
+    bookingTimeObjectLists.add(
+        TheaterBookingTimeObject("6:30PM",
+            "3D DBOX", "Screen 2", "Filling Fast","21 Available")
+
+    );
+
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -117,6 +175,7 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
 
                   ),),
                 )
+
               ],
             ),
             SizedBox(height: 15,),
@@ -150,15 +209,34 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
                   ),
                   // umber of items in the grid
                   itemBuilder: (BuildContext context, int index) {
-                    return BookingTimeView();
+                    return BookingTimeView(bookingTimeObjectLists[index],
+                    );
                     //Text('Item $index');
                     // BookingTimeView();
 
                   },
-                  itemCount: 10, // n
+                  itemCount: bookingTimeObjectLists.length, // n
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                ))
+                ),),
+           Container(
+             child: Row(
+               children: [
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Icon(Icons.info_sharp, color: Color.fromRGBO(170, 170, 170, 1),),
+                 ),
+
+                 Text("Long press on show timing to see seat class!",
+                 style: TextStyle(
+                   color: Color.fromRGBO(170, 170, 170, 1),
+                   fontSize: 14,
+                   fontWeight: FontWeight.w600
+                 ),)
+               ],
+             ),
+           ),
+            Divider(color: Colors.white)
 
           ],
         );

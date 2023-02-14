@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/booking_date_time_page.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 
 class BookingTimeView extends StatelessWidget {
-  const BookingTimeView({Key? key}) : super(key: key);
+
+  final TheaterBookingTimeObject theaterBookingTimeObject;
+
+  BookingTimeView(this.theaterBookingTimeObject);
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +29,30 @@ class BookingTimeView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("12:30 PM",style: TextStyle(
+            Text(theaterBookingTimeObject.bookingTime,style: TextStyle(
                 color: Colors.white,
                 fontSize: TEXT_REGULAR_1X,
                 fontWeight: FontWeight.w600
             ),),
             SizedBox(height: 5,),
-            Text("3D IMAX",style: TextStyle(
+            Text(theaterBookingTimeObject.movieViewType,style: TextStyle(
                 color: Colors.white,
                 fontSize: TEXT_REGULAR,
                 fontWeight: FontWeight.w600
             ),),
             SizedBox(height: 5,),
-            Text("Screen 2",style: TextStyle(
+            Text(theaterBookingTimeObject.screen,style: TextStyle(
                 color: Colors.white,
                 fontSize: TEXT_REGULAR,
                 fontWeight: FontWeight.w600
             ),),
+            SizedBox(height: 5,),
+            theaterBookingTimeObject.availableCountString.isNotEmpty?
+            Text(theaterBookingTimeObject.availableCountString,style: TextStyle(
+                color: Colors.white,
+                fontSize: TEXT_REGULAR,
+                fontWeight: FontWeight.w600
+            ),) : Text(""),
 
 
           ],
