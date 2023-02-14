@@ -9,15 +9,6 @@ import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 class MoviePage extends StatefulWidget {
 
   @override
-  void initState() {
-    // TODO: implement initState
-    print("initstate 1");
-
-    print("initstate 2");
-  }
-
-
-  @override
   State<MoviePage> createState() => _MoviePageState();
 }
 
@@ -31,9 +22,6 @@ class _MoviePageState extends State<MoviePage> {
         color: PRIMARY_COLOR,
         child: CustomScrollView(
           slivers: [
-            /* MovieListSliverAppBarView(
-              () => Navigator.pop(context),
-            ),*/
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -179,7 +167,8 @@ class _MoviePageState extends State<MoviePage> {
                 ],
               ),
             ),
-            GridMoviesListSection(_uiChangeFlag,()=>{
+            GridMoviesListSection(_uiChangeFlag,
+                    ()=>{
               _navigateToMovieDetailPage(context)
             })
           ],
@@ -380,21 +369,21 @@ class _NowShowingAndComingSoonButtonViewState
   }
 }
 
-MaterialStateProperty<Color> getColor(Color color, Color colorPressed) {
-  getColor(Set<MaterialState> states) {
-    if (states.contains(MaterialState.focused)) {
-      return colorPressed;
-    } else {
-      return color;
-    }
-  }
-
-  return MaterialStateProperty.resolveWith(getColor);
-}
+// MaterialStateProperty<Color> getColor(Color color, Color colorPressed) {
+//   getColor(Set<MaterialState> states) {
+//     if (states.contains(MaterialState.focused)) {
+//       return colorPressed;
+//     } else {
+//       return color;
+//     }
+//   }
+//
+//   return MaterialStateProperty.resolveWith(getColor);
+// }
 
 class GridMoviesListSection extends StatelessWidget {
-  bool _uiChangeFlag;
-  Function onTapItemView;
+  final bool _uiChangeFlag;
+  final Function onTapItemView;
 
   GridMoviesListSection(this._uiChangeFlag,this.onTapItemView);
 
@@ -410,7 +399,9 @@ class GridMoviesListSection extends StatelessWidget {
         (BuildContext context, int index) {
           return Padding(
               padding: EdgeInsets.only(left: MARGIN_MEDIUM),
-              child: MovieItemView(_uiChangeFlag,()=>onTapItemView),
+              child: MovieItemView(_uiChangeFlag,(){
+                this.onTapItemView();
+              }),
           );
         },
         childCount: 20,
@@ -549,6 +540,7 @@ class MovieListSliverAppBarView extends StatelessWidget {
     );
   }
 }
+
 Future<dynamic> _navigateToMovieDetailPage(BuildContext context) {
   return Navigator.push(
     context,

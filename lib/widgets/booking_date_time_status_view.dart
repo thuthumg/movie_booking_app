@@ -6,11 +6,15 @@ class BookingDateTimeStatusView extends StatelessWidget {
   final Color statusColor;
   final String statusText;
   final String statusIcon;
+  final double iconWidth;
+  final double iconHeight;
 
   BookingDateTimeStatusView(
       this.statusColor,
       this.statusText,
-      this.statusIcon
+      this.statusIcon,
+      this.iconWidth,
+      this.iconHeight
       );
 
   @override
@@ -19,10 +23,10 @@ class BookingDateTimeStatusView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-            width: 8,
-            height: 8,
+            width: iconWidth,
+            height: iconHeight,
             child: Image.asset(statusIcon)),
-        SizedBox(width: MARGIN_MEDIUM_2,),
+        SizedBox(width: MARGIN_MEDIUM,),
         Text(statusText,style: TextStyle(
           color: statusColor,
           fontSize: TEXT_REGULAR_1X,
