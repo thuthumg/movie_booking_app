@@ -3,7 +3,9 @@ import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
 import 'package:movie_booking_app/widgets/booking_time_view.dart';
+import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/date_time_card.dart';
+import 'package:movie_booking_app/widgets/my_clipper.dart';
 
 class BookingDateTimePage extends StatefulWidget {
   const BookingDateTimePage({Key? key}) : super(key: key);

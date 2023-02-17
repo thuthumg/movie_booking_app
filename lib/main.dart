@@ -12,6 +12,8 @@ import 'package:movie_booking_app/widgets/custom_button_view.dart';
 import 'package:movie_booking_app/widgets/date_time_background_view.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
 
+import 'pages/snack_page.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: SeatingPlanPage()
+      home: SnackPage()
 
     );
   }
