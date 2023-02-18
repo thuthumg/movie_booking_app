@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/seating_plan_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
@@ -102,9 +103,10 @@ class TheaterBookingTimeObject{
 // }
 
 class BookingMovieTheaters extends StatefulWidget {
-  const BookingMovieTheaters({
-    Key? key,
-  }) : super(key: key);
+
+  // const BookingMovieTheaters({
+  //   Key? key,
+  // }) : super(key: key);
 
   @override
   State<BookingMovieTheaters> createState() => _BookingMovieTheatersState();
@@ -112,7 +114,6 @@ class BookingMovieTheaters extends StatefulWidget {
 
 class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
   bool _showDetail = false;
-
   var bookingTimeObjectLists = <TheaterBookingTimeObject>[];
 
   @override
@@ -147,6 +148,7 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
     );
 
     return ListView.builder(
+
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       scrollDirection: Axis.vertical,
@@ -203,7 +205,7 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
             Visibility(
                 visible: _showDetail,
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, // number of columns
                     mainAxisSpacing: 10, // vertical space between items
                     crossAxisSpacing: 10, // horizontal space between items
@@ -211,8 +213,13 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
                   ),
                   // umber of items in the grid
                   itemBuilder: (BuildContext context, int index) {
-                    return BookingTimeView(bookingTimeObjectLists[index],
-                    );
+                    return GestureDetector(
+                      onTap: (){
+                        setState((){
+                          _navigateToSeatPage(context);
+                        });
+                      },
+                        child: BookingTimeView(bookingTimeObjectLists[index]));
                     //Text('Item $index');
                     // BookingTimeView();
 
@@ -246,7 +253,14 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
     );
   }
 }
-
+Future<dynamic> _navigateToSeatPage(BuildContext context) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SeatingPlanPage(),
+    ),
+  );
+}
 class MovieBookingTimeStatus extends StatelessWidget {
 
 

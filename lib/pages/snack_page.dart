@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/check_out_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/widgets/botton_sheet_view.dart';
 
 class SnackPage extends StatelessWidget {
   List<String> snackTabList = ["All", "Combo", "Snack", "Pop Corn", "Beverage"];
@@ -99,14 +101,36 @@ class SnackListViewAndTotalAmountView extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: Stack(
-        children: const [
+        children: [
           SnackListGridView(),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: TotalAmountButtonView((){
-          //           print("test");
-          //   }),
-          // )
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TotalAmountButtonView(() {
+
+              showModalBottomSheet<dynamic>(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return Wrap(
+                        children: <Widget>[
+                          Container(
+                            decoration: const BoxDecoration(
+                               // color: forDialog ? Color(0xFF737373) : Colors.white,
+                                color: PRIMARY_COLOR,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25.0),
+                                    topRight: Radius.circular(25.0))),
+                            child: _navigateToBottomSheet(context),
+                          )
+                        ]
+                    );
+                  }
+              );
+
+
+
+            }),
+          )
         ],
       ),
     );
@@ -143,13 +167,17 @@ class TotalAmountButtonView extends StatelessWidget {
             Positioned(
               top: 15,
               right: 10,
-              child: TotalAmountTextView(),
+              child: GestureDetector(
+                  onTap: (){
+                    _navigateToCheckOutPage(context);
+                  },
+                  child: TotalAmountTextView()),
             ),
             Positioned(
               top: 5,
               left: 0,
               child: GestureDetector(
-                  onTap: onTapFoodAndBeverageView(),
+                  onTap: () => onTapFoodAndBeverageView(),
                   child: FoodAndBeverageAllCountView()),
             )
           ],
@@ -194,7 +222,7 @@ class FoodAndBeverageAllCountView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(2),
                       child: Text(
-                        textAlign:TextAlign.center,
+                        textAlign: TextAlign.center,
                         "12",
                         style: TextStyle(
                             color: Colors.white,
@@ -202,9 +230,7 @@ class FoodAndBeverageAllCountView extends StatelessWidget {
                             fontWeight: FontWeight.w400),
                       ),
                     ),
-                  )
-
-                  )
+                  ))
             ],
           ),
         ),
@@ -355,11 +381,15 @@ class SnackListGridView extends StatelessWidget {
     );
   }
 }
-// Future<dynamic> _navigateToBottomSheet(BuildContext context) {
-//   return Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => BottomSheetPage(),
-//     ),
-//   );
-// }
+
+BottomSheetView _navigateToBottomSheet(BuildContext context) {
+  return BottomSheetView();
+}
+Future<dynamic> _navigateToCheckOutPage(BuildContext context) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CheckOutPage(),
+    ),
+  );
+}

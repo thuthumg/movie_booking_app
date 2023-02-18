@@ -5,6 +5,7 @@ import 'package:movie_booking_app/resources/dimens.dart';
 class BookingTimeView extends StatelessWidget {
 
   final TheaterBookingTimeObject theaterBookingTimeObject;
+//  Function onTapDateTime;
 
   BookingTimeView(this.theaterBookingTimeObject);
 
