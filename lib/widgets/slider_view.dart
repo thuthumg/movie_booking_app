@@ -34,8 +34,9 @@ class SliderWidgetState extends State{
                       semanticFormatterCallback: (double newValue) {
                         return '${newValue.round()}';
                       }
-                  )),
-              Text('$valueHolder', style: TextStyle(fontSize: 22),)
+                  ),),
+              Text('', style: TextStyle(fontSize: 22),//$valueHolder
+              )
 
             ]
         ));

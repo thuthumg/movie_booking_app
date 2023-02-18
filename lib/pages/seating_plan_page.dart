@@ -15,7 +15,11 @@ class SeatingPlanPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
-        leading: Icon(Icons.chevron_left),
+        leading: GestureDetector(
+            onTap: (){
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.chevron_left)),
       ),
       body: Container(
         // height: MediaQuery.of(context).size.height,
@@ -31,9 +35,11 @@ class SeatingPlanPage extends StatelessWidget {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    Expanded(flex: 1, child: AvailiableView()),
-                    Expanded(flex: 1, child: TakenView()),
-                    Expanded(flex: 1, child: SelectionView()),
+                    AvailiableView(),
+                    Spacer(),
+                    TakenView(),
+                    Spacer(),
+                    SelectionView(),
                   ],
                 ),
               ),
@@ -68,11 +74,18 @@ class TotalTicketView extends StatelessWidget {
                 children: const [
                   Text(
                     "2 Tickets",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      fontSize: TEXT_REGULAR_2X,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
                   ),
+                  SizedBox(height: 5,),
                   Text(
                     "17000KS",
-                    style: TextStyle(color: SECONDARY_COLOR),
+                    style: TextStyle(
+                        fontSize: TEXT_REGULAR_3X,
+                        fontWeight: FontWeight.w600,
+                        color: SECONDARY_COLOR),
                   ),
                 ],
               ),
@@ -136,21 +149,20 @@ class SeekBarView extends StatelessWidget {
       // height: 20,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Expanded(
-            flex: 1,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+
+          const Icon(
+            Icons.add,
+            color: Colors.white,
           ),
-          Expanded(flex: 3, child: SliderView()),
-          const Expanded(
-            flex: 1,
-            child: Icon(
-              Icons.remove,
-              color: Colors.white,
-            ),
+          const SizedBox(width: 5,),
+          SliderView(),
+          const SizedBox(width: 5,),
+          const Icon(
+            Icons.remove,
+            color: Colors.white,
           )
         ],
       ),

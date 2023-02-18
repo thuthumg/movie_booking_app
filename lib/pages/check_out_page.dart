@@ -22,7 +22,11 @@ class CheckOutPage extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        leading: Icon(Icons.chevron_left),
+        leading: GestureDetector(
+            onTap: (){
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.chevron_left)),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -30,10 +34,10 @@ class CheckOutPage extends StatelessWidget {
           child: Column(
             children: [
               CheckoutDataView(),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              ContinueButtonView()
+              const ContinueButtonView()
             ],
           ),
         ),

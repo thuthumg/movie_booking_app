@@ -21,7 +21,11 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
-        leading: Icon(Icons.chevron_left),
+        leading: GestureDetector(
+            onTap: (){
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.chevron_left)),
         actions: [
           Row(
             children: [
@@ -95,13 +99,6 @@ class TheaterBookingTimeObject{
 
 
 }
-// enum MovieBookingTimeStatus{
-//   AVAILIBLE,
-//   FILLING_FAST,
-//   ALMOST_FULL,
-//   DISABLE
-// }
-
 class BookingMovieTheaters extends StatefulWidget {
 
   // const BookingMovieTheaters({
@@ -159,7 +156,7 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
             SizedBox(height: 15,),
             Row(
               children: [
-                Text("JCGV : Junction City",style: TextStyle(
+                const Text("JCGV : Junction City",style: TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR_2X,
                     fontWeight: FontWeight.w600
@@ -171,7 +168,7 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
                       _showDetail = !_showDetail;
                     });
                   },
-                  child: Text("See Details",style: TextStyle(
+                  child: const Text("See Details",style: TextStyle(
                     color: SECONDARY_COLOR,
                     fontSize: TEXT_REGULAR_2X,
                     fontWeight: FontWeight.w500,
@@ -230,9 +227,9 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
                 ),),
            Container(
              child: Row(
-               children: [
+               children: const [
                  Padding(
-                   padding: const EdgeInsets.all(8.0),
+                   padding: EdgeInsets.all(8.0),
                    child: Icon(Icons.info_sharp, color: Color.fromRGBO(170, 170, 170, 1),),
                  ),
 
@@ -245,7 +242,7 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
                ],
              ),
            ),
-            Divider(color: Colors.white)
+            const Divider(color: Colors.white)
 
           ],
         );
@@ -285,38 +282,6 @@ class MovieBookingTimeStatus extends StatelessWidget {
       ),
     );
 
-
-
-    //   Container(
-    //   color: Color.fromRGBO(34, 34, 34, 1),
-    //   padding: EdgeInsets.all(10),
-    //   child: Row(
-    //     children: [
-    //       Expanded(
-    //           flex: 1,
-    //           child: BookingDateTimeStatusView(
-    //               Color.fromRGBO(170, 170, 170, 1),
-    //               "Parking",
-    //               'assets/icons/ic_parking.png'
-    //           ),),
-    //         Expanded(
-    //           flex: 1,
-    //           child: BookingDateTimeStatusView(
-    //               Color.fromRGBO(170, 170, 170, 1),
-    //               "Online Food",
-    //               'assets/icons/ic_online_food.png'
-    //           ),),
-    //       Expanded(
-    //           flex: 1,
-    //           child: BookingDateTimeStatusView(
-    //               Color.fromRGBO(170, 170, 170, 1),
-    //               "Wheel Chair",
-    //               'assets/icons/ic_wheel_chair.png'
-    //           ),
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }
 
@@ -414,8 +379,6 @@ class MovieViewTypeItem{
 
 class MovieViewType extends StatefulWidget {
 
-
-
   @override
   State<MovieViewType> createState() => _MovieViewTypeState();
 }
@@ -443,9 +406,6 @@ class _MovieViewTypeState extends State<MovieViewType> {
       );
       print(movieViewTypeObjList.toString());
     }
-
-
-
 
     return Container(
 
@@ -542,6 +502,10 @@ class _DateListViewState extends State<DateListView> {
   Widget build(BuildContext context) {
     //  var month = monthNames[date.month - 1];
     // var weekDay = weekDayNames[date.weekday - 1];
+
+    showMovieDateList.clear();
+    dates.clear();
+    /**calculation date start */
     var twoWeeksFromNow = currentDate.add(Duration(days: 14));
 
     for (var date = currentDate; date.isBefore(twoWeeksFromNow);
@@ -552,7 +516,8 @@ class _DateListViewState extends State<DateListView> {
     final today = DateTime(now.year, now.month, now.day);
 
     final tomorrow = DateTime(now.year, now.month, now.day + 1);
-    showMovieDateList.clear();
+
+
     for (var date in dates) {
       final aDate = DateTime(date.year, date.month, date.day);
       if(aDate == today)
@@ -578,11 +543,10 @@ class _DateListViewState extends State<DateListView> {
                 (date.day).toString())
         );
       }
-
-
-
       print(showMovieDateList.toString());
     }
+    /**calculation date end */
+
     return Container(
         height: 100,
         margin: const EdgeInsets.only(
@@ -591,65 +555,21 @@ class _DateListViewState extends State<DateListView> {
           scrollDirection: Axis.horizontal,
           itemCount: showMovieDateList.length,
           itemBuilder: (BuildContext context, int index) {
-            return DateTimeCard(
-                showMovieDateList[index].weekName,
-                showMovieDateList[index].monthName,
-                showMovieDateList[index].dayStr,
-                showMovieDateList[index].isSelected);
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  showMovieDateList[index].isSelected = !showMovieDateList[index].isSelected;
+                });
+              },
+              child: DateTimeCard(
+                  showMovieDateList[index].weekName,
+                  showMovieDateList[index].monthName,
+                  showMovieDateList[index].dayStr,
+                  showMovieDateList[index].isSelected),
+            );
            }
           ),
     );
 
-      //children: [
-      //           DateTimeCard("Today", "May", "8", true),
-      //           DateTimeCard("THU", "May", "9", false)
-      //         ]
-
-
-    //   Container(
-    //   height: 67,
-    //   child: ListView.builder(
-    //     scrollDirection: Axis.horizontal,
-    //     itemCount: showMovieDateList.length,
-    //     itemBuilder: (BuildContext context, int index) {
-    //       return GestureDetector(
-    //         onTap: ()=>_toggleSelection(index),
-    //         child: Container(
-    //             margin: EdgeInsets.only(right: MARGIN_MEDIUM_2),
-    //             width: 150,
-    //             height: 200,
-    //             decoration: BoxDecoration(
-    //                 color: showMovieDateList[index].isSelected ?
-    //                 SECONDARY_COLOR :
-    //                 Colors.white,
-    //                 borderRadius: BorderRadius.all(Radius.circular(10))
-    //
-    //             ),
-    //             child:
-    //             Center(
-    //               child: Column(
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 children: [
-    //                   Text(showMovieDateList[index].weekName,
-    //                     style: TextStyle(color: Colors.black,
-    //                         fontSize: TEXT_REGULAR,
-    //                         fontWeight: FontWeight.w400),),
-    //                   Text(showMovieDateList[index].monthName,
-    //                       style: TextStyle(color: Colors.black,
-    //                           fontSize: TEXT_REGULAR_1X,
-    //                           fontWeight: FontWeight.w400)),
-    //                   Text(showMovieDateList[index].dayStr,
-    //                       style: TextStyle(color: Colors.black,
-    //                           fontSize: TEXT_REGULAR_1X,
-    //                           fontWeight: FontWeight.w400))
-    //                 ],
-    //               ),
-    //             )
-    //
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
   }
 }

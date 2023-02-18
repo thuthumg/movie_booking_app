@@ -20,7 +20,11 @@ class SnackPage extends StatelessWidget {
               fontSize: 22,
             ),
           ),
-          leading: Icon(Icons.chevron_left),
+          leading: GestureDetector(
+              onTap: (){
+                Navigator.of(context).pop();
+              },
+              child: Icon(Icons.chevron_left)),
           actions: [
             Image.asset(
               "assets/icons/ic_search.png",
@@ -223,7 +227,7 @@ class FoodAndBeverageAllCountView extends StatelessWidget {
                       padding: const EdgeInsets.all(2),
                       child: Text(
                         textAlign: TextAlign.center,
-                        "12",
+                        "2",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 10,
