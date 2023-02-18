@@ -493,6 +493,9 @@ class _DateListViewState extends State<DateListView> {
   var showMovieDateList = <DateListItem>[];
   void _toggleSelection(int index) {
     setState(() {
+
+      print("check select = ${showMovieDateList[index].isSelected}");
+
       showMovieDateList[index].isSelected = !showMovieDateList[index].isSelected;
     });
   }
@@ -555,18 +558,15 @@ class _DateListViewState extends State<DateListView> {
           scrollDirection: Axis.horizontal,
           itemCount: showMovieDateList.length,
           itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: (){
-                setState(() {
-                  showMovieDateList[index].isSelected = !showMovieDateList[index].isSelected;
+            return DateTimeCard(
+                showMovieDateList[index].weekName,
+                showMovieDateList[index].monthName,
+                showMovieDateList[index].dayStr,
+                showMovieDateList[index].isSelected,
+                (){
+                  print("toggleselection");
+                  _toggleSelection(index);
                 });
-              },
-              child: DateTimeCard(
-                  showMovieDateList[index].weekName,
-                  showMovieDateList[index].monthName,
-                  showMovieDateList[index].dayStr,
-                  showMovieDateList[index].isSelected),
-            );
            }
           ),
     );

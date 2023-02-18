@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/ticket_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
@@ -603,7 +604,7 @@ class BookingTimePlaceAndSeatView extends StatelessWidget {
           height: 10,
         ),
         Row(
-          children: [
+          children: const [
             Expanded(
               flex: 2,
               child: Text(
@@ -627,6 +628,7 @@ class BookingTimePlaceAndSeatView extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
+               // overflow: TextOverflow.ellipsis,
                 "Q5H3+JPP,Corner of,Bogyoke Lann,Yangon",
                 style: TextStyle(
                     fontSize: TEXT_REGULAR_2X,
@@ -634,6 +636,7 @@ class BookingTimePlaceAndSeatView extends StatelessWidget {
                     color: Colors.white),
               ),
             )
+
           ],
         ),
         SizedBox(
@@ -714,8 +717,21 @@ class ContinueButtonView extends StatelessWidget {
         height: 50,
         width: MediaQuery.of(context).size.width * 0.6,
         margin: EdgeInsets.only(bottom: MARGIN_XLARGE),
-        child: CustomClipButtonView("Continue"),
+        child: GestureDetector(
+            onTap: (){
+              _navigateToTicketPage(context);
+            },
+            child: CustomClipButtonView("Continue")),
       ),
     );
   }
+}
+
+Future<dynamic> _navigateToTicketPage(BuildContext context) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => TicketPage(),
+    ),
+  );
 }

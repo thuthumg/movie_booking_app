@@ -9,12 +9,17 @@ class DateTimeCard extends StatelessWidget {
   final String month;
   final String date;
   final bool active;
+  Function onTapCardItem;
 
-  const DateTimeCard(this.day, this.month, this.date, this.active);
+
+  DateTimeCard(this.day, this.month, this.date, this.active,this.onTapCardItem);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: (){
+        print("ontapfunction");
+        onTapCardItem();},
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

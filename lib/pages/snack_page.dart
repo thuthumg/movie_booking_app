@@ -112,6 +112,7 @@ class SnackListViewAndTotalAmountView extends StatelessWidget {
             child: TotalAmountButtonView(() {
 
               showModalBottomSheet<dynamic>(
+                  backgroundColor: Colors.black54,
                   isScrollControlled: true,
                   context: context,
                   builder: (BuildContext bc) {
