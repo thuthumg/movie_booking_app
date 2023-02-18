@@ -1,5 +1,6 @@
 import 'package:movie_booking_app/constants/movie_seat_grid_list_view_obj.dart';
 import 'package:movie_booking_app/constants/movie_seat_list_view_obj.dart';
+import 'package:movie_booking_app/pages/ticket_page.dart';
 
 const MAIN_SCREEN_APP_BAR_TITLE = "Discover";
 const MAIN_SCREEN_BEST_POPULAR_MOVIES_AND_SERIALS =  "BEST POPULAR MOVIES AND SERIALS";
@@ -160,3 +161,25 @@ var showGoldSeatObject = <MovieSeatGridListViewObject>[
 
   MovieSeatGridListViewObject(title: "H", type: SEAT_TYPE_TEXT),
 ];
+
+
+//Ticket Section
+const String TICKET_APP_BART_TITLE = "Payment";
+
+var paymentTypeList = <PaymentTypeObject>[
+
+  PaymentTypeObject("UPI","assets/icons/ic_upi.png"),
+  PaymentTypeObject("Gift Voucher","assets/icons/ic_gift_voucher.png"),
+  PaymentTypeObject("Quck Pay","assets/icons/ic_quick_pay.png"),
+  PaymentTypeObject("Credit Card/Debit Card","assets/icons/ic_credit_card.png" ),
+  PaymentTypeObject("Redeem Ponit","assets/icons/ic_redeem_point.png"),
+  PaymentTypeObject("Mobile Wallet","assets/icons/ic_mobile_wallet.png"),
+  PaymentTypeObject("Net Banking","assets/icons/ic_net_banking.png"),
+];
+
+const String CHOOSE_YOUR_PAYMENT_TYPE_TITLE_LABEL= "Choose your payment type";
+
+const String UNLOCK_ORDER_OR_APPLY_PROMO_CODE_LABEL = "Unlock Offer or Apply Promocode";
+
+const String YOUR_NAME_LABEL = "Your Name";
+const String ENTER_YOUR_NAME_HINT_LABEL = "Enter your name";

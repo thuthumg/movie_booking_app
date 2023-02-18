@@ -83,7 +83,7 @@ class TotalTicketView extends StatelessWidget {
                   Text(
                     "17000KS",
                     style: TextStyle(
-                        fontSize: TEXT_REGULAR_3X,
+                        fontSize: TEXT_REGULAR_4X,
                         fontWeight: FontWeight.w600,
                         color: SECONDARY_COLOR),
                   ),

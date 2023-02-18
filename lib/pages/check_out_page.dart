@@ -112,7 +112,7 @@ class TotalAmountView extends StatelessWidget {
               "Total",
               style: TextStyle(
                   color: SECONDARY_COLOR,
-                  fontSize: TEXT_REGULAR_3X,
+                  fontSize: TEXT_REGULAR_4X,
                   fontWeight: FontWeight.w600),
             ),
           ),
@@ -122,7 +122,7 @@ class TotalAmountView extends StatelessWidget {
               "22500Ks",
               style: TextStyle(
                   color: SECONDARY_COLOR,
-                  fontSize: TEXT_REGULAR_3X,
+                  fontSize: TEXT_REGULAR_4X,
                   fontWeight: FontWeight.w600),
             ),
           )
