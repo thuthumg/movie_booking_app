@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/ticket_confirmation_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
@@ -49,9 +50,13 @@ class TicketPage extends StatelessWidget {
                 child: ChooseYourPaymentTypeTitleView(),
               ),
               Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                     left: MARGIN_MEDIUM, right: MARGIN_MEDIUM),
-                child: PaymentTypeListView(),
+                child: PaymentTypeListView(
+                    ()=>{
+                      _navigateToTicketConfirmPage(context)
+                    }
+                ),
               )
             ],
           ),
@@ -67,6 +72,11 @@ class PaymentTypeObject {
 }
 
 class PaymentTypeListView extends StatelessWidget {
+
+  final Function onTapTicketItem;
+
+  PaymentTypeListView(this.onTapTicketItem);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -77,10 +87,22 @@ class PaymentTypeListView extends StatelessWidget {
           itemCount: paymentTypeList.length,
           itemBuilder: (BuildContext context, int index) {
             return PaymentTypeItemView(
-                paymentTypeList[index].title, paymentTypeList[index].iconLink);
+                paymentTypeList[index].title,
+                paymentTypeList[index].iconLink,
+                (){
+                  this.onTapTicketItem();
+                });
           }),
     );
   }
+}
+Future<dynamic> _navigateToTicketConfirmPage(BuildContext context) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => TicketConfirmationPage(),
+    ),
+  );
 }
 
 class ChooseYourPaymentTypeTitleView extends StatelessWidget {

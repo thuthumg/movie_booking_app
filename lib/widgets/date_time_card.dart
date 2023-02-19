@@ -30,7 +30,7 @@ class DateTimeCard extends StatelessWidget {
                      width: 77,
                      height: 90,
                     child: ClipDateCard(
-                    clipper: MyClipperCard(holeRadius: 10),
+                    clipper: MyClipperCard(holeRadius: 10,height: 4),
                     shadow: Shadow(
                       color: Colors.grey,
                       blurRadius: 2,

@@ -15,6 +15,7 @@ import 'package:movie_booking_app/widgets/date_time_background_view.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
 
 import 'pages/snack_page.dart';
+import 'pages/ticket_confirmation_page.dart';
 
 
 void main() {
