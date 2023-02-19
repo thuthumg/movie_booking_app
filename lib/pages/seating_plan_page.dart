@@ -13,41 +13,104 @@ class SeatingPlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
         leading: GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.of(context).pop();
             },
             child: Icon(Icons.chevron_left)),
       ),
-      body: Container(
-        // height: MediaQuery.of(context).size.height,
-        color: PRIMARY_COLOR,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TitleImageView(),
-              SeatListView(),
-              Container(
-                color: Color.fromRGBO(34, 34, 34, 1),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    AvailiableView(),
-                    Spacer(),
-                    TakenView(),
-                    Spacer(),
-                    SelectionView(),
-                  ],
+      body: Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height*0.65,
+             child: Container(
+                // height: MediaQuery.of(context).size.height,
+                color: PRIMARY_COLOR,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      TitleImageView(),
+                      SeatListView(),
+                    ],
+                  ),
                 ),
-              ),
-              SeekBarView(),
-              TotalTicketView()
-            ],
+              )
           ),
-        ),
+          Container(
+           // height: MediaQuery.of(context).size.height*0.35,
+           // color: PRIMARY_COLOR,
+            child: Column(
+              children: const [
+                SeatColorSpecificationsView(),
+                SeekBarView(),
+                TotalTicketView()
+              ],
+            ),
+          )
+        ],
+      )
+
+      // Stack(
+      //   children: [
+      //     Positioned(
+      //       top: 0,
+      //       left: 0,
+      //       right: 0,
+      //       bottom: 0,
+      //       child: Container(
+      //         // height: MediaQuery.of(context).size.height,
+      //         color: PRIMARY_COLOR,
+      //         child: SingleChildScrollView(
+      //           child: Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               TitleImageView(),
+      //               SeatListView(),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //     Positioned(
+      //       bottom: 0,
+      //       left: 0,
+      //       right: 0,
+      //       child: Column(
+      //         children: [
+      //           SeatColorSpecificationsView(),
+      //           SeekBarView(),
+      //           TotalTicketView()
+      //         ],
+      //       ),
+      //     )
+      //   ],
+      // ),
+    );
+  }
+}
+
+class SeatColorSpecificationsView extends StatelessWidget {
+  const SeatColorSpecificationsView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color.fromRGBO(34, 34, 34, 1),
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
+          AvailiableView(),
+          Spacer(),
+          TakenView(),
+          Spacer(),
+          SelectionView(),
+        ],
       ),
     );
   }
@@ -66,20 +129,21 @@ class TotalTicketView extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              margin: const EdgeInsets.only(left: MARGIN_MEDIUM_3,
-                  bottom: MARGIN_MEDIUM_3),
+              margin: const EdgeInsets.only(
+                  left: MARGIN_MEDIUM_3, bottom: MARGIN_MEDIUM_3),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-
                 children: const [
                   Text(
                     "2 Tickets",
                     style: TextStyle(
-                      fontSize: TEXT_REGULAR_2X,
+                        fontSize: TEXT_REGULAR_2X,
                         fontWeight: FontWeight.w600,
                         color: Colors.white),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Text(
                     "17000KS",
                     style: TextStyle(
@@ -94,14 +158,14 @@ class TotalTicketView extends StatelessWidget {
           Expanded(
               flex: 1,
               child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   _navigateToSnackPage(context);
                 },
                 child: Container(
                   height: 50,
-                    margin: const EdgeInsets.only(right: MARGIN_MEDIUM_3,
-                        bottom: MARGIN_MEDIUM_3),
-                //  margin: EdgeInsets.only(right: MARGIN_MEDIUM_2),
+                  margin: const EdgeInsets.only(
+                      right: MARGIN_MEDIUM_3, bottom: MARGIN_MEDIUM_3),
+                  //  margin: EdgeInsets.only(right: MARGIN_MEDIUM_2),
                   child: ClipButton(
                     clipper: MyClipper(holeRadius: 20),
                     shadow: const Shadow(
@@ -152,14 +216,17 @@ class SeekBarView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           const Icon(
             Icons.add,
             color: Colors.white,
           ),
-          const SizedBox(width: 5,),
+          const SizedBox(
+            width: 5,
+          ),
           SliderView(),
-          const SizedBox(width: 5,),
+          const SizedBox(
+            width: 5,
+          ),
           const Icon(
             Icons.remove,
             color: Colors.white,
@@ -177,46 +244,28 @@ class SeatListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: MediaQuery.of(context).size.height *0.8,
-      child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2),
-          itemCount: showMovieSeatList.length,
-          itemBuilder: (BuildContext context, int index) {
-            //
-            return Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: MARGIN_CARD_MEDIUM_2,
-                  ),
-                  PriceTextView(showMovieSeatList[index].seatingArrangement),
-                  SizedBox(
-                    height: MARGIN_CARD_MEDIUM_2,
-                  ),
-                  SeatView(showMovieSeatList[index].movieSeatGridListViewObj)
-                ],
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2),
+        itemCount: showMovieSeatList.length,
+        itemBuilder: (BuildContext context, int index) {
+          //
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: MARGIN_CARD_MEDIUM_2,
               ),
-            );
-            // if (index == 0 ||
-            //     index == 3 ||
-            //     index == 6 ||
-            //     index == 9) {
-            //   // for seat price
-            //   return PriceTextView(showMovieSeatList[index].seatingArrangement);
-            // } else if (index == 10 || index == 11) {
-            //   //for couple seat
-            //   return CoupleSeatView(showMovieSeatList[index].movieSeatGridListViewObj);
-            // } else {
-            //   //for single seat
-            //   return SingleSeatView(showMovieSeatList[index].movieSeatGridListViewObj);
-            // }
-          }),
-    );
+              PriceTextView(showMovieSeatList[index].seatingArrangement),
+              SizedBox(
+                height: MARGIN_CARD_MEDIUM_2,
+              ),
+              SeatView(showMovieSeatList[index].movieSeatGridListViewObj)
+            ],
+          );
+        });
   }
 }
 
@@ -274,15 +323,13 @@ class SeatView extends StatelessWidget {
         // umber of items in the grid
         itemBuilder: (BuildContext context, int index) {
           if (movieSeatGridListViewObj[index].type == SEAT_TYPE_TEXT) {
-            return Container(
-              child: Text(
-                movieSeatGridListViewObj[index].title.toString(),
-                style: TextStyle(color: Colors.white),
-              ),
+            return Text(
+              movieSeatGridListViewObj[index].title.toString(),
+              style: TextStyle(color: Colors.white),
             );
           } else if (movieSeatGridListViewObj[index].type == SEAT_TYPE_EMPTY) {
-            return Container(
-              child: Spacer(),
+            return SizedBox(
+              width: 10,
             );
           } else if (movieSeatGridListViewObj[index].type ==
               SEAT_TYPE_AVAILABLE) {
@@ -302,7 +349,8 @@ class SeatView extends StatelessWidget {
             return Container(
               width: 30,
               height: 30,
-              child: Image.asset("assets/icons/ic_chair_your_selection.png"),
+              child: Image.asset("assets/icons/ic_chair_available.png",
+                color: SECONDARY_COLOR,),
             );
           } else if (movieSeatGridListViewObj[index].type ==
               SEAT_TYPE_GOLD_AVAILABLE) {
@@ -385,8 +433,8 @@ class AvailiableView extends StatelessWidget {
 class TakenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BookingDateTimeStatusView(const Color.fromRGBO(136, 136, 136, 1), "Taken",
-        "assets/icons/ellipse_grey.png", 8.0, 8.0);
+    return BookingDateTimeStatusView(const Color.fromRGBO(136, 136, 136, 1),
+        "Taken", "assets/icons/ellipse_grey.png", 8.0, 8.0);
   }
 }
 
