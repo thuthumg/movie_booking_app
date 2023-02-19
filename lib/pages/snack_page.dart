@@ -3,6 +3,7 @@ import 'package:movie_booking_app/pages/check_out_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/botton_sheet_view.dart';
+import 'package:movie_booking_app/widgets/total_amount_button_view.dart';
 
 class SnackPage extends StatelessWidget {
   List<String> snackTabList = ["All", "Combo", "Snack", "Pop Corn", "Beverage"];
@@ -112,7 +113,7 @@ class SnackListViewAndTotalAmountView extends StatelessWidget {
             child: TotalAmountButtonView(() {
 
               showModalBottomSheet<dynamic>(
-                  backgroundColor: Colors.black54,
+                  backgroundColor: Colors.transparent,
                   isScrollControlled: true,
                   context: context,
                   builder: (BuildContext bc) {
@@ -134,7 +135,9 @@ class SnackListViewAndTotalAmountView extends StatelessWidget {
 
 
 
-            }),
+            },(){
+              _navigateToCheckOutPage(context);
+            }, false),
           )
         ],
       ),
@@ -142,131 +145,59 @@ class SnackListViewAndTotalAmountView extends StatelessWidget {
   }
 }
 
-class TotalAmountButtonView extends StatelessWidget {
-  Function onTapFoodAndBeverageView;
+// class TotalAmountButtonView extends StatelessWidget {
+//   Function onTapFoodAndBeverageView;
+//
+//   TotalAmountButtonView(this.onTapFoodAndBeverageView);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       // color: Colors.black87,
+//       height: 90,
+//       width: MediaQuery.of(context).size.width,
+//       padding: const EdgeInsets.only(
+//           left: MARGIN_MEDIUM_3,
+//           right: MARGIN_MEDIUM_3,
+//           top: MARGIN_MEDIUM_2,
+//           bottom: MARGIN_MEDIUM_2),
+//       decoration: const BoxDecoration(
+//         color: PRIMARY_COLOR,
+//       ),
+//
+//       child: Container(
+//         // width: MediaQuery.of(context).size.width * 0.8,
+//         decoration: const BoxDecoration(
+//             color: SECONDARY_COLOR,
+//             borderRadius: BorderRadius.all(Radius.circular(8))),
+//         child: Stack(
+//           children: [
+//             Positioned(
+//               top: 15,
+//               right: 10,
+//               child: GestureDetector(
+//                   onTap: (){
+//                     _navigateToCheckOutPage(context);
+//                   },
+//                   child: TotalAmountTextView()),
+//             ),
+//             Positioned(
+//               top: 5,
+//               left: 0,
+//               child: GestureDetector(
+//                   onTap: () => onTapFoodAndBeverageView(),
+//                   child: FoodAndBeverageAllCountView()),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-  TotalAmountButtonView(this.onTapFoodAndBeverageView);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.black87,
-      height: 90,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(
-          left: MARGIN_MEDIUM_3,
-          right: MARGIN_MEDIUM_3,
-          top: MARGIN_MEDIUM_2,
-          bottom: MARGIN_MEDIUM_2),
-      decoration: const BoxDecoration(
-        color: PRIMARY_COLOR,
-      ),
 
-      child: Container(
-        // width: MediaQuery.of(context).size.width * 0.8,
-        decoration: const BoxDecoration(
-            color: SECONDARY_COLOR,
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 15,
-              right: 10,
-              child: GestureDetector(
-                  onTap: (){
-                    _navigateToCheckOutPage(context);
-                  },
-                  child: TotalAmountTextView()),
-            ),
-            Positioned(
-              top: 5,
-              left: 0,
-              child: GestureDetector(
-                  onTap: () => onTapFoodAndBeverageView(),
-                  child: FoodAndBeverageAllCountView()),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class FoodAndBeverageAllCountView extends StatelessWidget {
-  const FoodAndBeverageAllCountView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(
-              top: MARGIN_SMALL,
-              bottom: MARGIN_SMALL,
-              left: MARGIN_MEDIUM_3,
-              right: MARGIN_SMALL),
-          width: 35,
-          height: 35,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                  child: Image.asset("assets/images/snack_btn_icon.png")),
-              Positioned(
-                  top: 5,
-                  right: 0,
-                  child: Container(
-                    height: 18,
-                    width: 18,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(9)
-                        //more than 50% of width makes circle
-                        ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2),
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        "2",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ))
-            ],
-          ),
-        ),
-        Icon(Icons.keyboard_arrow_down)
-      ],
-    );
-  }
-}
-
-class TotalAmountTextView extends StatelessWidget {
-  const TotalAmountTextView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        Text(
-          "2000Ks",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: TEXT_REGULAR_2X,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Icon(Icons.chevron_right)
-      ],
-    );
-  }
-}
 
 class SnackListGridView extends StatelessWidget {
   const SnackListGridView({
