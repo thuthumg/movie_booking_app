@@ -19,6 +19,7 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
         leading: GestureDetector(
@@ -33,7 +34,7 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
                 'assets/icons/ic_location_arrow.png',
                 scale: 3,
               ),
-              Text("Yangon", style: TextStyle(
+              const Text("Yangon", style: TextStyle(
                   fontStyle: FontStyle.italic,
                   color: Colors.white,
                   fontSize: TEXT_REGULAR_1X,
@@ -55,18 +56,26 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
       ),
 
       body: Container(
-        color: PRIMARY_COLOR,
+
+
         child: CustomScrollView(
           slivers: [
             SliverList(
                 delegate: SliverChildListDelegate([
-                  DateListView(),
                   SizedBox(height: 15,),
-                  MovieViewType(),
+                  Container(
+                      margin: EdgeInsets.only(left: MARGIN_SMALL,right: MARGIN_SMALL),
+                      child: DateListView()),
+                  SizedBox(height: 10,),
+                  Container(
+                      margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                      child: MovieViewType()),
                   SizedBox(height: 20,),
                   MovieBookingTimeStatus(),
                   SizedBox(height: 15,),
-                  BookingMovieTheaters()
+                  Container(
+                      margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                      child: BookingMovieTheaters())
 
                 ])
             ),
@@ -145,7 +154,6 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
     );
 
     return ListView.builder(
-
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       scrollDirection: Axis.vertical,
@@ -201,30 +209,34 @@ class _BookingMovieTheatersState extends State<BookingMovieTheaters> {
             SizedBox(height: 15,),
             Visibility(
                 visible: _showDetail,
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // number of columns
-                    mainAxisSpacing: 10, // vertical space between items
-                    crossAxisSpacing: 10, // horizontal space between items
-                    childAspectRatio: 1, // aspect ratio of each item
-                  ),
-                  // umber of items in the grid
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: (){
-                        setState((){
-                          _navigateToSeatPage(context);
-                        });
-                      },
-                        child: BookingTimeView(bookingTimeObjectLists[index]));
-                    //Text('Item $index');
-                    // BookingTimeView();
+                child: Container(
+                  margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // number of columns
+                      mainAxisSpacing: 30, // vertical space between items
+                      crossAxisSpacing: 30, // horizontal space between items
+                      childAspectRatio: 1, // aspect ratio of each item
+                    ),
+                    // umber of items in the grid
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: (){
+                          setState((){
+                            _navigateToSeatPage(context);
+                          });
+                        },
+                          child: BookingTimeView(bookingTimeObjectLists[index]));
+                      //Text('Item $index');
+                      // BookingTimeView();
 
-                  },
-                  itemCount: bookingTimeObjectLists.length, // n
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                    },
+                    itemCount: bookingTimeObjectLists.length, // n
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
                 ),),
+            SizedBox(height: 15,),
            Container(
              child: Row(
                children: const [
@@ -359,12 +371,15 @@ class AvailiableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BookingDateTimeStatusView(
-      AVAILIBLE_COLOR,
-      "Availiable",
-      'assets/icons/ic_availiable.png',
-        8.0,
-        8.0
+    return Container(
+      margin: EdgeInsets.only(left: MARGIN_MEDIUM,right: MARGIN_MEDIUM),
+      child: BookingDateTimeStatusView(
+        AVAILIBLE_COLOR,
+        "Availiable",
+        'assets/icons/ic_availiable.png',
+          8.0,
+          8.0
+      ),
     );
   }
 }
@@ -418,8 +433,8 @@ class _MovieViewTypeState extends State<MovieViewType> {
             onTap: ()=>_toggleSelection(index),
             child: Container(
                 margin: EdgeInsets.only(right: MARGIN_MEDIUM_2),
-                width: MediaQuery.of(context).size.width * 0.2,
-                height: MediaQuery.of(context).size.height,
+               // width: MediaQuery.of(context).size.width * 0.2,
+               // height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                     color: movieViewTypeObjList[index].isSelected ?
                     SECONDARY_COLOR :
@@ -435,7 +450,7 @@ class _MovieViewTypeState extends State<MovieViewType> {
                 child:
                 Center(
                   child: Container(
-                    margin: const EdgeInsets.only(top: 5,bottom: 5,left: 10,right: 10),
+                    margin: const EdgeInsets.only(top: 5,bottom: 5,left: 20,right: 20),
                     child: Text(movieViewTypeObjList[index].movieViewTypeName,
                         style: TextStyle(color: Colors.white,
                           fontSize: TEXT_REGULAR,)),
@@ -497,6 +512,7 @@ class _DateListViewState extends State<DateListView> {
       print("check select = ${showMovieDateList[index].isSelected}");
 
       showMovieDateList[index].isSelected = !showMovieDateList[index].isSelected;
+      print("check select after = ${showMovieDateList[index].isSelected}");
     });
   }
 
@@ -551,7 +567,7 @@ class _DateListViewState extends State<DateListView> {
     /**calculation date end */
 
     return Container(
-        height: 100,
+        height: 125,
         margin: const EdgeInsets.only(
             right: MARGIN_MEDIUM_2),
         child: ListView.builder(

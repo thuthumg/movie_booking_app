@@ -16,10 +16,11 @@ class DateTimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print("date time card =  $active");
+
     return GestureDetector(
-      onTap: (){
-        print("ontapfunction");
-        onTapCardItem();},
+      onTap: ()=> onTapCardItem(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,8 +28,8 @@ class DateTimeCard extends StatelessWidget {
               children: [
                 Container(
                     margin: EdgeInsets.only(bottom: 10, left: 10),
-                     width: 77,
-                     height: 90,
+                     width: 80,
+                     height: 100,
                     child: ClipDateCard(
                     clipper: MyClipperCard(holeRadius: 10,height: 4),
                     shadow: Shadow(

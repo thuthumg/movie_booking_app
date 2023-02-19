@@ -13,7 +13,7 @@ class GradientView extends StatelessWidget {
             color: Color.fromRGBO(0, 255, 163, 1),
             width: 1.0,
             style: BorderStyle.solid,
-            strokeAlign: StrokeAlign.inside
+           // strokeAlign: StrokeAlign.inside
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,

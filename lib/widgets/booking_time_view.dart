@@ -21,7 +21,8 @@ class BookingTimeView extends StatelessWidget {
                 color: AVAILIBLE_COLOR,
                 width: 1.0,
                 style: BorderStyle.solid,
-                strokeAlign: StrokeAlign.inside),
+               // strokeAlign: StrokeAlign.inside
+            ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -37,8 +38,8 @@ class BookingTimeView extends StatelessWidget {
                 theaterBookingTimeObject.bookingTime,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: TEXT_REGULAR_1X,
-                    fontWeight: FontWeight.w600),
+                    fontSize: TEXT_REGULAR,
+                    fontWeight: FontWeight.w500),
               ),
               SizedBox(
                 height: 5,
@@ -48,7 +49,7 @@ class BookingTimeView extends StatelessWidget {
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR,
-                    fontWeight: FontWeight.w600),
+                    fontWeight: FontWeight.w500),
               ),
               SizedBox(
                 height: 5,
@@ -58,7 +59,7 @@ class BookingTimeView extends StatelessWidget {
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR,
-                    fontWeight: FontWeight.w600),
+                    fontWeight: FontWeight.w500),
               ),
               SizedBox(
                 height: 5,
@@ -85,7 +86,8 @@ class BookingTimeView extends StatelessWidget {
                 color: FILLING_FAST_COLOR,
                 width: 1.0,
                 style: BorderStyle.solid,
-                strokeAlign: StrokeAlign.inside),
+               // strokeAlign: StrokeAlign.inside
+            ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -101,7 +103,7 @@ class BookingTimeView extends StatelessWidget {
                 theaterBookingTimeObject.bookingTime,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: TEXT_REGULAR_1X,
+                    fontSize: TEXT_REGULAR,
                     fontWeight: FontWeight.w600),
               ),
               SizedBox(
@@ -149,7 +151,8 @@ class BookingTimeView extends StatelessWidget {
                 color: ALMOST_FULL_COLOR,
                 width: 1.0,
                 style: BorderStyle.solid,
-                strokeAlign: StrokeAlign.inside),
+              //  strokeAlign: StrokeAlign.inside
+            ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -165,7 +168,7 @@ class BookingTimeView extends StatelessWidget {
                 theaterBookingTimeObject.bookingTime,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: TEXT_REGULAR_1X,
+                    fontSize: TEXT_REGULAR,
                     fontWeight: FontWeight.w600),
               ),
               SizedBox(
@@ -213,7 +216,8 @@ class BookingTimeView extends StatelessWidget {
                 color: Color.fromRGBO(136, 136, 136, 1),
                 width: 1.0,
                 style: BorderStyle.solid,
-                strokeAlign: StrokeAlign.inside),
+              //  strokeAlign: StrokeAlign.inside
+            ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -229,7 +233,7 @@ class BookingTimeView extends StatelessWidget {
                 theaterBookingTimeObject.bookingTime,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: TEXT_REGULAR_1X,
+                    fontSize: TEXT_REGULAR,
                     fontWeight: FontWeight.w600),
               ),
               SizedBox(
