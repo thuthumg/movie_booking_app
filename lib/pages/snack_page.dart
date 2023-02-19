@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_booking_app/pages/check_out_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/viewitems/snack_list_item_view.dart';
 import 'package:movie_booking_app/widgets/botton_sheet_view.dart';
 import 'package:movie_booking_app/widgets/total_amount_button_view.dart';
 
@@ -22,7 +23,7 @@ class SnackPage extends StatelessWidget {
             ),
           ),
           leading: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).pop();
               },
               child: Icon(Icons.chevron_left)),
@@ -30,8 +31,8 @@ class SnackPage extends StatelessWidget {
             Image.asset(
               "assets/icons/ic_search.png",
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: MARGIN_MEDIUM_3),
+            const Padding(
+              padding: EdgeInsets.only(right: MARGIN_MEDIUM_3),
               child: Center(
                 child: Text(
                   "SKIP",
@@ -52,7 +53,7 @@ class SnackPage extends StatelessWidget {
                 flex: 1,
                 child: SnackTabBar(snackTabList: snackTabList),
               ),
-              Expanded(
+              const Expanded(
                 flex: 10,
                 child: SnackListViewAndTotalAmountView(),
               ),
@@ -107,98 +108,46 @@ class SnackListViewAndTotalAmountView extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          SnackListGridView(),
+          const SnackListGridView(),
           Align(
             alignment: Alignment.bottomCenter,
-            child: TotalAmountButtonView(() {
-
-              showModalBottomSheet<dynamic>(
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext bc) {
-                    return Wrap(
-                        children: <Widget>[
-                          Container(
-                            decoration: const BoxDecoration(
-                               // color: forDialog ? Color(0xFF737373) : Colors.white,
-                                color: PRIMARY_COLOR,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(25.0),
-                                    topRight: Radius.circular(25.0))),
-                            child: _navigateToBottomSheet(context),
-                          )
-                        ]
-                    );
-                  }
-              );
-
-
-
-            },(){
-              _navigateToCheckOutPage(context);
-            }, false),
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: MARGIN_MEDIUM_3,
+                  right: MARGIN_MEDIUM_3,
+                  top: MARGIN_MEDIUM_2,
+                  bottom: MARGIN_MEDIUM_2),
+              decoration: const BoxDecoration(
+                color: PRIMARY_COLOR,
+              ),
+              child: TotalAmountButtonView(() {
+                showModalBottomSheet<dynamic>(
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (BuildContext bc) {
+                      return Wrap(children: <Widget>[
+                        Container(
+                          decoration: const BoxDecoration(
+                              // color: forDialog ? Color(0xFF737373) : Colors.white,
+                              color: PRIMARY_COLOR,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25.0),
+                                  topRight: Radius.circular(25.0))),
+                          child: _navigateToBottomSheet(context),
+                        )
+                      ]);
+                    });
+              }, () {
+                _navigateToCheckOutPage(context);
+              }, false),
+            ),
           )
         ],
       ),
     );
   }
 }
-
-// class TotalAmountButtonView extends StatelessWidget {
-//   Function onTapFoodAndBeverageView;
-//
-//   TotalAmountButtonView(this.onTapFoodAndBeverageView);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       // color: Colors.black87,
-//       height: 90,
-//       width: MediaQuery.of(context).size.width,
-//       padding: const EdgeInsets.only(
-//           left: MARGIN_MEDIUM_3,
-//           right: MARGIN_MEDIUM_3,
-//           top: MARGIN_MEDIUM_2,
-//           bottom: MARGIN_MEDIUM_2),
-//       decoration: const BoxDecoration(
-//         color: PRIMARY_COLOR,
-//       ),
-//
-//       child: Container(
-//         // width: MediaQuery.of(context).size.width * 0.8,
-//         decoration: const BoxDecoration(
-//             color: SECONDARY_COLOR,
-//             borderRadius: BorderRadius.all(Radius.circular(8))),
-//         child: Stack(
-//           children: [
-//             Positioned(
-//               top: 15,
-//               right: 10,
-//               child: GestureDetector(
-//                   onTap: (){
-//                     _navigateToCheckOutPage(context);
-//                   },
-//                   child: TotalAmountTextView()),
-//             ),
-//             Positioned(
-//               top: 5,
-//               left: 0,
-//               child: GestureDetector(
-//                   onTap: () => onTapFoodAndBeverageView(),
-//                   child: FoodAndBeverageAllCountView()),
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-
 class SnackListGridView extends StatelessWidget {
   const SnackListGridView({
     Key? key,
@@ -219,94 +168,12 @@ class SnackListGridView extends StatelessWidget {
               // horizontal space between items
               childAspectRatio: 1,
               //
-              mainAxisExtent: 260
+              mainAxisExtent: 290
               // aspect ratio of each item
               ),
           // umber of items in the grid
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              // height: 300,
-              margin: EdgeInsets.only(
-                  left: MARGIN_MEDIUM_2,
-                  right: MARGIN_MEDIUM,
-                  top: MARGIN_MEDIUM_2,
-                  bottom: MARGIN_MEDIUM),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromRGBO(102, 102, 102, 0.8),
-                    Color.fromRGBO(51, 51, 51, 0.4)
-                  ],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
-                        child: Image.asset(
-                          width: 100,
-                          height: 100,
-                          "assets/images/snack_sample_photo.png",
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      "Potato Chips",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: TEXT_REGULAR_1X,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const Text(
-                      "1000KS",
-                      style: TextStyle(
-                        color: SECONDARY_COLOR,
-                        fontSize: TEXT_REGULAR_1X,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        decoration: const BoxDecoration(
-                            color: SECONDARY_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(4))),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              right: MARGIN_MEDIUM,
-                              left: MARGIN_MEDIUM,
-                              top: MARGIN_MEDIUM,
-                              bottom: MARGIN_MEDIUM),
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            "ADD",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
+            return SnackListItemView();
           },
           itemCount: 20,
           // n
@@ -318,9 +185,12 @@ class SnackListGridView extends StatelessWidget {
   }
 }
 
+
+
 BottomSheetView _navigateToBottomSheet(BuildContext context) {
   return BottomSheetView();
 }
+
 Future<dynamic> _navigateToCheckOutPage(BuildContext context) {
   return Navigator.push(
     context,
