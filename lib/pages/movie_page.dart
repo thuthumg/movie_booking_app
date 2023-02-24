@@ -2,22 +2,69 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/pages/movie_detail_page.dart';
+import 'package:movie_booking_app/pages/movie_search_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 
 class MoviePage extends StatefulWidget {
-
   @override
   State<MoviePage> createState() => _MoviePageState();
 }
 
 class _MoviePageState extends State<MoviePage> {
-  bool _uiChangeFlag = true;
+  // bool _uiChangeFlag = true;
+  bool _isNowShowing = true;
+  bool _isComingSoon = false;
+  String nowShowingOrComingSoon = 'NowShowing';
 
   @override
   Widget build(BuildContext context) {
+    if (nowShowingOrComingSoon == 'NowShowing') {
+      _isNowShowing = true;
+      _isComingSoon = false;
+    } else {
+      _isNowShowing = false;
+      _isComingSoon = true;
+      nowShowingOrComingSoon = 'ComingSoon';
+    }
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: PRIMARY_COLOR,
+        title: Text(
+          "Yangon",
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            fontStyle: FontStyle.italic,
+            fontSize: 16,
+          ),
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: MARGIN_XLARGE),
+          child: Image.asset(
+            'assets/icons/ic_location_arrow.png',
+            scale: 3,
+          ),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              _navigateSearchPage(context, nowShowingOrComingSoon);
+            },
+            child: Image.asset(
+              "assets/icons/ic_search.png",
+            ),
+          ),
+          Image.asset(
+            "assets/icons/ic_noti.png",
+          ),
+          Image.asset(
+            "assets/icons/ic_scanner.png",
+          ),
+        ],
+      ),
       body: Container(
         color: PRIMARY_COLOR,
         child: CustomScrollView(
@@ -29,7 +76,6 @@ class _MoviePageState extends State<MoviePage> {
                   const SizedBox(height: MARGIN_SMALL),
                   //  NowShowingAndComingSoonButtonView(),
                   Container(
-                    height: 60,
                     margin: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -46,119 +92,86 @@ class _MoviePageState extends State<MoviePage> {
                           left: MARGIN_MEDIUM, right: MARGIN_MEDIUM),
                       child: Row(
                         children: [
-                          _uiChangeFlag
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: SECONDARY_COLOR),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_uiChangeFlag) {
-                                        _uiChangeFlag = false;
-                                      } else {
-                                        _uiChangeFlag = true;
-                                      }
-                                    });
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25,
-                                        right: 25,
-                                        top: 10,
-                                        bottom: 10),
-                                    child: Text(
-                                      "Now Showing",
-                                      style: TextStyle(
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isNowShowing = !_isNowShowing;
+                                if (_isNowShowing) {
+                                  nowShowingOrComingSoon = "NowShowing";
+                                } else {
+                                  nowShowingOrComingSoon = "ComingSoon";
+                                }
+                              });
+                            },
+                            child: Container(
+                              height: 46,
+                              margin: const EdgeInsets.all(MARGIN_MEDIUM),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(MARGIN_MEDIUM)),
+                                  color: this._isNowShowing &&
+                                          !(this._isComingSoon)
+                                      ? SECONDARY_COLOR
+                                      : Colors.transparent),
+                              child: const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: MARGIN_MEDIUM,
+                                      bottom: MARGIN_MEDIUM,
+                                      left: MARGIN_MEDIUM_3,
+                                      right: MARGIN_MEDIUM_3),
+                                  child: Text(
+                                    "Now Showing",
+                                    style: TextStyle(
                                         color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
+                                        fontSize: TEXT_REGULAR_2X,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                )
-                              : TextButton(
-                                  style: ElevatedButton.styleFrom(),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (!_uiChangeFlag) {
-                                        _uiChangeFlag = true;
-                                      } else {
-                                        _uiChangeFlag = false;
-                                      }
-                                    });
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25,
-                                        right: 25,
-                                        top: 10,
-                                        bottom: 10),
-                                    child: Text(
-                                      textAlign: TextAlign.center,
-                                      "Now Showing",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  )),
+                                ),
+                              ),
+                            ),
+                          ),
                           Spacer(),
-                          !_uiChangeFlag
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: SECONDARY_COLOR),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_uiChangeFlag) {
-                                        _uiChangeFlag = false;
-                                      } else {
-                                        _uiChangeFlag = true;
-                                      }
-                                    });
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25,
-                                        right: 25,
-                                        top: 10,
-                                        bottom: 10),
-                                    child: Text(
-                                      "Coming Soon",
-                                      style: TextStyle(
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isComingSoon = !_isComingSoon;
+
+                                if (_isComingSoon) {
+                                  nowShowingOrComingSoon = 'ComingSoon';
+                                } else {
+                                  nowShowingOrComingSoon = 'NowShowing';
+                                }
+                              });
+                            },
+                            child: Container(
+                              height: 46,
+                              margin: const EdgeInsets.all(MARGIN_MEDIUM),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(MARGIN_MEDIUM)),
+                                  color: (this._isComingSoon) &&
+                                          !(this._isNowShowing)
+                                      ? SECONDARY_COLOR
+                                      : Colors.transparent),
+                              child: const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: MARGIN_MEDIUM,
+                                      bottom: MARGIN_MEDIUM,
+                                      left: MARGIN_MEDIUM_3,
+                                      right: MARGIN_MEDIUM_3),
+                                  child: Text(
+                                    "Coming Soon",
+                                    style: TextStyle(
                                         color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
+                                        fontSize: TEXT_REGULAR_2X,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                )
-                              : TextButton(
-                                  style: ElevatedButton.styleFrom(),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (!_uiChangeFlag) {
-                                        _uiChangeFlag = true;
-                                      } else {
-                                        _uiChangeFlag = false;
-                                      }
-                                    });
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 25,
-                                        right: 25,
-                                        top: 10,
-                                        bottom: 10),
-                                    child: Text(
-                                      textAlign: TextAlign.center,
-                                      "Coming Soon",
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ))
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -167,10 +180,13 @@ class _MoviePageState extends State<MoviePage> {
                 ],
               ),
             ),
-            GridMoviesListSection(_uiChangeFlag,
-                    ()=>{
-              _navigateToMovieDetailPage(context)
-            })
+            // GridMoviesListSection(_uiChangeFlag,
+            //         ()=>{
+            //   _navigateToMovieDetailPage(context)
+            // })
+
+            GridMoviesListSection(
+                _isNowShowing, () => {_navigateToMovieDetailPage(context,_isNowShowing)})
           ],
         ),
       ),
@@ -242,8 +258,6 @@ class NowShowingAndComingSoonButtonView extends StatefulWidget {
 class _NowShowingAndComingSoonButtonViewState
     extends State<NowShowingAndComingSoonButtonView> {
   bool _nowShowing = true;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -385,7 +399,7 @@ class GridMoviesListSection extends StatelessWidget {
   final bool _uiChangeFlag;
   final Function onTapItemView;
 
-  GridMoviesListSection(this._uiChangeFlag,this.onTapItemView);
+  GridMoviesListSection(this._uiChangeFlag, this.onTapItemView);
 
   @override
   Widget build(BuildContext context) {
@@ -398,10 +412,10 @@ class GridMoviesListSection extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           return Padding(
-              padding: EdgeInsets.only(left: MARGIN_MEDIUM),
-              child: MovieItemView(_uiChangeFlag,(){
-                this.onTapItemView();
-              }),
+            padding: EdgeInsets.only(left: MARGIN_MEDIUM),
+            child: MovieItemView(_uiChangeFlag, () {
+              this.onTapItemView();
+            }),
           );
         },
         childCount: 20,
@@ -541,11 +555,21 @@ class MovieListSliverAppBarView extends StatelessWidget {
   }
 }
 
-Future<dynamic> _navigateToMovieDetailPage(BuildContext context) {
+Future<dynamic> _navigateToMovieDetailPage(BuildContext context,bool _isNowShowing) {
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => MovieDetailPage(),
+      builder: (context) => MovieDetailPage(_isNowShowing),
+    ),
+  );
+}
+
+Future<dynamic> _navigateSearchPage(
+    BuildContext context, String nowShowingOrComingSoonFlag) {
+  return Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MovieSearchPage(nowShowingOrComingSoonFlag),
     ),
   );
 }

@@ -1,5 +1,9 @@
+import 'package:movie_booking_app/constants/filter_obj.dart';
+import 'package:movie_booking_app/constants/food_and_beverage_item_obj.dart';
 import 'package:movie_booking_app/constants/movie_seat_grid_list_view_obj.dart';
 import 'package:movie_booking_app/constants/movie_seat_list_view_obj.dart';
+import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
+import 'package:movie_booking_app/pages/profile_page.dart';
 import 'package:movie_booking_app/pages/ticket_page.dart';
 
 const MAIN_SCREEN_APP_BAR_TITLE = "Discover";
@@ -183,3 +187,53 @@ const String UNLOCK_ORDER_OR_APPLY_PROMO_CODE_LABEL = "Unlock Offer or Apply Pro
 
 const String YOUR_NAME_LABEL = "Your Name";
 const String ENTER_YOUR_NAME_HINT_LABEL = "Enter your name";
+
+
+
+var profileInfoList = <ProfileInfoListItemObject>[
+
+  ProfileInfoListItemObject("Purchae History","assets/icons/ic_purchae_history.png"),
+  ProfileInfoListItemObject("Offer","assets/icons/ic_offer_white.png"),
+  ProfileInfoListItemObject("Gift Card","assets/icons/ic_gift_card.png"),
+  ProfileInfoListItemObject("Location","assets/icons/ic_location_white.png" ),
+  ProfileInfoListItemObject("Payment","assets/icons/ic_payment.png"),
+  ProfileInfoListItemObject("Help and Support","assets/icons/ic_help_and_support.png"),
+  ProfileInfoListItemObject("Logout","assets/icons/ic_logout.png"),
+];
+
+List<String> safetyList = ["Thermal Scanning", "Contactless Security Check",
+  "Sanitization Before Every Show", "Disposable 3D glass","Contactless Food Service",
+  "Package Food","Deep Cleaning of rest room"];
+
+// List<String> facilitiesList = ["Parking","Online Food","Wheel Chair","Ticket Cancellation"];
+
+var facilitiesItemList = <FacilitiesItemObject>[
+  FacilitiesItemObject("Parking","assets/icons/ic_parking_green.png"),
+  FacilitiesItemObject("Online Food","assets/icons/ic_online_food_green.png"),
+  FacilitiesItemObject("Wheel Chair","assets/icons/ic_wheel_chair_green.png"),
+  FacilitiesItemObject("Ticket Cancellation","assets/icons/ic_ticket_cancelation_green.png")
+];
+
+
+var filterObjList = <FilterObj>[
+  FilterObj(['Facilities','Parking','Online Food','Wheel Chair','Ticket Cancellation']),
+  FilterObj(['Format','2D','3D','3D IMAX'])
+];
+
+var filterObjListForNowShowing = <FilterObj>[
+  FilterObj(['Genres','Action','Adventure','Comedy','Drama','Horror','Science Fiction','Romance','Thriller','Fantasy']),
+  FilterObj(['Format','2D','3D','3D IMAX'])
+];
+
+var filterObjListForComingSoon = <FilterObj>[
+  FilterObj(['Genres','Action','Adventure','Comedy','Drama','Horror','Science Fiction','Romance','Thriller','Fantasy']),
+  FilterObj(['Format','2D','3D','3D IMAX']),
+  FilterObj(['Month','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])
+];
+
+
+List<FoodAndBeverageItemObj> foodAndBeverageItemList = [
+  FoodAndBeverageItemObj("Potatoes", 1, 1000),
+  FoodAndBeverageItemObj("Cocala Large", 1, 1000),
+
+];

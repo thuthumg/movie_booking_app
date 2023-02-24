@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/constants/food_and_beverage_item_obj.dart';
-import 'package:movie_booking_app/pages/ticket_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
-import 'package:movie_booking_app/widgets/custom_button_view.dart';
 import 'package:movie_booking_app/widgets/custom_clip_button_view.dart';
 import 'package:movie_booking_app/widgets/dashed_divider_view.dart';
-import 'package:movie_booking_app/widgets/my_separator_view.dart';
 import 'package:movie_booking_app/widgets/ticket_cancellation_alert_box_view.dart';
 
-class CheckOutPage extends StatefulWidget {
+class TicketDetailsPage extends StatefulWidget {
+  @override
+  State<TicketDetailsPage> createState() => _TicketDetailsPageState();
+}
+
+class _TicketDetailsPageState extends State<TicketDetailsPage> {
   bool changeHeight = (foodAndBeverageItemList.length >0) ? true : false;
 
   @override
-  State<CheckOutPage> createState() => _CheckOutPageState(this.changeHeight);
-}
-
-class _CheckOutPageState extends State<CheckOutPage> {
-  bool changeHeight;
-
-  _CheckOutPageState(this.changeHeight);
-
-  @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
@@ -45,18 +37,20 @@ class _CheckOutPageState extends State<CheckOutPage> {
             child: Icon(Icons.chevron_left)),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 700.0,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    child: Container(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 700.0,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      child: Container(
                         margin: EdgeInsets.all(20),
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -70,7 +64,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           children: [
                             const Padding(
                               padding:
-                                  EdgeInsets.only(top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                              EdgeInsets.only(top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
                               child: BookingTimePlaceAndSeatView(),
                             ),
                             Padding(
@@ -88,7 +82,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                                 padding: EdgeInsets.only(
                                     top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
                                 child:
-                                    ConvenienceFeeAndTicketCancellationView()),
+                                ConvenienceFeeAndTicketCancellationView()),
                             SizedBox(height: 10,),
                             const Padding(
                               padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
@@ -96,34 +90,67 @@ class _CheckOutPageState extends State<CheckOutPage> {
                             ),
                           ],
                         ),),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    top: (changeHeight && foodAndBeverageItemList.length >0)? (300.0 + (30*foodAndBeverageItemList.length)) : 300.0,
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        // margin: EdgeInsets.only(right: 50),
-                        //  child:Image.asset("assets/images/dotted_line.png"),
-                        child: DashedDividerView(
-                            height: 1.0, color: Colors.white30)
-                        ),
-                  ),
-                  Positioned(
+                    ),
+                    Positioned(
                       left: 0,
                       right: 0,
-                      top: (changeHeight && foodAndBeverageItemList.length >0)? (280.0+(30*foodAndBeverageItemList.length)) : 280.0,
-                      child: ClipSectionView())
-                ],
+                      top: (changeHeight && foodAndBeverageItemList.length >0)? (300.0 + (30*foodAndBeverageItemList.length)) : 300.0,
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          // margin: EdgeInsets.only(right: 50),
+                          //  child:Image.asset("assets/images/dotted_line.png"),
+                          child: DashedDividerView(
+                              height: 1.0, color: Colors.white30)
+                      ),
+                    ),
+                    Positioned(
+                        left: 0,
+                        right: 0,
+                        top: (changeHeight && foodAndBeverageItemList.length >0)? (280.0+(30*foodAndBeverageItemList.length)) : 280.0,
+                        child: ClipSectionView())
+                  ],
+                ),
               ),
-            ),
-            ContinueButtonView(),
-          ],
+              Container(
+              //  height: 50,
+              //  margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                 // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                     // mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Refund Amount",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: TEXT_REGULAR_2X,
+                              fontWeight: FontWeight.w500
+                          ),),
+                        Text("15000Ks",
+                          style: TextStyle(
+                              color: CANCEL_COLOR,
+                              fontSize: TEXT_REGULAR_4X,
+                              fontWeight: FontWeight.w700
+                          ),)
+                      ],),
+                    SizedBox(width: 10,),
+
+                    CancelBookingButtonView(),
+                  ],
+                ),
+              )
+
+
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
 
 class ClipSectionView extends StatelessWidget {
   const ClipSectionView({
@@ -269,7 +296,7 @@ class TicketCancellationButtonView extends StatelessWidget {
         Container(
           height: 35,
           decoration: const BoxDecoration(
-            color: Color.fromRGBO(255, 107, 0, 1),
+            color: CANCEL_COLOR,
             borderRadius: BorderRadius.all(
               Radius.circular(25),
             ),
@@ -369,71 +396,71 @@ class FoodAndBeverageListItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //  height: 30,
+      //  height: 30,
         child: Row(
-      children: [
-        Container(
-          padding: EdgeInsets.only(right: MARGIN_MEDIUM),
-          width: 25,
-          height: 25,
-          child: Image.asset("assets/icons/ic_delete.png"),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Text(
-          "${foodAndBeverageItemObj.title}(Qt.${foodAndBeverageItemObj.qty})",
-          style: TextStyle(
-              color: Color.fromRGBO(136, 136, 136, 1),
-              fontSize: TEXT_REGULAR_1X,
-              fontWeight: FontWeight.w400),
-        ),
-        Spacer(),
-        Text(
-          "${foodAndBeverageItemObj.price}Ks",
-          style: TextStyle(
-              color: Color.fromRGBO(136, 136, 136, 1),
-              fontSize: TEXT_REGULAR_1X,
-              fontWeight: FontWeight.w400),
+          children: [
+            Container(
+              padding: EdgeInsets.only(right: MARGIN_MEDIUM),
+              width: 25,
+              height: 25,
+              child: Image.asset("assets/icons/ic_delete.png"),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "${foodAndBeverageItemObj.title}(Qt.${foodAndBeverageItemObj.qty})",
+              style: TextStyle(
+                  color: Color.fromRGBO(136, 136, 136, 1),
+                  fontSize: TEXT_REGULAR_1X,
+                  fontWeight: FontWeight.w400),
+            ),
+            Spacer(),
+            Text(
+              "${foodAndBeverageItemObj.price}Ks",
+              style: TextStyle(
+                  color: Color.fromRGBO(136, 136, 136, 1),
+                  fontSize: TEXT_REGULAR_1X,
+                  fontWeight: FontWeight.w400),
+            )
+          ],
         )
-      ],
-    )
 
-        // Stack(
-        //   children: [
-        //     Positioned(
-        //       left: 0,
-        //       child: Row(
-        //         children: [
-        //           Container(
-        //             padding: EdgeInsets.only(right: MARGIN_MEDIUM),
-        //             width: 25,
-        //             height: 25,
-        //             child: Image.asset("assets/icons/ic_delete.png"),
-        //           ),
-        //           const Text(
-        //             "Potatoes Chips(Qt.1)",
-        //             style: TextStyle(
-        //                 color: Color.fromRGBO(136, 136, 136, 1),
-        //                 fontSize: TEXT_REGULAR_1X,
-        //                 fontWeight: FontWeight.w400),
-        //           )
-        //         ],
-        //       ),
-        //     ),
-        //     const Positioned(
-        //       right: 0,
-        //       child: Text(
-        //         "10000Ks",
-        //         style: TextStyle(
-        //             color: Color.fromRGBO(136, 136, 136, 1),
-        //             fontSize: TEXT_REGULAR_1X,
-        //             fontWeight: FontWeight.w400),
-        //       ),
-        //     )
-        //   ],
-        // ),
-        );
+      // Stack(
+      //   children: [
+      //     Positioned(
+      //       left: 0,
+      //       child: Row(
+      //         children: [
+      //           Container(
+      //             padding: EdgeInsets.only(right: MARGIN_MEDIUM),
+      //             width: 25,
+      //             height: 25,
+      //             child: Image.asset("assets/icons/ic_delete.png"),
+      //           ),
+      //           const Text(
+      //             "Potatoes Chips(Qt.1)",
+      //             style: TextStyle(
+      //                 color: Color.fromRGBO(136, 136, 136, 1),
+      //                 fontSize: TEXT_REGULAR_1X,
+      //                 fontWeight: FontWeight.w400),
+      //           )
+      //         ],
+      //       ),
+      //     ),
+      //     const Positioned(
+      //       right: 0,
+      //       child: Text(
+      //         "10000Ks",
+      //         style: TextStyle(
+      //             color: Color.fromRGBO(136, 136, 136, 1),
+      //             fontSize: TEXT_REGULAR_1X,
+      //             fontWeight: FontWeight.w400),
+      //       ),
+      //     )
+      //   ],
+      // ),
+    );
   }
 }
 
@@ -463,13 +490,13 @@ class FoodAndBeverageTitleViewAndTotalAmtView extends StatelessWidget {
           ),
           isLisShowDetails
               ? Icon(
-                  Icons.keyboard_arrow_up,
-                  color: Colors.white,
-                )
+            Icons.keyboard_arrow_up,
+            color: Colors.white,
+          )
               : Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                ),
+            Icons.keyboard_arrow_down,
+            color: Colors.white,
+          ),
           Spacer(),
           Text(
             "20000Ks",
@@ -748,33 +775,31 @@ class MovieAndTheaterDataSectionView extends StatelessWidget {
   }
 }
 
-class ContinueButtonView extends StatelessWidget {
-  const ContinueButtonView({
+class CancelBookingButtonView extends StatelessWidget {
+  const CancelBookingButtonView({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 50,
-        width: MediaQuery.of(context).size.width * 0.6,
-        margin: EdgeInsets.only(bottom: MARGIN_XLARGE),
-        child: GestureDetector(
-            onTap: () {
-              _navigateToTicketPage(context);
-            },
-            child: CustomClipButtonView("Continue",SECONDARY_COLOR,Colors.black)),
-      ),
+    return Container(
+     // height: 50,
+     // width: MediaQuery.of(context).size.width * 0.6,
+     // margin: EdgeInsets.only(right: MARGIN_MEDIUM_2),
+      child: GestureDetector(
+          onTap: () {
+           // _navigateToTicketPage(context);
+          },
+          child: CustomClipButtonView("Cancel Booking",CANCEL_COLOR,Colors.white)),
     );
   }
 }
 
-Future<dynamic> _navigateToTicketPage(BuildContext context) {
+/*Future<dynamic> _navigateToTicketPage(BuildContext context) {
   return Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => TicketPage(),
     ),
   );
-}
+}*/

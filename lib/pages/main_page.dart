@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:movie_booking_app/pages/cinema_page.dart';
 import 'package:movie_booking_app/pages/movie_page.dart';
 import 'package:movie_booking_app/pages/profile_page.dart';
+import 'package:movie_booking_app/pages/movie_search_page.dart';
+import 'package:movie_booking_app/pages/ticket_list_page.dart';
 import 'package:movie_booking_app/pages/ticket_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -17,52 +19,67 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
 
   int _selectedScreenIndex = 0;
+  bool appBarVisible = true;
   final List _screens = [
     {"screen": MoviePage(), "title": "Movies"},
-    {"screen": const CinemaPage(), "title": "Cinema"},
-    {"screen": const TicketPage(), "title": "Ticket"},
+    {"screen": CinemaPage(), "title": "Cinema"},
+    {"screen": const TicketListPage(), "title": "Ticket"},
     {"screen": const ProfilePage(), "title": "Profile"}
   ];
 
   void _selectScreen(int index){
     setState(() {
       _selectedScreenIndex = index;
+
+      if(index == 0)
+        {
+          appBarVisible = true;
+        }else{
+        appBarVisible = false;
+      }
     });
   }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         backgroundColor: PRIMARY_COLOR,
-        appBar: AppBar(
-          backgroundColor: PRIMARY_COLOR,
-          title: const Text(
-            "Yangon",
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              fontStyle: FontStyle.italic,
-              fontSize: 16,
-            ),
-          ),
-          leading: Padding(
-            padding: const EdgeInsets.only(left: MARGIN_XLARGE),
-            child: Image.asset(
-              'assets/icons/ic_location_arrow.png',
-              scale: 3,
-            ),
-          ),
-          actions: [
-            Image.asset(
-              "assets/icons/ic_search.png",
-            ),
-            Image.asset(
-              "assets/icons/ic_noti.png",
-            ),
-            Image.asset(
-              "assets/icons/ic_scanner.png",
-            ),
-          ],
-        ),
+        // appBar:
+        // appBarVisible? AppBar(
+        //   backgroundColor: PRIMARY_COLOR,
+        //   title: Text(
+        //     "Yangon",
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.w700,
+        //       color: Colors.white,
+        //       fontStyle: FontStyle.italic,
+        //       fontSize: 16,
+        //     ),
+        //   ),
+        //   leading: Padding(
+        //     padding: const EdgeInsets.only(left: MARGIN_XLARGE),
+        //     child: Image.asset(
+        //       'assets/icons/ic_location_arrow.png',
+        //       scale: 3,
+        //     ),
+        //   ),
+        //   actions: [
+        //     GestureDetector(
+        //       onTap: (){
+        //         _navigateSearchPage(context);
+        //       },
+        //       child: Image.asset(
+        //         "assets/icons/ic_search.png",
+        //       ),
+        //     ),
+        //     Image.asset(
+        //       "assets/icons/ic_noti.png",
+        //     ),
+        //     Image.asset(
+        //       "assets/icons/ic_scanner.png",
+        //     ),
+        //   ],
+        // ) : null
+        // ,
         body: _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: PRIMARY_COLOR,
@@ -102,7 +119,14 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-
+// Future<dynamic> _navigateSearchPage(BuildContext context) {
+//   return Navigator.push(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => SearchPage(),
+//     ),
+//   );
+// }
 //  appBar: AppBar(
 //           backgroundColor: PRIMARY_COLOR,
 //           title:  const Text(

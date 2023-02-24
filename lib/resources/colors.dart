@@ -20,6 +20,8 @@ const APP_BAR_COLOR = Color.fromRGBO(17, 17, 17, 1);
 
 const CHOOSE_YOUR_PAYMENT_TYPE_TITLE_COLOR = Color.fromRGBO(0, 255, 106, 1);
 
+const CANCEL_COLOR = Color.fromRGBO(255, 46, 0, 1);
+
 
 
 

@@ -6,8 +6,10 @@ import 'package:movie_booking_app/widgets/my_clipper.dart';
 
 class CustomClipButtonView extends StatelessWidget {
   final String btnName;
+  final Color customBtnColor;
+  final Color textColor;
 
-  CustomClipButtonView(this.btnName);
+  CustomClipButtonView(this.btnName,this.customBtnColor,this.textColor);
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +24,13 @@ class CustomClipButtonView extends StatelessWidget {
         padding: EdgeInsets.only(
             left: 30, right: 20, top: 15, bottom: 15),
         decoration: BoxDecoration(
-          color: SECONDARY_COLOR,
+          color: customBtnColor,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [Text(btnName, style: TextStyle(color: Colors.black, fontSize: TEXT_REGULAR_2X,
+            children: [Text(btnName, style: TextStyle(color: textColor, fontSize: TEXT_REGULAR_2X,
                 fontWeight: FontWeight.w700),)]),
       ),
     );

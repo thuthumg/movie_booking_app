@@ -4,23 +4,33 @@ import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/clip_date_card.dart';
 import 'package:movie_booking_app/widgets/my_clipper_card.dart';
 
-class DateTimeCard extends StatelessWidget {
+class DateTimeCard extends StatefulWidget {
   final String day;
   final String month;
   final String date;
-  final bool active;
+  bool active;
   Function onTapCardItem;
 
 
   DateTimeCard(this.day, this.month, this.date, this.active,this.onTapCardItem);
 
   @override
+  State<DateTimeCard> createState() => _DateTimeCardState();
+}
+
+class _DateTimeCardState extends State<DateTimeCard> {
+  @override
   Widget build(BuildContext context) {
 
-    print("date time card =  $active");
+    print("date time card =  ${widget.active}");
 
     return GestureDetector(
-      onTap: ()=> onTapCardItem(),
+      onTap: (){
+        setState(() {
+        //  widget.active = !widget.active;
+          widget.onTapCardItem();
+        });
+        } ,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -41,7 +51,7 @@ class DateTimeCard extends StatelessWidget {
                        padding:
                        EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 5),
                       decoration: BoxDecoration(
-                        color: active ? SECONDARY_COLOR : Colors.grey[350],
+                        color: widget.active ? SECONDARY_COLOR : Colors.grey[350],
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Column(children: [
@@ -53,7 +63,7 @@ class DateTimeCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              day,
+                              widget.day,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: TEXT_REGULAR,
@@ -69,7 +79,7 @@ class DateTimeCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              month,
+                              widget.month,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: TEXT_REGULAR,
@@ -85,7 +95,7 @@ class DateTimeCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              date,
+                              widget.date,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: TEXT_REGULAR,

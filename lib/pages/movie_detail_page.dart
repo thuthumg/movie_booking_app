@@ -14,6 +14,10 @@ import 'package:movie_booking_app/widgets/my_clipper.dart';
 //import 'package:video_player/video_player.dart';
 
 class MovieDetailPage extends StatelessWidget {
+  bool _isNowShowing;
+
+  MovieDetailPage(this._isNowShowing);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,10 +46,13 @@ class MovieDetailPage extends StatelessWidget {
                   const SizedBox(
                     height: MARGIN_MEDIUM_2,
                   ),
-                  Container(
-                      margin: const EdgeInsets.only(
-                          left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
-                      child: ReleaseingNotiView()),
+                      Visibility(
+                        visible: !(this._isNowShowing),
+                        child: Container(
+                            margin: const EdgeInsets.only(
+                                left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
+                            child: ReleaseingNotiView(),),
+                      ),
                   Container(
                     margin: const EdgeInsets.only(
                         left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),

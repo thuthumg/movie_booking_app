@@ -142,7 +142,7 @@ class UnlockOrderView extends StatelessWidget {
               Container(
                 width: 25,
                 height: 25,
-                child: Image.asset("assets/icons/ic_offer.png"),
+                child: Image.asset("assets/icons/ic_offer_black.png"),
               ),
               const SizedBox(
                 width: 10,

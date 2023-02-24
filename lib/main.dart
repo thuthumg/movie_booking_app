@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/pages/check_out_page.dart';
+import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/location_page.dart';
 import 'package:movie_booking_app/pages/get_otp_page.dart';
 import 'package:movie_booking_app/pages/loading_page.dart';
 import 'package:movie_booking_app/pages/movie_detail_page.dart';
+import 'package:movie_booking_app/pages/movie_search_page.dart';
 import 'package:movie_booking_app/pages/seating_plan_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -14,6 +16,7 @@ import 'package:movie_booking_app/widgets/custom_button_view.dart';
 import 'package:movie_booking_app/widgets/date_time_background_view.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
 
+import 'pages/main_page.dart';
 import 'pages/snack_page.dart';
 import 'pages/ticket_confirmation_page.dart';
 
@@ -32,7 +35,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       home: LoadingPage()
