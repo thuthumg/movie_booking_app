@@ -237,3 +237,13 @@ List<FoodAndBeverageItemObj> foodAndBeverageItemList = [
   FoodAndBeverageItemObj("Cocala Large", 1, 1000),
 
 ];
+
+
+//cinema search
+const PRICE_RANGE_TEXT = "Price Range";
+const PRICE_START_RANGE = "3500Ks";
+const PRICE_END_RANGE = "29500Ks";
+
+const SHOW_TIMES_TEXT ="Show Times";
+const SHOW_TIMES_START_RANGE ="8am";
+const SHOW_TIMES_END_RANGE ="12pm";

@@ -76,13 +76,13 @@ class GridMoviesListSection extends StatelessWidget {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: MARGIN_MEDIUM,
+          mainAxisSpacing: MARGIN_CARD_MEDIUM_2,
           // crossAxisSpacing: 8,
           childAspectRatio: 0.63),
       delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
           return Padding(
-            padding: EdgeInsets.only(left: MARGIN_MEDIUM),
+            padding: EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2),
             child: MovieItemView(_isNowShowing, () {
               this.onTapItemView();
             }),

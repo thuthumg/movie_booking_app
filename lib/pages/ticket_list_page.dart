@@ -12,6 +12,7 @@ class TicketListPage extends StatelessWidget {
     return Scaffold(
         backgroundColor: PRIMARY_COLOR,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: PRIMARY_COLOR,
           actions: [
             Container(

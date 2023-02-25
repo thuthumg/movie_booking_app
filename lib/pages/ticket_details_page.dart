@@ -20,10 +20,11 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: Color.fromRGBO(17, 17, 17, 1),
         title: const Text(
-          "Checkout",
+          "Ticket Details",
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.white,
@@ -37,116 +38,118 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
             child: Icon(Icons.chevron_left)),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 700.0,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        margin: EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage(
-                                "assets/images/ticket_confirmation_card_bg.png"),
-                          ),
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 700,
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      margin: EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage(
+                              "assets/images/ticket_confirmation_card_bg.png"),
                         ),
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding:
-                              EdgeInsets.only(top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                              child: BookingTimePlaceAndSeatView(),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                              child: SnackView(foodAndBeverageItemList,(bool changeHeightParam){
+                      ),
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding:
+                            EdgeInsets.only(top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                            child: BookingTimePlaceAndSeatView(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                            child: SnackView(foodAndBeverageItemList,(bool changeHeightParam){
 
-                                setState(() {
-                                  this.changeHeight = changeHeightParam;
-                                  print("check height status = ${this.changeHeight}");
-                                });
-                              }),
-                            ),
-                            const SizedBox(height: 30,),
-                            const Padding(
-                                padding: EdgeInsets.only(
-                                    top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                                child:
-                                ConvenienceFeeAndTicketCancellationView()),
-                            SizedBox(height: 10,),
-                            const Padding(
-                              padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                              child: TotalAmountView(),
-                            ),
-                          ],
-                        ),),
+                              setState(() {
+                                this.changeHeight = changeHeightParam;
+                                print("check height status = ${this.changeHeight}");
+                              });
+                            }),
+                          ),
+                          const SizedBox(height: 30,),
+                          const Padding(
+                              padding: EdgeInsets.only(
+                                  top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                              child:
+                              ConvenienceFeeAndTicketCancellationView()),
+                          SizedBox(height: 10,),
+                          const Padding(
+                            padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                            child: TotalAmountView(),
+                          ),
+                        ],
+                      ),),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: (changeHeight && foodAndBeverageItemList.length >0)? (300.0 + (30*foodAndBeverageItemList.length)) : 300.0,
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        // margin: EdgeInsets.only(right: 50),
+                        //  child:Image.asset("assets/images/dotted_line.png"),
+                        child: DashedDividerView(
+                            height: 1.0, color: Colors.white30)
                     ),
-                    Positioned(
+                  ),
+                  Positioned(
                       left: 0,
                       right: 0,
-                      top: (changeHeight && foodAndBeverageItemList.length >0)? (300.0 + (30*foodAndBeverageItemList.length)) : 300.0,
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          // margin: EdgeInsets.only(right: 50),
-                          //  child:Image.asset("assets/images/dotted_line.png"),
-                          child: DashedDividerView(
-                              height: 1.0, color: Colors.white30)
-                      ),
-                    ),
-                    Positioned(
-                        left: 0,
-                        right: 0,
-                        top: (changeHeight && foodAndBeverageItemList.length >0)? (280.0+(30*foodAndBeverageItemList.length)) : 280.0,
-                        child: ClipSectionView())
-                  ],
-                ),
+                      top: (changeHeight && foodAndBeverageItemList.length >0)? (280.0+(30*foodAndBeverageItemList.length)) : 280.0,
+                      child: ClipSectionView())
+                ],
               ),
-              Container(
-              //  height: 50,
-              //  margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                 // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                     // mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Refund Amount",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: TEXT_REGULAR_2X,
-                              fontWeight: FontWeight.w500
-                          ),),
-                        Text("15000Ks",
-                          style: TextStyle(
-                              color: CANCEL_COLOR,
-                              fontSize: TEXT_REGULAR_4X,
-                              fontWeight: FontWeight.w700
-                          ),)
-                      ],),
-                    SizedBox(width: 10,),
-
-                    CancelBookingButtonView(),
-                  ],
-                ),
-              )
+            ),
+            CancelBookingSectionView()
 
 
-            ],
-          ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class CancelBookingSectionView extends StatelessWidget {
+  const CancelBookingSectionView({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Refund Amount",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: TEXT_REGULAR_2X,
+                  fontWeight: FontWeight.w500
+              ),),
+            Text("15000Ks",
+              style: TextStyle(
+                  color: CANCEL_COLOR,
+                  fontSize: TEXT_REGULAR_4X,
+                  fontWeight: FontWeight.w700
+              ),)
+          ],),
+        SizedBox(width: 10,),
+
+        CancelBookingButtonView(),
+      ],
     );
   }
 }

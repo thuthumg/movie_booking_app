@@ -9,6 +9,7 @@ import 'package:movie_booking_app/pages/movie_search_page.dart';
 import 'package:movie_booking_app/pages/seating_plan_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/videoplayer/default_player.dart';
 import 'package:movie_booking_app/widgets/botton_sheet_view.dart';
 import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/custom_button_bg_view.dart';

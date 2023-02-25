@@ -14,7 +14,7 @@ class ProfileListItemView extends StatelessWidget {
       onTap: ()=> onTapTicketItem(),
       child: Container(
         height: 55,
-        margin: EdgeInsets.only(top: MARGIN_MEDIUM,bottom: MARGIN_SMALL),
+        margin: EdgeInsets.only(bottom: MARGIN_SMALL),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
          // border: Border.all(color: Color.fromRGBO(255, 255, 255, 0.25),width: 1),

@@ -1,12 +1,39 @@
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
+import 'package:movie_booking_app/videoplayer/default_player.dart';
 import 'package:movie_booking_app/widgets/custom_chip_shape.dart';
+import 'package:video_player/video_player.dart';
 
-class CinemaInfoDetailPage extends StatelessWidget {
-  const CinemaInfoDetailPage({Key? key}) : super(key: key);
+class CinemaInfoDetailPage extends StatefulWidget {
 
+
+
+  @override
+  State<CinemaInfoDetailPage> createState() => _CinemaInfoDetailPageState();
+}
+
+class _CinemaInfoDetailPageState extends State<CinemaInfoDetailPage> {
+
+  // late FlickManager flickManager;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   flickManager = FlickManager(
+  //     autoPlay: true,
+  //     videoPlayerController:
+  //     VideoPlayerController.network("https://www.pexels.com/video/view-of-sunset-from-the-beach-5147455/"),
+  //   );
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   flickManager.dispose();
+  //   super.dispose();
+  // }
+  bool isFavorite  = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +41,11 @@ class CinemaInfoDetailPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: PRIMARY_COLOR,
-        leading: Icon(Icons.chevron_left),
+        leading: GestureDetector(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.chevron_left)),
           title: const Text(
             "Cinema Details",
             style: TextStyle(
@@ -23,12 +54,18 @@ class CinemaInfoDetailPage extends StatelessWidget {
                 fontWeight: FontWeight.w700),
           ),
         actions: [
-
-          Container(
-             width: 20,
-              height: 20,
-            margin: EdgeInsets.only(right: MARGIN_MEDIUM_3),
-            child: Image.asset("assets/icons/ic_favourite.png"),
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                isFavorite = !isFavorite;
+              });
+            },
+            child: Container(
+               width: 20,
+                height: 20,
+              margin: EdgeInsets.only(right: MARGIN_MEDIUM_3),
+              child: Image.asset("assets/icons/ic_favourite.png",color: isFavorite ? SECONDARY_COLOR : null,),
+            ),
           )
         ],
       ),
@@ -229,9 +266,9 @@ class SafetyChipView extends StatelessWidget {
   }
 }
 class VideoBannerSection extends StatelessWidget {
-  const VideoBannerSection({
-    Key? key,
-  }) : super(key: key);
+ // FlickManager flickManager;
+
+  //VideoBannerSection(this.flickManager);
 
   @override
   Widget build(BuildContext context) {
@@ -239,12 +276,34 @@ class VideoBannerSection extends StatelessWidget {
       height: 200,
       child: Stack(
         children: [
-          Positioned.fill(child: Image.asset("assets/images/cinema_pic.png",fit: BoxFit.cover,),),
+          Positioned.fill(child:
+          // FlickVideoPlayer(
+          //     flickManager: flickManager
+          // ),
+          Image.asset("assets/images/cinema_pic.png",fit: BoxFit.cover,),
+          ),
           Align(alignment: Alignment.center,
-            child: Container(
-                width: 50,
-                height: 50,
-                child: Image.asset("assets/images/play_btn_pic.png",)),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        VideoPlayerScreen(
+                          'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                        )
+
+                    //     VideoPlayerScreen(
+                    //   'assets/videos/sample_video2.mp4',
+                    // ),
+                  ),
+                );
+              },
+              child: Container(
+                  width: 50,
+                  height: 50,
+                  child: Image.asset("assets/images/play_btn_pic.png",)),
+            ),
           )
         ],
       ),

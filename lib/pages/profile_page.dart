@@ -9,16 +9,20 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: PRIMARY_COLOR,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            color: PRIMARY_COLOR,
+            child: Column(
+              children: [
+                ProfileView(),
+                ProfileListView( ()=>{})
 
-
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            ProfileView(),
-            ProfileListView( ()=>{})
-
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -39,8 +43,8 @@ class ProfileListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
+     // height: MediaQuery.of(context).size.height,
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0,top: 20.0),
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,

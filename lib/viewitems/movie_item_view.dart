@@ -15,7 +15,7 @@ class MovieItemView extends StatelessWidget {
       onTap: ()=> onTapItemView(),
       child: Container(
         width: 171,
-        margin: EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
+        margin: EdgeInsets.only(right: MARGIN_MEDIUM),
         decoration: const BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(8)),

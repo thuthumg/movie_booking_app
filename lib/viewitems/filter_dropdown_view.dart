@@ -20,56 +20,63 @@ class _FilterDropdownState extends State<FilterDropdownView> {
 
   _FilterDropdownState(this.filterArrayObj);
 
+  String _selectedItem = "";
   @override
   Widget build(BuildContext context) {
 
- //   _selectedItem = filterArrayObj[0].toString();
-    String _selectedItem = filterArrayObj[0].toString();
+    _selectedItem = _selectedItem.isEmpty? filterArrayObj[0].toString() : _selectedItem;
+
     final List<String> _ItemName = filterArrayObj;
 
-    return Container(
-      margin: const EdgeInsets.only(top: 8.0, right: 8.0),
-      width: 200,
-      // color: Colors.white,
-      child: DropdownButtonFormField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(
-            left: 10.0,
-            right: 10.0,
-            top: 2.0,
-            bottom: 2.0
-          ),
-          enabledBorder: OutlineInputBorder(
-            // borderSide: BorderSide(color: Colors.white, width: 2),
-            borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
-          ),
-          border: OutlineInputBorder(
-            // borderSide: BorderSide(color: Colors.white, width: 2),
-            borderRadius: BorderRadius.circular(MARGIN_MEDIUM),
-          ),
-          filled: true,
-          fillColor: Colors.white,
+    return IntrinsicWidth(
+      child: Container(
+       // padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.only(top: 8.0, right: 8.0),
+        height: 35,
+       // padding: EdgeInsets.zero,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(MARGIN_MEDIUM)
         ),
-        dropdownColor: Colors.white,
-        value: _selectedItem,
-        onChanged: (newValue) {
-          setState(() {
-            _selectedItem = newValue ?? "";
-          });
-        },
-        items: _ItemName.map((countryCode) {
-          return DropdownMenuItem<String>(
-            value: countryCode,
-            child: Text(
-              countryCode,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400),
+        // width: MediaQuery.of(context).size.width,
+        // color: Colors.white,
+        child:
+        DropdownButton<String>(
+          underline: Container(),
+          value: _selectedItem,
+          dropdownColor: Colors.white,
+          icon: const Padding(
+            padding: EdgeInsets.only(right: MARGIN_MEDIUM),
+            child: Icon(
+              Icons.keyboard_arrow_down_sharp,
+              color: Colors.black, // <-- SEE HERE
             ),
-          );
-        }).toList(),
-        // items: dropdownItems
+          ),
+          onChanged: (newValue) {
+            setState(() {
+              _selectedItem = newValue ?? "";
+            });
+          },
+          items: _ItemName.map((countryCode) {
+            return DropdownMenuItem<String>(
+              value: countryCode,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: MARGIN_MEDIUM),
+                child: Text(
+                  countryCode,
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            );
+          }).toList(),
+        )
+
+
+
+        ,
       ),
     );
 

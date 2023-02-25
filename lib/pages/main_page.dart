@@ -119,37 +119,4 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-// Future<dynamic> _navigateSearchPage(BuildContext context) {
-//   return Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => SearchPage(),
-//     ),
-//   );
-// }
-//  appBar: AppBar(
-//           backgroundColor: PRIMARY_COLOR,
-//           title:  const Text(
-//             "Yangon",
-//             style: TextStyle(
-//               fontWeight: FontWeight.w700,
-//               color: Colors.white,
-//               fontStyle: FontStyle.italic,
-//               fontSize: 16,
-//             ),
-//           ),
-//           leading:
-//           Padding(
-//             padding: const EdgeInsets.only(left: MARGIN_XLARGE),
-//             child: Image.asset('assets/icons/ic_location_arrow.png',scale: 3,),
-//           ),
-//
-//           actions:  [
-//             Image.asset("assets/icons/ic_search.png",),
-//             Image.asset("assets/icons/ic_noti.png",),
-//             Image.asset("assets/icons/ic_scanner.png",),
-//
-//           ],
-//
-//         ),
 

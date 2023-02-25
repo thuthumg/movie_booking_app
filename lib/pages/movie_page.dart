@@ -32,7 +32,7 @@ class _MoviePageState extends State<MoviePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
-        title: Text(
+        title: const Text(
           "Yangon",
           style: TextStyle(
             fontWeight: FontWeight.w700,

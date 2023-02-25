@@ -22,6 +22,12 @@ const CHOOSE_YOUR_PAYMENT_TYPE_TITLE_COLOR = Color.fromRGBO(0, 255, 106, 1);
 
 const CANCEL_COLOR = Color.fromRGBO(255, 46, 0, 1);
 
+const SLIDER_RANGE_TEXT_COLOR = Color.fromRGBO(136, 136, 136, 1);
+
+const SLIDER_RANGE_INACTIVE_COLOR = Color.fromRGBO(136, 136, 136, 1);
+
+const SLIDER_RANGE_ACTIVE_COLOR = Color.fromRGBO(0, 255, 106, 1);
+
 
 
 
