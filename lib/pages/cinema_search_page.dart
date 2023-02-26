@@ -6,14 +6,28 @@ import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/filter_dropdown_view.dart';
 import 'package:movie_booking_app/widgets/booking_movie_theaters_view.dart';
 import 'package:movie_booking_app/widgets/price_range_slider.dart';
-import 'package:movie_booking_app/widgets/clearable_text_field.dart';
+import 'package:movie_booking_app/widgets/search_widget_view.dart';
 
-class CinemaSearchPage extends StatelessWidget {
-  const CinemaSearchPage({Key? key}) : super(key: key);
+import '../widgets/search_box_view.dart';
+
+class CinemaSearchPage extends StatefulWidget {
+
+  @override
+  State<CinemaSearchPage> createState() => _CinemaSearchPageState();
+}
+
+class _CinemaSearchPageState extends State<CinemaSearchPage> {
+  String _searchText = '';
+
+  void _onSearch(String text) {
+    setState(() {
+      _searchText = text;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    RangeValues _currentRangeValues = RangeValues(0.2, 0.8);
+
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
@@ -23,10 +37,14 @@ class CinemaSearchPage extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.chevron_left)),
-        title: SearchBoxView(),
+            child: const Icon(Icons.chevron_left)),
+        title: SearchBoxView(onSearch: (String paramString){
+          setState(() {
+            _onSearch(paramString);
+          });
+        }),
         actions: [
-          FilterButtonView(),
+          FilterButtonView()
         ],
       ),
       body: Container(
@@ -47,8 +65,9 @@ class CinemaSearchPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const CinemaFilterListSectionView(),
-            ]))
+                  _searchText.toString().isNotEmpty?
+                  CinemaFilterListSectionView() :  Container()
+            ],),),
           ],
         ),
       ),
@@ -57,9 +76,6 @@ class CinemaSearchPage extends StatelessWidget {
 }
 
 class CinemaFilterListSectionView extends StatelessWidget {
-  const CinemaFilterListSectionView({
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +144,10 @@ class PriceRangeSectionView extends StatelessWidget {
                 fontWeight: FontWeight.w600),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        PriceRangeSliderSectionView(),
+        const PriceRangeSliderSectionView(),
       ],
     );
   }
@@ -145,7 +161,7 @@ class FilterDropdownSectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: MARGIN_MEDIUM_3),
+      margin: const EdgeInsets.only(left: MARGIN_MEDIUM_3,top: MARGIN_MEDIUM),
       child: Wrap(
         spacing: 4.0, // spacing between adjacent chips
         // runSpacing: 1.0,
@@ -161,16 +177,13 @@ class FilterDropdownSectionView extends StatelessWidget {
 }
 
 class FilterButtonView extends StatelessWidget {
-  const FilterButtonView({
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 35,
       height: 35,
-      margin: EdgeInsets.only(right: MARGIN_MEDIUM_3),
+      margin: const EdgeInsets.only(right: MARGIN_MEDIUM_3),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Image.asset(
@@ -183,26 +196,7 @@ class FilterButtonView extends StatelessWidget {
   }
 }
 
-class SearchBoxView extends StatelessWidget {
-  const SearchBoxView({
-    Key? key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(Icons.search_rounded),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.5,
-          child: Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: ClearableTextField()),
-        ),
-      ],
-    );
-  }
-}
 
 class PriceRangeSliderSectionView extends StatefulWidget {
   const PriceRangeSliderSectionView({
@@ -219,7 +213,7 @@ class _PriceRangeSliderSectionViewState
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: MARGIN_MEDIUM_3, right: MARGIN_MEDIUM_3),
+        margin: const EdgeInsets.only(left: MARGIN_MEDIUM_3, right: MARGIN_MEDIUM_3),
         child: PriceRangeSlider());
 
   }
@@ -240,7 +234,7 @@ class _TimeRangeSliderSectionViewState
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: MARGIN_MEDIUM_3, right: MARGIN_MEDIUM_3),
+        margin: const EdgeInsets.only(left: MARGIN_MEDIUM_3, right: MARGIN_MEDIUM_3),
         child: PriceRangeSlider());
   }
 }

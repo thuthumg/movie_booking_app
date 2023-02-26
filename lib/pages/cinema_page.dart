@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking_app/pages/booking_date_time_page.dart';
 import 'package:movie_booking_app/pages/cinema_search_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -18,34 +17,16 @@ class CinemaPage extends StatelessWidget {
             onTap: (){
               _navigateToCinemaSearchPage(context);
             },
-            child: Container(
-              // width: 30,
-              //  height: 30,
-              child: Image.asset("assets/icons/ic_search.png"),
-            ),
+            child: Image.asset("assets/icons/ic_search.png"),
           ),
-          Container(
-            // width: 30,
-            // height: 30,
-            child: Image.asset("assets/icons/ic_noti.png"),
-          ),
-          Container(
-            // width: 30,
-            //  height: 30,
-            child: Image.asset("assets/icons/ic_scan.png"),
-          )
+          Image.asset("assets/icons/ic_noti.png"),
+          Image.asset("assets/icons/ic_scan.png")
         ],
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
-          child: Column(
-            children: [
-              MovieBookingTimeStatus(),
-              SizedBox(height: 15,),
-              BookingMovieTheatersView(),
-            ],
-          ),
+          margin: const EdgeInsets.all(MARGIN_MEDIUM_3),
+          child: BookingMovieTheatersView(),
         ),
       ),
     );

@@ -4,163 +4,145 @@ import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/seating_plan_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
 import 'package:movie_booking_app/widgets/booking_time_view.dart';
 
 class BookingMovieTheatersView extends StatefulWidget {
 
-  // const BookingMovieTheaters({
-  //   Key? key,
-  // }) : super(key: key);
   @override
   State<BookingMovieTheatersView> createState() => _BookingMovieTheatersViewState();
 }
 
 class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
-  bool _showDetail = false;
+   int position = -1;
   var bookingTimeObjectLists = <TheaterBookingTimeObject>[];
 
   @override
   Widget build(BuildContext context) {
 
-    bookingTimeObjectLists.clear();
+    for(int i=0 ; i<theaterListObjList.length; i++){
 
-    bookingTimeObjectLists.add(
-        TheaterBookingTimeObject("9:30AM",
-            "3D", "Screen1", "Disable","21 Available")
-    );
-    bookingTimeObjectLists.add(
-        TheaterBookingTimeObject("12:30PM",
-            "3D IMAX", "Screen 1", "Available")
+      if(position == i)
+      {
+        theaterListObjList[i].isSelected = ! theaterListObjList[i].isSelected;
+      }else{
+        theaterListObjList[i].isSelected = false;
+      }
 
-    );
-    bookingTimeObjectLists.add(
-        TheaterBookingTimeObject("12:30PM",
-            "3D", "Screen 2", "Almost Full","2 Available")
-
-    );
-    bookingTimeObjectLists.add(
-        TheaterBookingTimeObject("3:30PM",
-            "3D", "Screen 2", "Available")
-
-    );
-
-    bookingTimeObjectLists.add(
-        TheaterBookingTimeObject("6:30PM",
-            "3D DBOX", "Screen 2", "Filling Fast","21 Available")
-
-    );
+    }
 
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       scrollDirection: Axis.vertical,
-      itemCount: 5,
+      itemCount: theaterListObjList.length,
       itemBuilder: (BuildContext context, int index) {
-        return Column(
-          children: [
-            SizedBox(height: 15,),
-            Row(
-              children: [
-                GestureDetector(
-                    onTap: (){
-                      setState((){
-                        _showDetail = !_showDetail;
-                      });
-                    },
-                    child: TheaterNameSpaceView()),
-               Spacer(),
-
-                GestureDetector(
-                  onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CinemaInfoDetailPage(),
-                      ),
-                    );
-                  },
-                  child: const Text("See Details",style: TextStyle(
-                    color: SECONDARY_COLOR,
-                    fontSize: TEXT_REGULAR_2X,
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline,
-
-                  ),),
-                )
-
-              ],
-            ),
-            SizedBox(height: 15,),
-            Container(
-
-              padding: EdgeInsets.all(10),
-              child: Row(
+        return Container(
+          margin: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  Expanded(
-                      flex: 1,
-                      child: ParkingView()),
-                  Expanded(
-                      flex: 1,
-                      child: OnlineFoodView()),
-                  Expanded(
-                      flex: 1,
-                      child: WheelChairView()),
+                  GestureDetector(
+                      onTap: (){
+                        setState((){
+                          position = index;
+                        });
+                      },
+                      child: TheaterNameSpaceView(theaterListObjList[index].theaterName)),
+                 const Spacer(),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CinemaInfoDetailPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(SEE_DETAILS_TEXT,style: TextStyle(
+                      color: SECONDARY_COLOR,
+                      fontSize: TEXT_REGULAR_2X,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+
+                    ),),
+                  )
 
                 ],
               ),
-            ),
-            SizedBox(height: 15,),
-            Visibility(
-              visible: _showDetail,
-              child: Container(
-                margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // number of columns
-                    mainAxisSpacing: 30, // vertical space between items
-                    crossAxisSpacing: 30, // horizontal space between items
-                    childAspectRatio: 1, // aspect ratio of each item
-                  ),
-                  // umber of items in the grid
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                        onTap: (){
-                          setState((){
-                            _navigateToSeatPage(context);
-                          });
-                        },
-                        child: BookingTimeView(bookingTimeObjectLists[index]));
-                    //Text('Item $index');
-                    // BookingTimeView();
+              const SizedBox(height: 15,),
+              Container(
 
-                  },
-                  itemCount: bookingTimeObjectLists.length, // n
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: ParkingView()),
+                    Expanded(
+                        flex: 1,
+                        child: OnlineFoodView()),
+                    Expanded(
+                        flex: 1,
+                        child: WheelChairView()),
+
+                  ],
                 ),
-              ),),
-            SizedBox(height: 15,),
-            Container(
-              child: Row(
+              ),
+              const SizedBox(height: 15,),
+              Visibility(
+                visible: theaterListObjList[index].isSelected,
+                child: Container(
+                  margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // number of columns
+                      mainAxisSpacing: 30, // vertical space between items
+                      crossAxisSpacing: 30, // horizontal space between items
+                      childAspectRatio: 1, // aspect ratio of each item
+                    ),
+                    // umber of items in the grid
+                    itemBuilder: (BuildContext context, int gridIndex) {
+                      return GestureDetector(
+                          onTap: (){
+                            setState((){
+                              _navigateToSeatPage(context);
+                            });
+                          },
+                          child: BookingTimeView(theaterListObjList[index].theaterBookingTimeList[gridIndex]));
+                      //Text('Item $index');
+                      // BookingTimeView();
+
+                    },
+                    itemCount: theaterListObjList[index].theaterBookingTimeList.length, // n
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15,),
+              Row(
                 children: const [
                   Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.info_sharp, color: Color.fromRGBO(170, 170, 170, 1),),
+                    padding: EdgeInsets.all(MARGIN_MEDIUM),
+                    child: Icon(Icons.info_sharp, color: LONG_PRESS_ON_SHOW_TIMING_COLOR,),
                   ),
 
-                  Text("Long press on show timing to see seat class!",
+                  Text(LONG_PRESS_ON_SHOW_TIMING_TEXT,
                     style: TextStyle(
-                        color: Color.fromRGBO(170, 170, 170, 1),
-                        fontSize: 14,
+                        color: LONG_PRESS_ON_SHOW_TIMING_COLOR,
+                        fontSize: TEXT_REGULAR_1X,
                         fontWeight: FontWeight.w600
                     ),)
                 ],
               ),
-            ),
-            const Divider(color: Colors.white)
+              const SizedBox(height: 15,),
+              const Divider(color: Colors.white)
 
-          ],
+            ],
+          ),
         );
       },
     );
@@ -168,13 +150,12 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
 }
 
 class TheaterNameSpaceView extends StatelessWidget {
-  const TheaterNameSpaceView({
-    Key? key,
-  }) : super(key: key);
 
+  String theaterName;
+  TheaterNameSpaceView(this.theaterName);
   @override
   Widget build(BuildContext context) {
-    return const Text("JCGV : Junction City",style: TextStyle(
+    return Text(theaterName,style: const TextStyle(
         color: Colors.white,
         fontSize: TEXT_REGULAR_2X,
         fontWeight: FontWeight.w600
@@ -188,7 +169,7 @@ class ParkingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BookingDateTimeStatusView(
-        Color.fromRGBO(170, 170, 170, 1),
+        LONG_PRESS_ON_SHOW_TIMING_COLOR,
         "Parking",
         'assets/icons/ic_parking.png',
         15.80,
@@ -202,7 +183,7 @@ class OnlineFoodView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BookingDateTimeStatusView(
-        Color.fromRGBO(170, 170, 170, 1),
+        LONG_PRESS_ON_SHOW_TIMING_COLOR,
         "Online Food",
         'assets/icons/ic_online_food.png',
         15.80,
@@ -216,7 +197,7 @@ class WheelChairView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BookingDateTimeStatusView(
-        Color.fromRGBO(170, 170, 170, 1),
+        LONG_PRESS_ON_SHOW_TIMING_COLOR,
         "Wheel Chair",
         'assets/icons/ic_wheel_chair.png',
         15.80,

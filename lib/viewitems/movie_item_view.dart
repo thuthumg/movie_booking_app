@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/constants/movie_list_obj.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 
@@ -6,16 +7,19 @@ class MovieItemView extends StatelessWidget {
 
   final bool uiChangeFlag;
   final Function onTapItemView;
+  final MovieListObj movieListObjItem;
 
-  MovieItemView(this.uiChangeFlag,this.onTapItemView);
+  MovieItemView(this.uiChangeFlag,this.movieListObjItem,this.onTapItemView);
 // ()=> Navigator.pop(context),
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ()=> onTapItemView(),
       child: Container(
-        width: 171,
-        margin: EdgeInsets.only(right: MARGIN_MEDIUM),
+      //  width: 171,
+        margin: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 12),
         decoration: const BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -24,7 +28,7 @@ class MovieItemView extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
                 borderRadius:BorderRadius.circular(8.0),
-                child: MovieItemImageView()),
+                child: MovieItemImageView(movieListObjItem.movieImage)),
           ),
           Positioned.fill(
             child: ClipRRect(
@@ -41,25 +45,35 @@ class MovieItemView extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Text(
-                          "Venom II",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: TEXT_REGULAR_1X,
-                              fontWeight: FontWeight.w500),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            movieListObjItem.movieName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
-                        const Spacer(),
+                       // const Spacer(),
+                        SizedBox(width: MARGIN_MEDIUM,),
                         SizedBox(
                             height: 30,
                             child: Image.asset(
                                 'assets/images/ic_imbd.png')),
-                        const Text(
-                          "9.0",
-                          style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                              fontSize: TEXT_REGULAR_1X,
-                              fontWeight: FontWeight.w700),
+                        Expanded(
+                          child: Text(
+                           movieListObjItem.movieRating,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w700),
+                          ),
                         )
                       ],
                     ),
@@ -81,12 +95,17 @@ class MovieItemView extends StatelessWidget {
                             Image.asset('assets/images/ic_dot.png'),
                           ),
                         ),
-                        const Text(
-                          "2D,3D,3D IMAX",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: TEXT_REGULAR_1X,
-                              fontWeight: FontWeight.w500),
+                        Expanded(
+                          child: Text(
+
+                           movieListObjItem.movieFormatType,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: TEXT_REGULAR_1X,
+                                fontWeight: FontWeight.w500),
+                          ),
                         )
                       ],
                     )
@@ -106,9 +125,9 @@ class MovieItemView extends StatelessWidget {
                       color: SECONDARY_COLOR,
                       borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
-                    child: const Center(
-                      child: Text("8th\nAUG",
-                      style: TextStyle(
+                    child: Center(
+                      child: Text(movieListObjItem.movieComingSoonDate,
+                      style: const TextStyle(
                         fontSize: TEXT_REGULAR,
                         color: Color.fromRGBO(85, 85, 85, 1),
                         fontWeight: FontWeight.w700
@@ -129,25 +148,14 @@ class MovieItemView extends StatelessWidget {
 
 class MovieItemImageView extends StatelessWidget {
 
+  final String movieImage;
+
+  MovieItemImageView(this.movieImage);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 212,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius:  BorderRadius.all(Radius.circular(8)),
-        // BorderRadius.only(topLeft: Radius.circular(8),
-        //     topRight: Radius.circular(8),bottomLeft: Radius.circular(8),bottomRight: Radius.circular(8)),
-        // image: DecorationImage(
-        //     fit: BoxFit.cover,
-        //     image: AssetImage(
-        //         "assets/images/sample_grid_img_2.png",)
-        // )
-      ),
-      child: Image.asset(
-        "assets/images/sample_grid_img_2.png",
-        fit: BoxFit.cover,
-      ),
+    return Image.asset(
+      movieImage,
+      fit: BoxFit.cover,
     );
   }
 }
@@ -167,6 +175,7 @@ class GradientView extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [Color.fromRGBO(68, 68, 68, 0),
                 Color.fromRGBO(68, 68, 68, 0),
+                Colors.black87,
                 Color.fromRGBO(0, 0, 0, 1)])),
     );
   }

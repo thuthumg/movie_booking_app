@@ -49,7 +49,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 700.0,
+              height: 600.0,
               child: Stack(
                 children: [
                   Positioned(

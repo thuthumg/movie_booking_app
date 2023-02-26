@@ -27,60 +27,55 @@ class _MainPageState extends State<MainPage> {
     {"screen": const ProfilePage(), "title": "Profile"}
   ];
 
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  int _currentIndex = 0;
+
   void _selectScreen(int index){
+    // switch (index) {
+    //   case 0:
+    //     _screens.currentState.pushNamed('/tab1');
+    //     break;
+    //   case 1:
+    //     navigatorKey.currentState.pushNamed('/tab2');
+    //     break;
+    //   case 2:
+    //     navigatorKey.currentState.pushNamed('/tab3');
+    //     break;
+    // }
+
     setState(() {
       _selectedScreenIndex = index;
 
       if(index == 0)
-        {
-          appBarVisible = true;
-        }else{
+      {
+        appBarVisible = true;
+      }else{
         appBarVisible = false;
       }
+      // navigatorKey.currentState.pushNamed('/tab$index');
     });
+  }
+  Widget _getPage(String pageName) {
+    switch (pageName) {
+      case '/tab0':
+        return MainPage();
+      case '/tab1':
+        return CinemaPage();
+      case '/tab2':
+        return TicketListPage();
+      case '/tab3':
+        return ProfilePage();
+      default:
+        return MainPage();
+    }
   }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         backgroundColor: PRIMARY_COLOR,
-        // appBar:
-        // appBarVisible? AppBar(
-        //   backgroundColor: PRIMARY_COLOR,
-        //   title: Text(
-        //     "Yangon",
-        //     style: TextStyle(
-        //       fontWeight: FontWeight.w700,
-        //       color: Colors.white,
-        //       fontStyle: FontStyle.italic,
-        //       fontSize: 16,
-        //     ),
-        //   ),
-        //   leading: Padding(
-        //     padding: const EdgeInsets.only(left: MARGIN_XLARGE),
-        //     child: Image.asset(
-        //       'assets/icons/ic_location_arrow.png',
-        //       scale: 3,
-        //     ),
-        //   ),
-        //   actions: [
-        //     GestureDetector(
-        //       onTap: (){
-        //         _navigateSearchPage(context);
-        //       },
-        //       child: Image.asset(
-        //         "assets/icons/ic_search.png",
-        //       ),
-        //     ),
-        //     Image.asset(
-        //       "assets/icons/ic_noti.png",
-        //     ),
-        //     Image.asset(
-        //       "assets/icons/ic_scanner.png",
-        //     ),
-        //   ],
-        // ) : null
-        // ,
-        body: _screens[_selectedScreenIndex]["screen"],
+
+        body:
+        _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: PRIMARY_COLOR,
           type: BottomNavigationBarType.fixed,

@@ -1,7 +1,10 @@
 import 'package:movie_booking_app/constants/filter_obj.dart';
 import 'package:movie_booking_app/constants/food_and_beverage_item_obj.dart';
+import 'package:movie_booking_app/constants/movie_list_obj.dart';
 import 'package:movie_booking_app/constants/movie_seat_grid_list_view_obj.dart';
 import 'package:movie_booking_app/constants/movie_seat_list_view_obj.dart';
+import 'package:movie_booking_app/constants/theater_booking_time_obj.dart';
+import 'package:movie_booking_app/constants/theater_list_obj.dart';
 import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/profile_page.dart';
 import 'package:movie_booking_app/pages/ticket_page.dart';
@@ -216,17 +219,17 @@ var facilitiesItemList = <FacilitiesItemObject>[
 
 
 var filterObjList = <FilterObj>[
-  FilterObj(['Facilities','Parking','Online Food','Wheel Chair','Ticket Cancellation']),
+  FilterObj(['Facilities','Parking','Online Food','Wheel Chair']),
   FilterObj(['Format','2D','3D','3D IMAX'])
 ];
 
 var filterObjListForNowShowing = <FilterObj>[
-  FilterObj(['Genres','Action','Adventure','Comedy','Drama','Horror','Science Fiction','Romance','Thriller','Fantasy']),
+  FilterObj(['Genres','Action','Adventure','Comedy','Drama','Horror','Romance','Thriller','Fantasy']),
   FilterObj(['Format','2D','3D','3D IMAX'])
 ];
 
 var filterObjListForComingSoon = <FilterObj>[
-  FilterObj(['Genres','Action','Adventure','Comedy','Drama','Horror','Science Fiction','Romance','Thriller','Fantasy']),
+  FilterObj(['Genres','Action','Adventure','Comedy','Drama','Horror','Romance','Thriller','Fantasy']),
   FilterObj(['Format','2D','3D','3D IMAX']),
   FilterObj(['Month','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])
 ];
@@ -238,6 +241,49 @@ List<FoodAndBeverageItemObj> foodAndBeverageItemList = [
 
 ];
 
+List<TheaterListObj> theaterListObjList = [
+  TheaterListObj("JCGV:Junction City",[TheaterBookingTimeObject("9:30AM",
+      "3D", "Screen1", "Disable","21 Available"),
+    TheaterBookingTimeObject("12:30PM",
+        "3D IMAX", "Screen 1", "Available"),
+    TheaterBookingTimeObject("12:30PM",
+        "3D", "Screen 2", "Almost Full","2 Available"),
+    TheaterBookingTimeObject("3:30PM",
+        "3D", "Screen 2", "Available"),
+    TheaterBookingTimeObject("6:30PM",
+        "3D DBOX", "Screen 2", "Filling Fast","21 Available")
+  ],false),
+  TheaterListObj("JCGV:City Mall",[TheaterBookingTimeObject("9:30AM",
+      "3D", "Screen1", "Disable","21 Available"),
+    TheaterBookingTimeObject("12:30PM",
+        "3D IMAX", "Screen 1", "Available"),
+    TheaterBookingTimeObject("12:30PM",
+        "3D", "Screen 2", "Almost Full","2 Available"),
+    TheaterBookingTimeObject("3:30PM",
+        "3D", "Screen 2", "Available"),
+    TheaterBookingTimeObject("6:30PM",
+        "3D DBOX", "Screen 2", "Filling Fast","21 Available")
+  ],false),
+  TheaterListObj("Mingalar Cinema Gold Class",[TheaterBookingTimeObject("9:30AM",
+      "3D", "Screen1", "Disable","21 Available"),
+    TheaterBookingTimeObject("12:30PM",
+        "3D IMAX", "Screen 1", "Available"),
+    TheaterBookingTimeObject("12:30PM",
+        "3D", "Screen 2", "Almost Full","2 Available"),
+    TheaterBookingTimeObject("3:30PM",
+        "3D", "Screen 2", "Available"),
+    TheaterBookingTimeObject("6:30PM",
+        "3D DBOX", "Screen 2", "Filling Fast","21 Available")
+  ],false)
+
+];
+
+
+//cinema page
+
+const SEE_DETAILS_TEXT = "See Details";
+const LONG_PRESS_ON_SHOW_TIMING_TEXT = "Long press on show timing to see seat class!";
+
 
 //cinema search
 const PRICE_RANGE_TEXT = "Price Range";
@@ -247,3 +293,76 @@ const PRICE_END_RANGE = "29500Ks";
 const SHOW_TIMES_TEXT ="Show Times";
 const SHOW_TIMES_START_RANGE ="8am";
 const SHOW_TIMES_END_RANGE ="12pm";
+
+List<MovieListObj> movieObjListForNowShowing = [
+  MovieListObj(
+    movieName: "Venom II",
+    movieFormatType: "2D,3D,3D IMAX",
+    movieRating: "9.0",
+    movieImage: "assets/images/sample_movie_venom_img.png",
+    movieComingSoonDate: ""
+  ),
+  MovieListObj(
+      movieName: "Black Widow",
+      movieFormatType: "2D,3D,3D IMAX, DBOX 3D",
+      movieRating: "7.1",
+      movieImage: "assets/images/sample_movie_black_widow_img.png",
+      movieComingSoonDate: ""
+  ),
+  MovieListObj(
+      movieName: "The hows of us",
+      movieFormatType: "2D,3D",
+      movieRating: "9.0",
+      movieImage: "assets/images/sample_movie_the_hows_of_us_img.png",
+      movieComingSoonDate: ""
+  ),
+  MovieListObj(
+      movieName: "DORA",
+      movieFormatType: "2D,3D,3D IMAX",
+      movieRating: "7.1",
+      movieImage: "assets/images/sample_movie_dora_img.png",
+      movieComingSoonDate: ""
+  )
+];
+
+List<MovieListObj> movieObjListForComingSoon = [
+  MovieListObj(
+      movieName: "Minions The ri....",
+      movieFormatType: "2D",
+      movieRating: "9.8",
+      movieImage: "assets/images/sample_video_minions_img.png",
+      movieComingSoonDate: "8th\nAUG"
+  ),
+  MovieListObj(
+      movieName: "Forest Gump",
+      movieFormatType: "2D,3D,3D IMAX",
+      movieRating: "9.0",
+      movieImage: "assets/images/sample_movie_forest_dump_img.png",
+      movieComingSoonDate: "10th\nAUG"
+  ),
+  MovieListObj(
+      movieName: "Jurassic World.....",
+      movieFormatType: "2D,3D,3D IMAX",
+      movieRating: "6.5",
+      movieImage: "assets/images/sample_movie_jurassic_world_img.png",
+      movieComingSoonDate: "15th\nAUG"
+  ),
+  MovieListObj(
+      movieName: "Vertigo",
+      movieFormatType: "2D,3D,3D IMAX, DBOX 3D",
+      movieRating: "7.0",
+      movieImage: "assets/images/sample_movie_vertigo_img.png",
+      movieComingSoonDate: "8th\nAUG"
+  )
+];
+//Ticket Details
+const REFUND_AMOUNT_TEXT = "Refund Amount";
+
+const TICKET_DETAILS_AMOUNT_TOTAL_SECTION_TEXT = "Total";
+
+
+//Cinema Details
+
+const FACILITIES_TEXT = "Facilities";
+const SAFETY_TEXT = "Safety";
+const CINEMA_DETAILS_TEXT = "Cinema Details";

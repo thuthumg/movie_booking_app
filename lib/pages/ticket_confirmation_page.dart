@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/ticket_list_info_item.dart';
@@ -174,7 +175,15 @@ class DoneButtonView extends StatelessWidget {
             textFontSize: TEXT_REGULAR_2X,
             iconPath: '',
             isShowIcon: false,
-            () {}),
+            () {
+            //  Navigator.of(context).pushNamedAndRemoveUntil('/location_page', (Route route) => false);
+             // Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>MainPage()),
+              );
+             // Navigator.popUntil(context, ModalRoute.withName('/movie_page'));
+            }),
       ),
     );
   }

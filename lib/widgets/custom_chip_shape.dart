@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/resources/dimens.dart';
 
 class CustomChipShape extends ShapeBorder {
   final double borderRadius;
@@ -50,7 +51,7 @@ class CustomChip extends StatelessWidget {
         label,
         style: TextStyle(
           color: Colors.black,
-          fontSize: 14.0,
+          fontSize: TEXT_REGULAR_1X,
           fontWeight: FontWeight.bold,
         ),
       ),

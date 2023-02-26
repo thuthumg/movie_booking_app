@@ -5,6 +5,7 @@ import 'package:movie_booking_app/pages/movie_detail_page.dart';
 import 'package:movie_booking_app/pages/movie_search_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 
 class MoviePage extends StatefulWidget {
@@ -30,6 +31,7 @@ class _MoviePageState extends State<MoviePage> {
     }
 
     return Scaffold(
+      backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
         title: const Text(
@@ -67,6 +69,8 @@ class _MoviePageState extends State<MoviePage> {
       ),
       body: Container(
         color: PRIMARY_COLOR,
+        // margin: EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2,
+        // right: MARGIN_CARD_MEDIUM_2),
         child: CustomScrollView(
           slivers: [
             SliverList(
@@ -76,7 +80,7 @@ class _MoviePageState extends State<MoviePage> {
                   const SizedBox(height: MARGIN_SMALL),
                   //  NowShowingAndComingSoonButtonView(),
                   Container(
-                    margin: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
+                    margin: const EdgeInsets.all(MARGIN_MEDIUM_2),
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                         gradient: LinearGradient(
@@ -148,7 +152,7 @@ class _MoviePageState extends State<MoviePage> {
                               height: 46,
                               margin: const EdgeInsets.all(MARGIN_MEDIUM),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
+                                  borderRadius: const BorderRadius.all(
                                       Radius.circular(MARGIN_MEDIUM)),
                                   color: (this._isComingSoon) &&
                                           !(this._isNowShowing)
@@ -180,11 +184,6 @@ class _MoviePageState extends State<MoviePage> {
                 ],
               ),
             ),
-            // GridMoviesListSection(_uiChangeFlag,
-            //         ()=>{
-            //   _navigateToMovieDetailPage(context)
-            // })
-
             GridMoviesListSection(
                 _isNowShowing, () => {_navigateToMovieDetailPage(context,_isNowShowing)})
           ],
@@ -383,18 +382,6 @@ class _NowShowingAndComingSoonButtonViewState
   }
 }
 
-// MaterialStateProperty<Color> getColor(Color color, Color colorPressed) {
-//   getColor(Set<MaterialState> states) {
-//     if (states.contains(MaterialState.focused)) {
-//       return colorPressed;
-//     } else {
-//       return color;
-//     }
-//   }
-//
-//   return MaterialStateProperty.resolveWith(getColor);
-// }
-
 class GridMoviesListSection extends StatelessWidget {
   final bool _uiChangeFlag;
   final Function onTapItemView;
@@ -406,19 +393,20 @@ class GridMoviesListSection extends StatelessWidget {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: MARGIN_MEDIUM,
-          // crossAxisSpacing: 8,
-          childAspectRatio: 0.63),
+         // mainAxisSpacing: 10,
+         //  crossAxisSpacing: 10,
+         childAspectRatio: 0.63,//childAspectRatio: 0.63
+          ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return Padding(
-            padding: EdgeInsets.only(left: MARGIN_MEDIUM),
-            child: MovieItemView(_uiChangeFlag, () {
-              this.onTapItemView();
-            }),
-          );
+          return MovieItemView(_uiChangeFlag,
+              _uiChangeFlag?
+              movieObjListForNowShowing[index] :
+              movieObjListForComingSoon[index], () {
+            this.onTapItemView();
+          });
         },
-        childCount: 20,
+        childCount: _uiChangeFlag? movieObjListForNowShowing.length : movieObjListForComingSoon.length,
       ),
     );
   }

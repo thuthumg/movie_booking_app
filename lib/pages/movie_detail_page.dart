@@ -1,3 +1,4 @@
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/pages/booking_date_time_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
@@ -11,12 +12,36 @@ import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/custom_button_bg_view.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
+import 'package:video_player/video_player.dart';
 //import 'package:video_player/video_player.dart';
 
-class MovieDetailPage extends StatelessWidget {
+class MovieDetailPage extends StatefulWidget {
   bool _isNowShowing;
 
   MovieDetailPage(this._isNowShowing);
+
+  @override
+  State<MovieDetailPage> createState() => _MovieDetailPageState();
+}
+
+class _MovieDetailPageState extends State<MovieDetailPage> {
+  late FlickManager flickManager;
+
+  @override
+  void initState() {
+    super.initState();
+    flickManager = FlickManager(
+      autoPlay: true,
+      videoPlayerController: VideoPlayerController.network(
+          "https://storage.googleapis.com/biograf-video-files/videos/dd-ep-4/mp4/v-1080p-4500k-libx264.mp4"),
+    );
+  }
+
+  @override
+  void dispose() {
+    flickManager.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +53,15 @@ class MovieDetailPage extends StatelessWidget {
             CustomScrollView(
               slivers: [
                 MovieDetailsSliverAppBarView(
-                  () => Navigator.pop(context),
+                  () => Navigator.pop(context),flickManager
                 ),
+
                 SliverList(
                     delegate: SliverChildListDelegate([
                   Container(
-                    margin: EdgeInsets.only(left: MARGIN_MEDIUM_2),
+                    margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,top: MARGIN_MEDIUM_2),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         MovieInformationItemView("Censor Rating", "U/A"),
                         MovieInformationItemView(
@@ -47,7 +74,7 @@ class MovieDetailPage extends StatelessWidget {
                     height: MARGIN_MEDIUM_2,
                   ),
                       Visibility(
-                        visible: !(this._isNowShowing),
+                        visible: !(this.widget._isNowShowing),
                         child: Container(
                             margin: const EdgeInsets.only(
                                 left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
@@ -301,14 +328,17 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
 
   final List<String> genreList = ["Action", "Adventure", "Drama", "Animation"];
 
-  MovieDetailsSliverAppBarView(this.onTapBack);
+
+  FlickManager flickManager;
+
+  MovieDetailsSliverAppBarView(this.onTapBack,this.flickManager);
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       backgroundColor: PRIMARY_COLOR,
-      expandedHeight: 300,
+      expandedHeight: 350,
       // floating: true,
       pinned: false,
       //  snap: true,
@@ -319,11 +349,11 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
               top: 0,
               left: 0,
               right: 0,
-              child: MovieDetailsAppBarVideoView(),
+              child: MovieDetailsAppBarVideoView(flickManager),
             ),
             Positioned(
               left: 15.63,
-              bottom: 15.63,
+              bottom: 0,
               child: Container(
                 width: 125,
                 height: 175,
@@ -336,7 +366,7 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
               ),
             ),
             Positioned(
-                bottom: -5,
+                bottom: -10,
                 right: 0,
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.6,
@@ -458,14 +488,24 @@ class ShareButtonView extends StatelessWidget {
 }
 
 class MovieDetailsAppBarVideoView extends StatelessWidget {
+
+  FlickManager flickManager;
+
+  MovieDetailsAppBarVideoView(this.flickManager);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 155,
-        child: Image.asset(
-          'assets/images/sample_grid_img.png',
-          fit: BoxFit.cover,
-        ));
+        height: 200,
+        child: FlickVideoPlayer(
+          flickManager: flickManager,
+        ),
+
+        // Image.asset(
+        //   'assets/images/sample_movie_venom_img.png',
+        //   fit: BoxFit.cover,
+        // ),
+    );
   }
 }
 

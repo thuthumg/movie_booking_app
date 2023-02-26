@@ -28,6 +28,8 @@ const SLIDER_RANGE_INACTIVE_COLOR = Color.fromRGBO(136, 136, 136, 1);
 
 const SLIDER_RANGE_ACTIVE_COLOR = Color.fromRGBO(0, 255, 106, 1);
 
+const LONG_PRESS_ON_SHOW_TIMING_COLOR = Color.fromRGBO(170, 170, 170, 1);
+
 
 
 

@@ -6,17 +6,32 @@ import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/filter_dropdown_view.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
-import 'package:movie_booking_app/widgets/clearable_text_field.dart';
+import 'package:movie_booking_app/widgets/search_box_view.dart';
+import 'package:movie_booking_app/widgets/search_widget_view.dart';
 
-class MovieSearchPage extends StatelessWidget {
+class MovieSearchPage extends StatefulWidget {
   final String  nowShowingOrComingSoonFlag;
 
 
   MovieSearchPage(this.nowShowingOrComingSoonFlag);
 
   @override
+  State<MovieSearchPage> createState() => _MovieSearchPageState();
+}
+
+class _MovieSearchPageState extends State<MovieSearchPage> {
+
+  String _searchText = '';
+
+  void _onSearch(String text) {
+    setState(() {
+      _searchText = text;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool _isNowShowing = this.nowShowingOrComingSoonFlag == 'NowShowing' ? true : false;
+    bool _isNowShowing = this.widget.nowShowingOrComingSoonFlag == 'NowShowing' ? true : false;
 
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
@@ -30,26 +45,36 @@ class MovieSearchPage extends StatelessWidget {
             child: Icon(Icons.chevron_left)),
         title: Row(
           children: [
-            SearchBoxView()
+            SearchBoxView(onSearch: (String paramString){
+              setState(() {
+                _onSearch(paramString);
+              });
+            })
           ],
         ),
-        actions: [
+        actions: const [
           FilterButtonView()
         ],
       ),
       body: Container(
+        margin: EdgeInsets.all(MARGIN_MEDIUM),
         color: PRIMARY_COLOR,
         child: CustomScrollView(
           slivers: [
             SliverList(
                 delegate: SliverChildListDelegate([
+                  SizedBox(height: 10,),
                   FilterDropdownSectionView(_isNowShowing),
                   SizedBox(height: 20,),
 
                 ])
             ),
+
             GridMoviesListSection(
-                _isNowShowing, () => {_navigateToMovieDetailPage(context,_isNowShowing)})
+                _isNowShowing,
+                _searchText,
+                    () => {_navigateToMovieDetailPage(context,_isNowShowing)})
+
           ],
         ),
       ),
@@ -68,27 +93,33 @@ Future<dynamic> _navigateToMovieDetailPage(BuildContext context,bool _isNowShowi
 class GridMoviesListSection extends StatelessWidget {
   final bool _isNowShowing;
   final Function onTapItemView;
+  final String searchText;
 
-  GridMoviesListSection(this._isNowShowing, this.onTapItemView);
+  GridMoviesListSection(this._isNowShowing,this.searchText, this.onTapItemView);
 
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: MARGIN_CARD_MEDIUM_2,
+          //mainAxisSpacing: MARGIN_CARD_MEDIUM_2,
           // crossAxisSpacing: 8,
           childAspectRatio: 0.63),
       delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-          return Padding(
-            padding: EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2),
-            child: MovieItemView(_isNowShowing, () {
-              this.onTapItemView();
-            }),
-          );
+          return searchText.toString().isNotEmpty?
+          MovieItemView(_isNowShowing,
+              _isNowShowing? movieObjListForNowShowing[index] :
+              movieObjListForComingSoon[index], () {
+            this.onTapItemView();
+          }) : Container();
         },
-        childCount: 20,
+        childCount:
+        searchText.toString().isNotEmpty?
+        _isNowShowing?
+        movieObjListForNowShowing.length:
+        movieObjListForComingSoon.length
+        : 0,
       ),
     );
   }
@@ -110,7 +141,7 @@ class FilterDropdownSectionView extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.only(left: MARGIN_MEDIUM_3),
+      margin: EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2),
       child: Wrap(
         spacing: 4.0, // spacing between adjacent chips
         // runSpacing: 1.0,
@@ -148,26 +179,6 @@ class FilterButtonView extends StatelessWidget {
   }
 }
 
-class SearchBoxView extends StatelessWidget {
-  const SearchBoxView({
-    Key? key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(Icons.search_rounded),
-        Container(
-          width: MediaQuery.of(context).size.width*0.5,
-          child: Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: ClearableTextField()
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 

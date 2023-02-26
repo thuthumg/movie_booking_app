@@ -42,7 +42,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 700,
+              height: 569,
               child: Stack(
                 children: [
                   Positioned(
@@ -50,9 +50,9 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                     right: 0,
                     top: 0,
                     child: Container(
-                      margin: EdgeInsets.all(20),
+                      margin: EdgeInsets.all(MARGIN_MEDIUM_3),
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderRadius: BorderRadius.all(Radius.circular(MARGIN_MEDIUM_3)),
                         image: DecorationImage(
                           fit: BoxFit.fill,
                           image: AssetImage(
@@ -127,29 +127,42 @@ class CancelBookingSectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Refund Amount",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: TEXT_REGULAR_2X,
-                  fontWeight: FontWeight.w500
-              ),),
-            Text("15000Ks",
-              style: TextStyle(
-                  color: CANCEL_COLOR,
-                  fontSize: TEXT_REGULAR_4X,
-                  fontWeight: FontWeight.w700
-              ),)
-          ],),
-        SizedBox(width: 10,),
+    return Container(
+      margin: EdgeInsets.only(left: MARGIN_LARGE,right: MARGIN_LARGE),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+       // mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(REFUND_AMOUNT_TEXT,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: TEXT_REGULAR_3X,
+                    fontWeight: FontWeight.w500
+                ),),
+              Text("15000Ks",
+                style: TextStyle(
+                    color: CANCEL_COLOR,
+                    fontSize: TEXT_REGULAR_4X,
+                    fontWeight: FontWeight.w700
+                ),)
+            ],),
+         Spacer(),
 
-        CancelBookingButtonView(),
-      ],
+          Expanded(
+            flex: 5,
+              child:GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: CancelBookingButtonView())) ,
+
+        ],
+      ),
     );
   }
 }
@@ -166,17 +179,17 @@ class ClipSectionView extends StatelessWidget {
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: 40,
-          height: 40,
+          width: CLIP_CIRCLE_SIZE,
+          height: CLIP_CIRCLE_SIZE,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: PRIMARY_COLOR),
+              borderRadius: BorderRadius.circular(MARGIN_MEDIUM_3), color: PRIMARY_COLOR),
         ),
         Spacer(),
         Container(
-          width: 40,
-          height: 40,
+          width: CLIP_CIRCLE_SIZE,
+          height: CLIP_CIRCLE_SIZE,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: PRIMARY_COLOR),
+              borderRadius: BorderRadius.circular(MARGIN_MEDIUM_3), color: PRIMARY_COLOR),
         )
       ],
     );
@@ -190,13 +203,13 @@ class TotalAmountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
+      height: TICKET_DETAILS_AMOUNT_TOTAL_SECTION_HEIGHT,
       child: Stack(
         children: const [
           Positioned(
             left: 0,
             child: Text(
-              "Total",
+              TICKET_DETAILS_AMOUNT_TOTAL_SECTION_TEXT,
               style: TextStyle(
                   color: SECONDARY_COLOR,
                   fontSize: TEXT_REGULAR_4X,
@@ -404,8 +417,8 @@ class FoodAndBeverageListItemView extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.only(right: MARGIN_MEDIUM),
-              width: 25,
-              height: 25,
+              width: TICKET_DETAILS_PAGE_DELETE_ICON_SIZE,
+              height: TICKET_DETAILS_PAGE_DELETE_ICON_SIZE,
               child: Image.asset("assets/icons/ic_delete.png"),
             ),
             SizedBox(
@@ -414,7 +427,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
             Text(
               "${foodAndBeverageItemObj.title}(Qt.${foodAndBeverageItemObj.qty})",
               style: TextStyle(
-                  color: Color.fromRGBO(136, 136, 136, 1),
+                  color: GRAY_COLOR_2,
                   fontSize: TEXT_REGULAR_1X,
                   fontWeight: FontWeight.w400),
             ),
@@ -422,7 +435,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
             Text(
               "${foodAndBeverageItemObj.price}Ks",
               style: TextStyle(
-                  color: Color.fromRGBO(136, 136, 136, 1),
+                  color: GRAY_COLOR_2,
                   fontSize: TEXT_REGULAR_1X,
                   fontWeight: FontWeight.w400),
             )
@@ -788,12 +801,8 @@ class CancelBookingButtonView extends StatelessWidget {
     return Container(
      // height: 50,
      // width: MediaQuery.of(context).size.width * 0.6,
-     // margin: EdgeInsets.only(right: MARGIN_MEDIUM_2),
-      child: GestureDetector(
-          onTap: () {
-           // _navigateToTicketPage(context);
-          },
-          child: CustomClipButtonView("Cancel Booking",CANCEL_COLOR,Colors.white)),
+      margin: EdgeInsets.only(bottom: MARGIN_MEDIUM_3),
+      child: CustomClipButtonView("Cancel Booking",CANCEL_COLOR,Colors.white),
     );
   }
 }
