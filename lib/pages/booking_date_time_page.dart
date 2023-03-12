@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/constants/date_list_item.dart';
-import 'package:movie_booking_app/pages/seating_plan_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
 import 'package:movie_booking_app/widgets/booking_movie_theaters_view.dart';
-import 'package:movie_booking_app/widgets/booking_time_view.dart';
-import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/date_time_card.dart';
-import 'package:movie_booking_app/widgets/my_clipper.dart';
 
 class BookingDateTimePage extends StatefulWidget {
   const BookingDateTimePage({Key? key}) : super(key: key);
@@ -57,46 +54,41 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
         ],
       ),
 
-      body: Container(
+      body: CustomScrollView(
+        slivers: [
+          SliverList(
+              delegate: SliverChildListDelegate([
+                const SizedBox(height: SIZE_BOX_HEIGHT_MEDIUM,),
+                Container(
+                    margin: const EdgeInsets.only(left: MARGIN_SMALL,right: MARGIN_SMALL),
+                    child: DateListView()),
+                const SizedBox(height: SIZE_BOX_HEIGHT_SMALL,),
+                Container(
+                    margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                    child: MovieViewType()),
+                const SizedBox(height: SIZE_BOX_HEIGHT_MEDIUM_1,),
+                MovieBookingTimeStatus(),
+                const SizedBox(height: SIZE_BOX_HEIGHT_MEDIUM,),
+                Container(
+                    margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
+                    child: BookingMovieTheatersView())
 
+              ])
+          ),
 
-        child: CustomScrollView(
-          slivers: [
-            SliverList(
-                delegate: SliverChildListDelegate([
-                  SizedBox(height: 15,),
-                  Container(
-                      margin: EdgeInsets.only(left: MARGIN_SMALL,right: MARGIN_SMALL),
-                      child: DateListView()),
-                  SizedBox(height: 10,),
-                  Container(
-                      margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
-                      child: MovieViewType()),
-                  SizedBox(height: 20,),
-                  MovieBookingTimeStatus(),
-                  SizedBox(height: 15,),
-                  Container(
-                      margin: EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
-                      child: BookingMovieTheatersView())
+        ],
 
-                ])
-            ),
-
-          ],
-
-        ),
       )
     );
   }
 }
 class MovieBookingTimeStatus extends StatelessWidget {
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromRGBO(34, 34, 34, 1),
-      padding: EdgeInsets.all(10),
+      color: BOOKING_TIME_STATUS_COLOR,
+      padding: const EdgeInsets.all(MARGIN_MEDIUM_1),
       child: Row(
         children: [
           Expanded(
@@ -124,8 +116,7 @@ class AlmostFullView extends StatelessWidget {
         ALMOST_FULL_COLOR,
         "Almost Full",
         'assets/icons/ic_almost_full.png',
-      8.0,
-      8.0
+      MARGIN_MEDIUM, MARGIN_MEDIUM
     );
   }
 }
@@ -138,8 +129,8 @@ class FillingFastView extends StatelessWidget {
         FILLING_FAST_COLOR,
         "Filling Fast",
         'assets/icons/ic_filling_fast.png',
-      8.0,
-      8.0
+        MARGIN_MEDIUM,
+        MARGIN_MEDIUM
     );
   }
 }
@@ -149,11 +140,11 @@ class ParkingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BookingDateTimeStatusView(
-        Color.fromRGBO(170, 170, 170, 1),
-        "Parking",
+        FACILITIES_TEXT_COLOR,
+        PARKING_TEXT,
         'assets/icons/ic_parking.png',
-      15.80,
-        15.80
+        FACILITIES_ICON_SIZE,
+        FACILITIES_ICON_SIZE
     );
   }
 }
@@ -163,11 +154,11 @@ class OnlineFoodView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BookingDateTimeStatusView(
-        Color.fromRGBO(170, 170, 170, 1),
-        "Online Food",
+        FACILITIES_TEXT_COLOR,
+        ONLINE_FOOD_TEXT,
         'assets/icons/ic_online_food.png',
-        15.80,
-        15.80
+        FACILITIES_ICON_SIZE,
+        FACILITIES_ICON_SIZE
     );
   }
 }
@@ -177,11 +168,11 @@ class WheelChairView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BookingDateTimeStatusView(
-        Color.fromRGBO(170, 170, 170, 1),
-        "Wheel Chair",
+        FACILITIES_TEXT_COLOR,
+        WHEEL_CHAIR_TEXT,
         'assets/icons/ic_wheel_chair.png',
-        15.80,
-        15.80
+        FACILITIES_ICON_SIZE,
+        FACILITIES_ICON_SIZE
     );
   }
 }
@@ -194,10 +185,10 @@ class AvailiableView extends StatelessWidget {
       margin: EdgeInsets.only(left: MARGIN_MEDIUM,right: MARGIN_MEDIUM),
       child: BookingDateTimeStatusView(
         AVAILIBLE_COLOR,
-        "Availiable",
+          AVAILIABLE_TEXT,
         'assets/icons/ic_availiable.png',
-          8.0,
-          8.0
+          MARGIN_MEDIUM,
+          MARGIN_MEDIUM
       ),
     );
   }
@@ -242,8 +233,7 @@ class _MovieViewTypeState extends State<MovieViewType> {
     }
 
     return Container(
-
-      height: 30,
+      height: MOVIE_VIEW_TYPE_HEIGHT,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: movieViewTypeObjList.length,
@@ -260,7 +250,7 @@ class _MovieViewTypeState extends State<MovieViewType> {
                     Colors.white30,
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     border: Border.all(
-                        color: Color.fromRGBO(255, 255, 255, 1),
+                        color: Colors.white,
                         width:1.0
                     )
 

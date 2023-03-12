@@ -366,3 +366,19 @@ const TICKET_DETAILS_AMOUNT_TOTAL_SECTION_TEXT = "Total";
 const FACILITIES_TEXT = "Facilities";
 const SAFETY_TEXT = "Safety";
 const CINEMA_DETAILS_TEXT = "Cinema Details";
+
+const PARKING_TEXT = "Parking";
+
+const ONLINE_FOOD_TEXT = "Online Food";
+
+const WHEEL_CHAIR_TEXT  = "Wheel Chair";
+
+const AVAILIABLE_TEXT = "Availiable";
+
+const COUNTRY_CODE_TEXT = "Country Code";
+
+const MOBILE_NUMBER_TEXT = "Mobile number";
+
+const VERIFY_YOUR_PHONE_NO_TEXT = "Verify Your Phone Number";
+
+const CONTINUE_WITH_GOOGLE = "Continue With Google";

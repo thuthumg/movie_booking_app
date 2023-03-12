@@ -48,6 +48,7 @@ class ProfileListView extends StatelessWidget {
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           itemCount: profileInfoList.length,
           itemBuilder: (BuildContext context, int index) {
             return ProfileListItemView(

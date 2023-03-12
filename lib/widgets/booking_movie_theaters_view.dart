@@ -139,7 +139,7 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
                 ],
               ),
               const SizedBox(height: 15,),
-              const Divider(color: Colors.white)
+              Container(height:1,color: SLIDER_RANGE_INACTIVE_COLOR)
 
             ],
           ),

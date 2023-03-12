@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking_app/pages/check_out_page.dart';
-import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
-import 'package:movie_booking_app/pages/location_page.dart';
-import 'package:movie_booking_app/pages/get_otp_page.dart';
+import 'package:hive/hive.dart';
+import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/pages/loading_page.dart';
-import 'package:movie_booking_app/pages/movie_detail_page.dart';
-import 'package:movie_booking_app/pages/movie_search_page.dart';
-import 'package:movie_booking_app/pages/seating_plan_page.dart';
-import 'package:movie_booking_app/resources/colors.dart';
-import 'package:movie_booking_app/resources/dimens.dart';
-import 'package:movie_booking_app/videoplayer/default_player.dart';
-import 'package:movie_booking_app/widgets/botton_sheet_view.dart';
-import 'package:movie_booking_app/widgets/clip_button.dart';
-import 'package:movie_booking_app/widgets/custom_button_bg_view.dart';
-import 'package:movie_booking_app/widgets/custom_button_view.dart';
-import 'package:movie_booking_app/widgets/date_time_background_view.dart';
-import 'package:movie_booking_app/widgets/my_clipper.dart';
+import 'package:movie_booking_app/persistence/hive_constants.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'pages/main_page.dart';
-import 'pages/snack_page.dart';
-import 'pages/ticket_confirmation_page.dart';
+void main()  async{
+
+  await Hive.initFlutter();
 
 
-void main() {
+  Hive.registerAdapter(CityVOAdapter());
+
+  await Hive.openBox<CityVO>(BOX_NAME_CITY_VO);
+
+
   runApp(const MyApp());
 }
 
@@ -39,6 +31,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: LoadingPage()
+      //LoadingPage()
 //SnackPage()
     );
   }

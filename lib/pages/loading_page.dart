@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:movie_booking_app/pages/get_otp_page.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+
 import 'package:movie_booking_app/pages/log_in_page.dart';
+import 'package:movie_booking_app/resources/colors.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -13,19 +16,24 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   bool _taskCompleted = false;
-
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
   @override
   void initState() {
-    // TODO: implement initState
+    movieBookingAppModel.getCities().then((value){
+      debugPrint("cities data = ${value.toString()}");
+    })
+    .catchError((error){
+      debugPrint(error.toString());
+    });
     super.initState();
     _runDelayedTask();
   }
 
   Future<void> _runDelayedTask() async {
-    print('Starting the delayed task');
+   // print('Starting the delayed task');
     await Future.delayed(Duration(seconds: 3));
-    print('Delayed task completed');
+   // print('Delayed task completed');
     setState(() {
       _taskCompleted = true;
       _navigateToLogin(context);
@@ -43,7 +51,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color.fromRGBO(19, 19, 19, 1.0),
+      color: PRIMARY_COLOR,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

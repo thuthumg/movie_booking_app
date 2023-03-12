@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_booking_app/pages/get_otp_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
+import 'package:movie_booking_app/widgets/phone_number_text_field_view.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+
+
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String _enterMobileNoText  = '';
+  String _chooseCountryCode  = '';
+  void _onClickVerifyBtn(String text){
+    setState(() {
+      _enterMobileNoText = text;
+
+
+    });
+  }
+  void _onTapCountryCode(String text){
+    setState(() {
+      _chooseCountryCode = text;
+
+
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +48,13 @@ class LoginPage extends StatelessWidget {
               const LogoImageView(),
               const SubTitleTextView(),
               const SizedBox(
-                height: 80,
+                height: VERIFITED_YOUR_PH_NO_AND_COUNTRY_CODE_SPACE,
               ),
-              const CountryCodeAndMobileTextFieldView(),
-              const VerifyYourPhoneNoButton(),
+              CountryCodeAndMobileTextFieldView(onClickVerifyBtn:_onClickVerifyBtn,
+                  onTapCountryCode:_onTapCountryCode),
+              VerifyYourPhoneNoButton(enterMobileNoText: _enterMobileNoText,countryCode: _chooseCountryCode,),
               const SizedBox(
-                height: 10,
+                height: MARGIN_MEDIUM_1,
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -50,7 +79,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const GoogleButton(),
+              GoogleButton(enterMobileNoText: _enterMobileNoText,countryCode: _chooseCountryCode,),
             ],
           ),
         ),
@@ -106,8 +135,14 @@ class LogoImageView extends StatelessWidget {
 }
 
 class GoogleButton extends StatelessWidget {
-  const GoogleButton({
+
+  String? enterMobileNoText;
+  String? countryCode;
+
+  GoogleButton({
     Key? key,
+    required this.enterMobileNoText,
+    required this.countryCode
   }) : super(key: key);
 
   @override
@@ -121,19 +156,38 @@ class GoogleButton extends StatelessWidget {
           iconPadding: MARGIN_MEDIUM,
           iconWidthHeight: 35,
           textColor: Colors.black,
-          textDesc: "Continue With Google",
+          textDesc: CONTINUE_WITH_GOOGLE,
           textFontSize: TEXT_REGULAR_2X,
           iconPath: 'assets/images/ic_google.png',
           isShowIcon: true,
-          () => _navigateToOTPPage(context)),
+          () => _navigateToOTPPage(context,enterMobileNoText,countryCode)),
     );
   }
 }
 
-class CountryCodeAndMobileTextFieldView extends StatelessWidget {
-  const CountryCodeAndMobileTextFieldView({
+class CountryCodeAndMobileTextFieldView extends StatefulWidget {
+  final Function(String) onClickVerifyBtn;
+  final Function(String) onTapCountryCode;
+  CountryCodeAndMobileTextFieldView(
+  {
     Key? key,
-  }) : super(key: key);
+    required this.onClickVerifyBtn,
+    required this.onTapCountryCode
+}
+      ): super(key: key);
+
+  @override
+  State<CountryCodeAndMobileTextFieldView> createState() => _CountryCodeAndMobileTextFieldViewState(
+      this.onClickVerifyBtn,
+  this.onTapCountryCode);
+}
+
+class _CountryCodeAndMobileTextFieldViewState extends State<CountryCodeAndMobileTextFieldView> {
+
+ final Function(String) onClickVerifyBtn;
+ final Function(String) onTapCountryCode;
+
+ _CountryCodeAndMobileTextFieldViewState(this.onClickVerifyBtn,this.onTapCountryCode);
 
   @override
   Widget build(BuildContext context) {
@@ -144,32 +198,68 @@ class CountryCodeAndMobileTextFieldView extends StatelessWidget {
         children: [
           const Align(
             alignment: Alignment.centerLeft,
-            child: Text("Country Code",
+            child: Text(COUNTRY_CODE_TEXT,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: Color.fromRGBO(136, 136, 136, 1),
-                    fontSize: 12,
+                    color: COUNTRY_CODE_AND_MOBILE_NUMBER_TEXT_COLOR,
+                    fontSize: TEXT_REGULAR,
                     fontWeight: FontWeight.w400)),
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CountryCodeDropdown(),
-              const Expanded(
+              CountryCodeDropdown(onTapCountryCode: onTapCountryCode),
+              Expanded(
                 flex: 1,
-                child: TextField(
-                  decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 1.0),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 1.0),
-                      ),
-                      hintText: "Mobile number",
-                      hintStyle:
-                          TextStyle(color: Color.fromRGBO(136, 136, 136, 1))),
-                  style: TextStyle(color: Colors.white),
-                ),
+                child:
+                  PhoneNumberTextField(onClickVerifyBtn:onClickVerifyBtn),
+                // Column(
+                //   children: [
+                //     TextField(
+                //       keyboardType: TextInputType.phone,
+                //       style: TextStyle(color: Colors.white),
+                //       decoration: InputDecoration(
+                //         //labelText: MOBILE_NUMBER_TEXT,
+                //         enabledBorder: UnderlineInputBorder(
+                //           borderSide: BorderSide(color: Colors.white, width: 1.0),
+                //         ),
+                //         focusedBorder: UnderlineInputBorder(
+                //           borderSide: BorderSide(color: Colors.white, width: 1.0),
+                //         ),
+                //         hintText: MOBILE_NUMBER_TEXT,
+                //         hintStyle:
+                //         TextStyle(color: COUNTRY_CODE_AND_MOBILE_NUMBER_TEXT_COLOR),
+                //        ),
+                //       ),
+                // Visibility(
+                //   visible: this.showErrorMsg ?? false,
+                //   child:
+                //   Text(
+                //     'Please enter a valid phone number',
+                //     style: const TextStyle(
+                //         color: Color.fromRGBO(255, 255, 255, 1),
+                //         fontSize: 16,
+                //         fontWeight: FontWeight.w400),
+                //   ),),
+                //   ],
+                // ),
+
+
+                //
+                // TextField(
+                //   keyboardType: TextInputType.numberWithOptions(decimal: true),
+                //   decoration: InputDecoration(
+                //       enabledBorder: UnderlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.white, width: 1.0),
+                //       ),
+                //       focusedBorder: UnderlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.white, width: 1.0),
+                //       ),
+                //       hintText: MOBILE_NUMBER_TEXT,
+                //       hintStyle:
+                //           TextStyle(color: COUNTRY_CODE_AND_MOBILE_NUMBER_TEXT_COLOR)),
+                //   style: TextStyle(color: Colors.white),
+                // ),
               )
             ],
           ),
@@ -180,9 +270,14 @@ class CountryCodeAndMobileTextFieldView extends StatelessWidget {
 }
 
 class VerifyYourPhoneNoButton extends StatelessWidget {
-  const VerifyYourPhoneNoButton({
+
+  String? enterMobileNoText;
+  String? countryCode;
+
+  VerifyYourPhoneNoButton({
     Key? key,
-  }) : super(key: key);
+  required this.enterMobileNoText,
+  required this.countryCode}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -195,25 +290,72 @@ class VerifyYourPhoneNoButton extends StatelessWidget {
           iconPadding: 0,
           iconWidthHeight: 0,
           textColor: Colors.black,
-          textDesc: "Verify Your Phone Number",
+          textDesc: VERIFY_YOUR_PHONE_NO_TEXT,
           textFontSize: TEXT_REGULAR_2X,
           iconPath: '',
           isShowIcon: false,
-          () => _navigateToOTPPage(context)),
+          () => _navigateToOTPPage(context,enterMobileNoText,countryCode)),
     );
   }
 }
 
-Future<dynamic> _navigateToOTPPage(BuildContext context) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => GetOTPPage(),
-    ),
-  );
+
+
+Future<dynamic> _navigateToOTPPage(BuildContext context, String? enterMobileNoText, String? countryCode) {
+  String validPhoneNo = "${countryCode}${enterMobileNoText}";
+ debugPrint("check param = ${validPhoneNo}");
+
+ if(enterMobileNoText == null)
+   {
+      return Fluttertoast.showToast(
+          msg: "Please enter a valid phone number",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+   }else{
+
+   if(phoneNoVerificationFunc(validPhoneNo))
+     {
+     //  String validPhoneNo = "${countryCode}${enterMobileNoText}";
+      // print("check valid phone no true= ${validPhoneNo}");
+
+       return Navigator.push(
+         context,
+         MaterialPageRoute(
+           builder: (context) => GetOTPPage(),
+         ),
+       );
+     }else{
+    // String validPhoneNo = "${countryCode}${enterMobileNoText}";
+    // print("check valid phone no false= ${validPhoneNo}");
+     return Fluttertoast.showToast(
+         msg: "Please enter a valid phone number",
+         toastLength: Toast.LENGTH_SHORT,
+         gravity: ToastGravity.CENTER,
+         backgroundColor: Colors.grey,
+         textColor: Colors.white,
+         fontSize: 16.0
+     );
+   }
+
+
+   //callAPi
+
+ }
+
+
+
 }
 
 class CountryCodeDropdown extends StatefulWidget {
+
+  Function(String) onTapCountryCode;
+
+  CountryCodeDropdown({required this.onTapCountryCode});
+
   @override
   _CountryCodeDropdownState createState() => _CountryCodeDropdownState();
 }
@@ -240,6 +382,7 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
         onChanged: (newValue) {
           setState(() {
             _selectedCountryCode = newValue ?? "";
+            widget.onTapCountryCode(_selectedCountryCode);
           });
         },
         items: _countryCodes.map((countryCode) {
@@ -258,3 +401,18 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
     );
   }
 }
+bool phoneNoVerificationFunc(String phoneNo) {
+  final RegExp _phoneNumberRegExp = RegExp(r'^\+959\d{8,9}$');
+  return _phoneNumberRegExp.hasMatch(phoneNo);
+
+
+}
+// bool checkPlusNineFiveNineFunc(String phoneNo){
+//
+//   var subStringData = phoneNo.substring(0, 4);
+//   if (subStringData == "+959") {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
