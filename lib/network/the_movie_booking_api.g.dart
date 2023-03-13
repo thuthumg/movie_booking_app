@@ -43,6 +43,30 @@ class _TheMovieBookingApi implements TheMovieBookingApi {
     return value;
   }
 
+  @override
+  Future<GetOtpResponse> getOtp(PARAM_PHONE) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {'phone': PARAM_PHONE};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<GetOtpResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/x-www-form-urlencoded',
+    )
+            .compose(
+              _dio.options,
+              '/api/v2/get-otp',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetOtpResponse.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

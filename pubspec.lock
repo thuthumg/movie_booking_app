@@ -262,14 +262,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_libphonenumber:
-    dependency: "direct main"
-    description:
-      name: flutter_libphonenumber
-      sha256: "4a96521ce73c0a93ee535a90ec217dce8f2dada29e56ccfc06ee5a5639524748"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.5"
   flutter_lints:
     dependency: "direct dev"
     description:

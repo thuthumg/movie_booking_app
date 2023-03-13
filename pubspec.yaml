@@ -51,7 +51,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   fluttertoast: ^8.0.7
-  flutter_libphonenumber: ^0.1.2
+  #flutter_libphonenumber: ^0.1.2
   #flick_video_player: ^0.3.1
  # video_player: ^2.5.1
   #pin_code_fields: ^7.4.0

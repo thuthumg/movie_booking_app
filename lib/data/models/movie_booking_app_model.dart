@@ -4,4 +4,5 @@ abstract class MovieBookingAppModel{
 
   ///Network
   Future<List<CityVO>?> getCities();
+  Future<int?> getOtp(String phoneNum);
 }

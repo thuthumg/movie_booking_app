@@ -23,4 +23,9 @@ class MovieBookingAppModelImpl extends MovieBookingAppModel{
     return _dataAgent.getCities();
   }
 
+  @override
+  Future<int?> getOtp(String phoneNum) {
+   return _dataAgent.getOtp(phoneNum);
+  }
+
 }
