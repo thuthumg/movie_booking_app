@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:movie_booking_app/constants/filter_obj.dart';
 import 'package:movie_booking_app/constants/food_and_beverage_item_obj.dart';
 import 'package:movie_booking_app/constants/movie_list_obj.dart';
@@ -382,3 +383,12 @@ const MOBILE_NUMBER_TEXT = "Mobile number";
 const VERIFY_YOUR_PHONE_NO_TEXT = "Verify Your Phone Number";
 
 const CONTINUE_WITH_GOOGLE = "Continue With Google";
+
+const VERIFY_YOUR_PHONE_NUMBER = "Verify Your Phone Number";
+
+const WE_WILL_SENT_SIX_DIGIT_SMS_CODE_TEXT = "We will sent 6-digit sms code \n to verify your phone number";
+
+const PLEASE_ENTER_A_VALID_PHONE_NUMBER_MSG = "Please enter a valid phone number";
+
+const ENTER_OTP_CODE = "Enter OTP Code";
+

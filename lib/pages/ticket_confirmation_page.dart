@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -19,6 +20,7 @@ class TicketConfirmationPage extends StatefulWidget {
 class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
   final String data = 'https://www.example.com';
   bool _taskLoadingCompleted = true;
+ // CityVO cityVO = CityVO();
 
   @override
   void initState() {
@@ -176,12 +178,20 @@ class DoneButtonView extends StatelessWidget {
             iconPath: '',
             isShowIcon: false,
             () {
+
+
+            /*
+             For city VO condition(15.03.2023)
+             Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>MainPage(cityVO: ,)),
+              );*/
+
+
+
             //  Navigator.of(context).pushNamedAndRemoveUntil('/location_page', (Route route) => false);
              // Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>MainPage()),
-              );
+
              // Navigator.popUntil(context, ModalRoute.withName('/movie_page'));
             }),
       ),

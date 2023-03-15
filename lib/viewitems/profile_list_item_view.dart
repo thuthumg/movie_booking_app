@@ -4,14 +4,14 @@ import 'package:movie_booking_app/resources/dimens.dart';
 class ProfileListItemView extends StatelessWidget {
   final String titleLabel;
   final String iconLinkLabel;
-  Function onTapTicketItem;
+  Function(String titletxt) onTapTicketItem;
 
   ProfileListItemView(this.titleLabel,this.iconLinkLabel,this.onTapTicketItem);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=> onTapTicketItem(),
+      onTap: ()=> onTapTicketItem(titleLabel),
       child: Container(
         height: 55,
         margin: EdgeInsets.only(bottom: MARGIN_SMALL),

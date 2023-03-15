@@ -1,12 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/city_view.dart';
 
-class LocationPage extends StatelessWidget {
-  const LocationPage({Key? key}) : super(key: key);
+class LocationPage extends StatefulWidget {
+  LocationPage({Key? key}) : super(key: key);
 
+  @override
+  State<LocationPage> createState() => _LocationPageState();
+}
+
+class _LocationPageState extends State<LocationPage> {
+  MovieBookingAppModel mMovieBookingAppModel = MovieBookingAppModelImpl();
+
+
+
+  ///State Variables
+  List<CityVO>? citiesDataList;
+
+
+ @override
+  void initState() {
+
+   ///cities from Database
+   mMovieBookingAppModel.getCitiesFromDatabase().then((citiesList) {
+     setState(() {
+       citiesDataList = citiesList;
+     });
+   }).catchError((error) {
+     debugPrint(error.toString());
+   });
+
+
+
+   super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +91,9 @@ class LocationPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              CitiesListView(() => _navigateToHomeScreen(context))
+              CitiesListView(
+                      onTapCity: (CityVO cityVO) => _navigateToHomeScreen(context,cityVO),
+              citiesList:  citiesDataList?? [],)
             ],
           ),
         ),
@@ -94,9 +130,9 @@ class CitiesTitleView extends StatelessWidget {
   }
 }
 
-Future<dynamic> _navigateToHomeScreen(BuildContext context) {
-  return Navigator.push(
-      context, MaterialPageRoute(builder: (context) => MainPage()));
+Future<dynamic> _navigateToHomeScreen(BuildContext context, CityVO cityVO) {
+  return Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => MainPage(cityVO: cityVO)));
 }
 
 class SearchSection extends StatelessWidget {
@@ -169,7 +205,9 @@ class SearchSection extends StatelessWidget {
 }
 
 class CitiesListView extends StatelessWidget {
-  final Function onTapCity;
+  final Function(CityVO) onTapCity;
+  List<CityVO> citiesList;
+/*
   List<String> citiesPopulate = [
     "Yangon",
     "Mandalay",
@@ -177,8 +215,9 @@ class CitiesListView extends StatelessWidget {
     "Naypyidaw",
     "Mawlamyine"
   ];
+*/
 
-  CitiesListView(this.onTapCity);
+  CitiesListView({required this.onTapCity,required this.citiesList});
 
   @override
   Widget build(BuildContext context) {
@@ -186,13 +225,13 @@ class CitiesListView extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: citiesPopulate.length,
+        itemCount: citiesList.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: (){
-              onTapCity();
+              onTapCity(citiesList.elementAt(index));
             },
-            child: CityView(citiesPopulate.elementAt(index)),
+            child: CityView(citiesList.elementAt(index).name.toString()),
           );
         },
       ),

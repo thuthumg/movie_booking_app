@@ -1,6 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/banner_vo.dart';
+import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/pages/movie_detail_page.dart';
 import 'package:movie_booking_app/pages/movie_search_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
@@ -9,6 +16,10 @@ import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 
 class MoviePage extends StatefulWidget {
+  final CityVO cityVO;
+
+  const MoviePage({Key? key, required this.cityVO}) : super(key: key);
+
   @override
   State<MoviePage> createState() => _MoviePageState();
 }
@@ -18,6 +29,40 @@ class _MoviePageState extends State<MoviePage> {
   bool _isNowShowing = true;
   bool _isComingSoon = false;
   String nowShowingOrComingSoon = 'NowShowing';
+
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+
+  ///State Variables
+  UserDataVO? userDataVO;
+  List<BannerVO>? bannersList;
+  List<MovieVO>? moviesList;
+
+  @override
+  void initState() {
+    //  print("string token = ${paramTokenStr}");
+
+    ///banners from Network
+    movieBookingAppModel.getBanners().then((bannersList) {
+      setState(() {
+        this.bannersList = bannersList;
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+
+    ///movies from Network
+    movieBookingAppModel
+        .getMovieList(nowShowingOrComingSoon)
+        .then((moviesList) {
+      setState(() {
+        this.moviesList = moviesList;
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +79,9 @@ class _MoviePageState extends State<MoviePage> {
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
-        title: const Text(
-          "Yangon",
-          style: TextStyle(
+        title: Text(
+          widget.cityVO.name.toString(),
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.white,
             fontStyle: FontStyle.italic,
@@ -76,7 +121,7 @@ class _MoviePageState extends State<MoviePage> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  BannerSectionView(),
+                  BannerSectionView(bannersList: bannersList),
                   const SizedBox(height: MARGIN_SMALL),
                   //  NowShowingAndComingSoonButtonView(),
                   Container(
@@ -185,7 +230,10 @@ class _MoviePageState extends State<MoviePage> {
               ),
             ),
             GridMoviesListSection(
-                _isNowShowing, () => {_navigateToMovieDetailPage(context,_isNowShowing)})
+                moviesList: moviesList,
+                _isNowShowing,
+                onTapItemView: () =>
+                    {_navigateToMovieDetailPage(context, _isNowShowing)})
           ],
         ),
       ),
@@ -194,6 +242,10 @@ class _MoviePageState extends State<MoviePage> {
 }
 
 class BannerSectionView extends StatefulWidget {
+  final List<BannerVO>? bannersList;
+
+  BannerSectionView({required this.bannersList});
+
   @override
   State<BannerSectionView> createState() => _BannerSectionViewState();
 }
@@ -224,10 +276,10 @@ class _BannerSectionViewState extends State<BannerSectionView> {
                 });
               },
             ),
-            items: [1, 2, 3, 4, 5].map((i) {
+            items: widget.bannersList?.map((bannerVO) {
               return Builder(
                 builder: (BuildContext context) {
-                  return BannerItemView();
+                  return BannerItemView(bannerVO: bannerVO);
                 },
               );
             }).toList(),
@@ -385,37 +437,45 @@ class _NowShowingAndComingSoonButtonViewState
 class GridMoviesListSection extends StatelessWidget {
   final bool _uiChangeFlag;
   final Function onTapItemView;
+  final List<MovieVO>? moviesList;
 
-  GridMoviesListSection(this._uiChangeFlag, this.onTapItemView);
+  GridMoviesListSection(this._uiChangeFlag,
+      {required this.onTapItemView, required this.moviesList});
 
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-         // mainAxisSpacing: 10,
-         //  crossAxisSpacing: 10,
-         childAspectRatio: 0.63,//childAspectRatio: 0.63
-          ),
+        crossAxisCount: 2,
+        // mainAxisSpacing: 10,
+        //  crossAxisSpacing: 10,
+        childAspectRatio: 0.63, //childAspectRatio: 0.63
+      ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return MovieItemView(_uiChangeFlag,
-              _uiChangeFlag?
-              movieObjListForNowShowing[index] :
-              movieObjListForComingSoon[index], () {
+          return MovieItemView(
+              uiChangeFlag: _uiChangeFlag,
+              movieListObjItem:   moviesList?.elementAt(index)        
+             /* _uiChangeFlag
+                  ? moviesList[index]
+                  : moviesList[index]*/
+              ,
+                  onTapItemView: () {
             this.onTapItemView();
           });
         },
-        childCount: _uiChangeFlag? movieObjListForNowShowing.length : movieObjListForComingSoon.length,
+        childCount: _uiChangeFlag
+            ? moviesList?.length
+            : moviesList?.length,
       ),
     );
   }
 }
 
 class BannerItemView extends StatelessWidget {
-  const BannerItemView({
-    Key? key,
-  }) : super(key: key);
+  final BannerVO? bannerVO;
+
+  BannerItemView({Key? key, this.bannerVO}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -423,8 +483,8 @@ class BannerItemView extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        image: const DecorationImage(
-          image: AssetImage('assets/images/sample_img.png'),
+        image: DecorationImage(
+          image: NetworkImage(bannerVO?.url.toString() ?? ""),
           fit: BoxFit.cover,
         ),
       ),
@@ -543,7 +603,8 @@ class MovieListSliverAppBarView extends StatelessWidget {
   }
 }
 
-Future<dynamic> _navigateToMovieDetailPage(BuildContext context,bool _isNowShowing) {
+Future<dynamic> _navigateToMovieDetailPage(
+    BuildContext context, bool _isNowShowing) {
   return Navigator.push(
     context,
     MaterialPageRoute(

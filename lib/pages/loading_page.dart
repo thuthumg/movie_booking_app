@@ -3,8 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 
 import 'package:movie_booking_app/pages/log_in_page.dart';
+import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -16,16 +20,38 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   bool _taskCompleted = false;
+  UserDataVO? userDataVO;
+  List<CityVO>? citiesListVO;
   MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
   @override
   void initState() {
     movieBookingAppModel.getCities().then((value){
       debugPrint("cities data = ${value.toString()}");
+
+      citiesListVO = value;
     })
     .catchError((error){
       debugPrint(error.toString());
     });
+
+
+
+
+    if(paramTokenStr.isNotEmpty)
+    {
+      ///uservo from Database
+      movieBookingAppModel.getUserDataFromDatabase(paramTokenStr).then((userVO) {
+        setState(() {
+          userDataVO = userVO;
+          print("check User data = ${userDataVO?.userToken}");
+        });
+      }).catchError((error) {
+        debugPrint(error.toString());
+      });
+    }
+
+
     super.initState();
     _runDelayedTask();
   }
@@ -41,12 +67,32 @@ class _LoadingPageState extends State<LoadingPage> {
     });
   }
   Future<dynamic> _navigateToLogin(BuildContext context) {
-    return Navigator.push(
+
+   /* if(paramTokenStr.isNotEmpty)
+      {
+        return Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainPage(cityVO: ),
+          ),
+        );
+      }else{
+      return Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
+    }*/
+
+    return Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => LoginPage(),
       ),
     );
+
+
   }
   @override
   Widget build(BuildContext context) {

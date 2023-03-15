@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/constants/movie_list_obj.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 
 class MovieItemView extends StatelessWidget {
 
   final bool uiChangeFlag;
   final Function onTapItemView;
-  final MovieListObj movieListObjItem;
+ // final MovieListObj movieListObjItem;
+  final MovieVO? movieListObjItem;
 
-  MovieItemView(this.uiChangeFlag,this.movieListObjItem,this.onTapItemView);
+  MovieItemView({
+    required this.uiChangeFlag,
+    required this.movieListObjItem,
+    required this.onTapItemView
+}
+     );
 // ()=> Navigator.pop(context),
   @override
   Widget build(BuildContext context) {
@@ -28,7 +37,7 @@ class MovieItemView extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
                 borderRadius:BorderRadius.circular(8.0),
-                child: MovieItemImageView(movieListObjItem.movieImage)),
+                child: MovieItemImageView(movieListObjItem?.posterPath??"")),
           ),
           Positioned.fill(
             child: ClipRRect(
@@ -48,7 +57,7 @@ class MovieItemView extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            movieListObjItem.movieName,
+                            movieListObjItem?.originalTitle ?? "",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -63,12 +72,12 @@ class MovieItemView extends StatelessWidget {
                             height: 30,
                             child: Image.asset(
                                 'assets/images/ic_imbd.png')),
-                        Expanded(
+                        const Expanded(
                           child: Text(
-                           movieListObjItem.movieRating,
+                           "9.0",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontStyle: FontStyle.italic,
                                 color: Colors.white,
                                 fontSize: TEXT_REGULAR_1X,
@@ -95,13 +104,12 @@ class MovieItemView extends StatelessWidget {
                             Image.asset('assets/images/ic_dot.png'),
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: Text(
-
-                           movieListObjItem.movieFormatType,
+                              "2D,3D,3D IMAX",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: Colors.white,
                                 fontSize: TEXT_REGULAR_1X,
                                 fontWeight: FontWeight.w500),
@@ -126,7 +134,7 @@ class MovieItemView extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
                     child: Center(
-                      child: Text(movieListObjItem.movieComingSoonDate,
+                      child: Text(movieListObjItem?.formatDate()??"",
                       style: const TextStyle(
                         fontSize: TEXT_REGULAR,
                         color: Color.fromRGBO(85, 85, 85, 1),
@@ -153,8 +161,8 @@ class MovieItemImageView extends StatelessWidget {
   MovieItemImageView(this.movieImage);
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      movieImage,
+    return Image.network(
+      '${IMAGE_BASE_URL}${movieImage}',
       fit: BoxFit.cover,
     );
   }

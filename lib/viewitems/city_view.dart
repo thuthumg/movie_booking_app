@@ -29,8 +29,10 @@ class CityView extends StatelessWidget {
                 ),),
             ),
           ),
-
-          const Expanded(flex: 1, child: Divider(color: CITIES_LIST_DIVIDER_COLOR))
+          SizedBox(height: 10,),
+          Container(
+              height: 1,
+              color: CITIES_LIST_DIVIDER_COLOR)
 
         ],
       ),

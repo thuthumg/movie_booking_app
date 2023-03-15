@@ -40,7 +40,8 @@ class CustomButtonView extends StatelessWidget {
             decoration: BoxDecoration(
                 color: buttonContainerBgColor,
                 borderRadius:
-                    BorderRadius.all(Radius.circular(buttonContainerRadius))),
+                    BorderRadius.all(
+                        Radius.circular(buttonContainerRadius))),
             child: Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,

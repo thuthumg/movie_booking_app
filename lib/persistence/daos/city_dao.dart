@@ -1,4 +1,6 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/persistence/hive_constants.dart';
 
 class CityDao{
 
@@ -18,10 +20,14 @@ class CityDao{
       value: (city) => city
     );
 
-   // await getCityBox()
+    await getCityBox().putAll(cityMap);
   }
 
-  // Box<CityVO> getCityBox(){
-  //   return Hive.box<CityVO>(BOX_NAME_CITY_VO);
-  // }
+  List<CityVO> getAllCities(){
+    return getCityBox().values.toList();
+  }
+
+  Box<CityVO> getCityBox(){
+    return Hive.box<CityVO>(BOX_NAME_CITY_VO);
+  }
 }

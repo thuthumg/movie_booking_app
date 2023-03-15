@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/pages/location_page.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
 
 //import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:pinput/pinput.dart';
 
-class GetOTPPage extends StatelessWidget {
-  const GetOTPPage({Key? key}) : super(key: key);
+class GetOTPPage extends StatefulWidget {
+  final String paramPhoneNumber;
+
+  const GetOTPPage({Key? key,required this.paramPhoneNumber}) : super(key: key);
+
+  @override
+  State<GetOTPPage> createState() => _GetOTPPageState();
+}
+
+class _GetOTPPageState extends State<GetOTPPage> {
+
+  String pinText = "";
+
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +43,21 @@ class GetOTPPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              LogoImageView(),
-              SubTitleTextView(),
-              SizedBox(
+            children: [
+              const LogoImageView(),
+              const SubTitleTextView(),
+              const SizedBox(
                 height: MARGIN_XXLARGE,
               ),
-              OTPTextView(),
-              SizedBox(
+              OTPTextView(pinCodeText: (String pinText){
+                this.pinText = pinText;
+              },),
+              const SizedBox(
                 height: MARGIN_XLARGE,
               ),
-              ResendCodeTextView(),
-              ConfirmOTPBtnView()
+              const ResendCodeTextView(),
+              ConfirmOTPBtnView(movieBookingAppModel: movieBookingAppModel,
+                  pinText: this.pinText,phoneNum: widget.paramPhoneNumber)
             ],
           ),
         ),
@@ -66,9 +86,14 @@ class BackButtonView extends StatelessWidget {
 }
 
 class ConfirmOTPBtnView extends StatelessWidget {
-  const ConfirmOTPBtnView({
-    Key? key,
-  }) : super(key: key);
+  MovieBookingAppModel? movieBookingAppModel;
+  String pinText;
+  String phoneNum;
+  ConfirmOTPBtnView({
+    required this.movieBookingAppModel,
+    required this.pinText,
+    required this.phoneNum
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +110,7 @@ class ConfirmOTPBtnView extends StatelessWidget {
           textFontSize: TEXT_REGULAR_2X,
           iconPath: '',
           isShowIcon: false,
-          () => _navigateToLocationPage(context)),
+          () => _navigateToLocationPage(context,movieBookingAppModel,pinText,phoneNum)),
     );
 
     //   Padding(
@@ -141,8 +166,12 @@ class ResendCodeTextView extends StatelessWidget {
 }
 
 class OTPTextView extends StatelessWidget {
-  const OTPTextView({
+
+  Function(String) pinCodeText;
+
+  OTPTextView({
     Key? key,
+    required this.pinCodeText
   }) : super(key: key);
 
   @override
@@ -156,11 +185,11 @@ class OTPTextView extends StatelessWidget {
             children: const [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Enter OTP Code",
+                child: Text(ENTER_OTP_CODE,
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                        color: Color.fromRGBO(136, 136, 136, 1),
-                        fontSize: 12,
+                        color: ENTER_OTP_CODE_TEXT_COLOR,
+                        fontSize: TEXT_REGULAR,
                         fontWeight: FontWeight.w400)),
               ),
             ],
@@ -169,7 +198,9 @@ class OTPTextView extends StatelessWidget {
         const SizedBox(
           height: MARGIN_MEDIUM,
         ),
-        const PinCodeTextSection(),
+        PinCodeTextSection(pinCodeText: (String pinText){
+          this.pinCodeText(pinText);
+        }),
       ],
     );
   }
@@ -222,8 +253,12 @@ class LogoImageView extends StatelessWidget {
 }
 
 class PinCodeTextSection extends StatelessWidget {
-  const PinCodeTextSection({
+
+  Function(String) pinCodeText;
+
+  PinCodeTextSection({
     Key? key,
+    required this.pinCodeText
   }) : super(key: key);
 
   @override
@@ -232,24 +267,24 @@ class PinCodeTextSection extends StatelessWidget {
       width: 50,
       height: 50,
       textStyle: const TextStyle(
-          fontSize: 14,
-          color: Color.fromRGBO(74, 74, 75, 1),
+          fontSize: TEXT_REGULAR_1X,
+          color: PIN_THEME_TEXT_COLOR,
           fontWeight: FontWeight.w500),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
-        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: PIN_THEME_BORDER_COLOR),
+        borderRadius: BorderRadius.circular(PIN_THEME_BORDER_RADIUS),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
       border: Border.all(color: Colors.white),
-      borderRadius: BorderRadius.circular(6),
+      borderRadius: BorderRadius.circular(PIN_THEME_BORDER_RADIUS),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: const Color.fromRGBO(234, 239, 243, 1),
+        color: SUMBITED_PIN_THEME_COLOR,
       ),
     );
     return Pinput(
@@ -257,21 +292,99 @@ class PinCodeTextSection extends StatelessWidget {
       defaultPinTheme: defaultPinTheme,
       focusedPinTheme: focusedPinTheme,
       submittedPinTheme: submittedPinTheme,
-      validator: (s) {
-        return s == '222222' ? null : 'Pin is incorrect';
-      },
+      // validator: (s) {
+      //   return s == '222222' ? null : 'Pin is incorrect';
+      // },
       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
       showCursor: true,
-      onCompleted: (pin) => print(pin),
+      onCompleted: (pin){
+        print(pin);
+        this.pinCodeText(pin);
+      } ,
     );
   }
 }
 
-Future<dynamic> _navigateToLocationPage(BuildContext context) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => LocationPage(),
-    ),
-  );
+Future<dynamic>? _navigateToLocationPage(BuildContext context,
+    MovieBookingAppModel? movieBookingAppModel,
+    String pinText,String phoneNum) {
+  //call confirm otp api
+  if (pinText.isEmpty) {
+    return Fluttertoast.showToast(
+        msg: "Please fill the pin code.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  } else {
+    movieBookingAppModel?.getSignInWithPhone(phoneNum, pinText).then((value) {
+      debugPrint("otp data = ${value?.userToken}");
+      String tokenStr = value?.userToken?? "";
+      paramTokenStr = tokenStr;
+      if(tokenStr.isNotEmpty)
+        {
+         // removeAllPreviousRoutes(context);
+          return
+
+            Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LocationPage(),
+            ),
+          );
+        }else{
+        return Fluttertoast.showToast(
+            msg:"Wrong OTP",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: TEXT_REGULAR_2X
+        );
+      }
+
+
+      //
+      // if(value == value)
+      // {
+      //   return Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => GetOTPPage(paramPhoneNumber: validPhoneNo),
+      //     ),
+      //   );
+      // }else{
+      //   return Fluttertoast.showToast(
+      //       msg:"Pin is incorrect",
+      //       toastLength: Toast.LENGTH_SHORT,
+      //       gravity: ToastGravity.CENTER,
+      //       backgroundColor: Colors.grey,
+      //       textColor: Colors.white,
+      //       fontSize: 16.0
+      //   );
+      // }
+
+    })
+        .catchError((error) {
+      return Fluttertoast.showToast(
+          msg: error.toString() ?? "",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      // debugPrint(error.toString());
+    });
+  }
+
+
+
+}
+void removeAllPreviousRoutes(BuildContext context) {
+  while (Navigator.of(context).canPop()) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LocationPage()));
+  }
 }

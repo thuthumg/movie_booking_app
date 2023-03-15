@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/pages/loading_page.dart';
 import 'package:movie_booking_app/persistence/hive_constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,9 +12,10 @@ void main()  async{
 
 
   Hive.registerAdapter(CityVOAdapter());
+  Hive.registerAdapter(UserDataVOAdapter());
 
   await Hive.openBox<CityVO>(BOX_NAME_CITY_VO);
-
+  await Hive.openBox<UserDataVO>(BOX_NAME_USER_DATA_VO);
 
   runApp(const MyApp());
 }

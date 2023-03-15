@@ -43,12 +43,12 @@ class _LoginPageState extends State<LoginPage> {
 
   String? _selectedCountryCode;
 
-  @override
-  void initState() {
-
-    _selectedCountryCode = '+95';
-    super.initState();
-  }
+   @override
+   void initState() {
+     _selectedCountryCode = '+95';
+     _chooseCountryCode = '+95';
+     super.initState();
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +65,14 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: VERIFITED_YOUR_PH_NO_AND_COUNTRY_CODE_SPACE,
               ),
-              CountryCodeAndMobileTextFieldView(onClickVerifyBtn:_onClickVerifyBtn,
-                  onTapCountryCode:_onTapCountryCode),
-              VerifyYourPhoneNoButton(enterMobileNoText: _enterMobileNoText,countryCode: _chooseCountryCode, movieBookingAppModel: movieBookingAppModel),
+              CountryCodeAndMobileTextFieldView(
+                  onClickVerifyBtn:_onClickVerifyBtn,
+                  onTapCountryCode:_onTapCountryCode,
+                  selectedcountryCode : _selectedCountryCode??"+95"),
+              VerifyYourPhoneNoButton(
+                  enterMobileNoText: _enterMobileNoText,
+                  countryCode: _chooseCountryCode,
+                  movieBookingAppModel: movieBookingAppModel),
               const SizedBox(
                 height: MARGIN_MEDIUM_1,
               ),
@@ -94,7 +99,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              GoogleButton(enterMobileNoText: _enterMobileNoText,countryCode: _chooseCountryCode, movieBookingAppModel: movieBookingAppModel),
+              GoogleButton(
+                  enterMobileNoText: _enterMobileNoText,
+                  countryCode: _chooseCountryCode,
+                  movieBookingAppModel: movieBookingAppModel),
             ],
           ),
         ),
@@ -113,10 +121,10 @@ class SubTitleTextView extends StatelessWidget {
     return Column(
       children: const [
         Text(
-          "Verify Your Phone Number",
+          VERIFY_YOUR_PHONE_NUMBER,
           style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-              fontSize: 22,
+              color: VERIFY_YOUR_PHONE_NUMBER_COLOR,
+              fontSize: VERIFY_YOUR_PHONE_NUMBER_TEXT_SIZE,
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w500),
         ),
@@ -124,10 +132,10 @@ class SubTitleTextView extends StatelessWidget {
           height: 10,
         ),
         Text(
-          "We will sent 6-digit sms code \n to verify your phone number",
+          WE_WILL_SENT_SIX_DIGIT_SMS_CODE_TEXT,
           style: TextStyle(
-              color: Color.fromRGBO(136, 136, 136, 1),
-              fontSize: 14,
+              color: WE_WILL_SENT_SIX_DIGIT_SMS_CODE_COLOR,
+              fontSize: TEXT_REGULAR_1X,
               fontWeight: FontWeight.w400),
         ),
       ],
@@ -177,7 +185,11 @@ class GoogleButton extends StatelessWidget {
           textFontSize: TEXT_REGULAR_2X,
           iconPath: 'assets/images/ic_google.png',
           isShowIcon: true,
-          () => _navigateToOTPPage(context,enterMobileNoText,countryCode,movieBookingAppModel)),
+          () => _navigateToOTPPage(
+              context,
+              enterMobileNoText,
+              countryCode,
+              movieBookingAppModel)),
     );
   }
 }
@@ -185,13 +197,14 @@ class GoogleButton extends StatelessWidget {
 class CountryCodeAndMobileTextFieldView extends StatefulWidget {
   final Function(String) onClickVerifyBtn;
   final Function(String) onTapCountryCode;
- // String selectedCountryCode;
+  String selectedcountryCode;
+
   CountryCodeAndMobileTextFieldView(
   {
     Key? key,
     required this.onClickVerifyBtn,
     required this.onTapCountryCode,
-  //  required this.selectedCountryCode,
+    required this.selectedcountryCode
 }
       ): super(key: key);
 
@@ -227,7 +240,7 @@ class _CountryCodeAndMobileTextFieldViewState extends State<CountryCodeAndMobile
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CountryCodeDropdown(onTapCountryCode: onTapCountryCode,),
+              CountryCodeDropdown(onTapCountryCode: onTapCountryCode,selectCountryCode: widget.selectedcountryCode,),
               Expanded(
                 flex: 1,
                 child:
@@ -315,7 +328,11 @@ class VerifyYourPhoneNoButton extends StatelessWidget {
           textFontSize: TEXT_REGULAR_2X,
           iconPath: '',
           isShowIcon: false,
-          () => _navigateToOTPPage(context,enterMobileNoText,countryCode,movieBookingAppModel)),
+          () => _navigateToOTPPage(
+              context,
+              enterMobileNoText,
+              countryCode,
+              movieBookingAppModel)),
     );
   }
 }
@@ -323,27 +340,28 @@ class VerifyYourPhoneNoButton extends StatelessWidget {
 class CountryCodeDropdown extends StatefulWidget {
 
   Function(String) onTapCountryCode;
+  String selectCountryCode;
 
-  CountryCodeDropdown({required this.onTapCountryCode});
+  CountryCodeDropdown({required this.onTapCountryCode,required this.selectCountryCode});
 
   @override
   _CountryCodeDropdownState createState() => _CountryCodeDropdownState();
 }
 
 class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
-  String _selectedCountryCode = '+95'; //'+1';
+ // String _selectedCountryCode = '+95'; //'+1';
 
-  final List<String> _countryCodes = ['+1', '+44', '+33', '+81', '+86', '+95'];
+  final List<String> _countryCodes = ['+95','+1', '+44', '+33', '+81', '+86'];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 8.0, right: 8.0),
+      margin: const EdgeInsets.only(top: MARGIN_MEDIUM, right: MARGIN_MEDIUM),
       child: DropdownButton<String>(
-        value: _selectedCountryCode,
+        value: widget.selectCountryCode,
         dropdownColor: PRIMARY_COLOR,
         icon: const Padding(
-          padding: EdgeInsets.only(left: 15.0),
+          padding: EdgeInsets.only(left: MARGIN_CARD_MEDIUM_3),
           child: Icon(
             Icons.keyboard_arrow_down_sharp,
             color: Colors.white, // <-- SEE HERE
@@ -351,8 +369,8 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
         ),
         onChanged: (newValue) {
           setState(() {
-            _selectedCountryCode = newValue ?? "";
-            widget.onTapCountryCode(_selectedCountryCode);
+            widget.selectCountryCode = newValue ?? "";
+            widget.onTapCountryCode(widget.selectCountryCode);
           });
         },
         items: _countryCodes.map((countryCode) {
@@ -361,8 +379,8 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
             child: Text(
               countryCode,
               style: const TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 1),
-                  fontSize: 16,
+                  color: DROPDOWN_MENU_COLOR,
+                  fontSize: TEXT_REGULAR_2X,
                   fontWeight: FontWeight.w400),
             ),
           );
@@ -372,7 +390,10 @@ class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
   }
 }
 
-Future<dynamic>? _navigateToOTPPage(BuildContext context, String? enterMobileNoText, String? countryCode, MovieBookingAppModel? movieBookingAppModel) {
+Future<dynamic>? _navigateToOTPPage(BuildContext context,
+    String? enterMobileNoText,
+    String? countryCode,
+    MovieBookingAppModel? movieBookingAppModel) {
 
   String validPhoneNo = "${countryCode}${enterMobileNoText}";
   debugPrint("check param = ${validPhoneNo}");
@@ -380,12 +401,12 @@ Future<dynamic>? _navigateToOTPPage(BuildContext context, String? enterMobileNoT
   if(enterMobileNoText == null)
   {
     return Fluttertoast.showToast(
-        msg: "Please enter a valid phone number",
+        msg: PLEASE_ENTER_A_VALID_PHONE_NUMBER_MSG,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         backgroundColor: Colors.grey,
         textColor: Colors.white,
-        fontSize: 16.0
+        fontSize: TEXT_REGULAR_2X
     );
   }else{
 
@@ -402,7 +423,7 @@ Future<dynamic>? _navigateToOTPPage(BuildContext context, String? enterMobileNoT
             return Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GetOTPPage(),
+                builder: (context) => GetOTPPage(paramPhoneNumber: validPhoneNo),
               ),
             );
           }else{
@@ -435,7 +456,7 @@ Future<dynamic>? _navigateToOTPPage(BuildContext context, String? enterMobileNoT
       // String validPhoneNo = "${countryCode}${enterMobileNoText}";
       // print("check valid phone no false= ${validPhoneNo}");
       return Fluttertoast.showToast(
-          msg: "Please enter a valid phone number",
+          msg: PLEASE_ENTER_A_VALID_PHONE_NUMBER_MSG,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.grey,

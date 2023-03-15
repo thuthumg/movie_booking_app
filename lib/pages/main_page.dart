@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/pages/cinema_page.dart';
 import 'package:movie_booking_app/pages/movie_page.dart';
 import 'package:movie_booking_app/pages/profile_page.dart';
@@ -10,7 +14,9 @@ import 'package:movie_booking_app/resources/dimens.dart';
 
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final CityVO cityVO;
+
+  MainPage({Key? key,required this.cityVO}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -18,18 +24,32 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+  String profileImageLink = "";
+  @override
+  void initState() {
+    movieBookingAppModel.getUserDataFromDatabase(paramTokenStr).then((userDataVO) {
+      profileImageLink = userDataVO?.profileImage.toString()??"";
+      print("string profile link ${profileImageLink}");
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+    super.initState();
+  }
+
+
   int _selectedScreenIndex = 0;
   bool appBarVisible = true;
-  final List _screens = [
-    {"screen": MoviePage(), "title": "Movies"},
+
+ /* final List _screens = [
+    {"screen": MoviePage(cityVO: CityVO(1,"Yangon")), "title": "Movies"},
     {"screen": CinemaPage(), "title": "Cinema"},
     {"screen": const TicketListPage(), "title": "Ticket"},
-    {"screen": const ProfilePage(), "title": "Profile"}
-  ];
+    {"screen": ProfilePage(profileImageLink), "title": "Profile"}
+  ];*/
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   int _currentIndex = 0;
-
   void _selectScreen(int index){
     // switch (index) {
     //   case 0:
@@ -55,10 +75,22 @@ class _MainPageState extends State<MainPage> {
       // navigatorKey.currentState.pushNamed('/tab$index');
     });
   }
-  Widget _getPage(String pageName) {
+  Widget _getPage(int pageName) {
+    switch (pageName) {
+      case 0:
+        return MoviePage(cityVO: widget.cityVO,);
+      case 1:
+        return CinemaPage();
+      case 2:
+        return TicketListPage();
+      case 3:
+        return ProfilePage(profileImageLink: profileImageLink,);
+      default:
+        return MoviePage(cityVO: widget.cityVO,);
+    /*
     switch (pageName) {
       case '/tab0':
-        return MainPage();
+        return MainPage(cityVO: widget.cityVO,);
       case '/tab1':
         return CinemaPage();
       case '/tab2':
@@ -66,7 +98,7 @@ class _MainPageState extends State<MainPage> {
       case '/tab3':
         return ProfilePage();
       default:
-        return MainPage();
+        return MainPage(cityVO: widget.cityVO,);*/
     }
   }
   @override
@@ -75,7 +107,8 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: PRIMARY_COLOR,
 
         body:
-        _screens[_selectedScreenIndex]["screen"],
+        _getPage(_selectedScreenIndex),
+       // _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: PRIMARY_COLOR,
           type: BottomNavigationBarType.fixed,
