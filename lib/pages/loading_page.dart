@@ -21,48 +21,49 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   bool _taskCompleted = false;
   UserDataVO? userDataVO;
-  List<CityVO>? citiesListVO;
+ // List<CityVO>? citiesListVO;
+  String? usertoken;
   MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
   @override
   void initState() {
-    movieBookingAppModel.getCities().then((value){
-      debugPrint("cities data = ${value.toString()}");
 
-      citiesListVO = value;
-    })
-    .catchError((error){
-      debugPrint(error.toString());
+    ///cities and status colors data from Network
+   movieBookingAppModel.getCities();
+   movieBookingAppModel.getConfigurations();
+
+    ///uservo from Database
+    movieBookingAppModel.getUserDataFromDatabase().then((userDataVO) {
+      setState(() {
+        usertoken = userDataVO?.userToken.toString()??"";
+        userDataVO = userDataVO;
+      });
+
+
+
+    }).catchError((error) {
+      debugPrint("error = "+error.toString());
     });
 
-
-
-
-    if(paramTokenStr.isNotEmpty)
-    {
-      ///uservo from Database
-      movieBookingAppModel.getUserDataFromDatabase(paramTokenStr).then((userVO) {
-        setState(() {
-          userDataVO = userVO;
-          print("check User data = ${userDataVO?.userToken}");
-        });
-      }).catchError((error) {
-        debugPrint(error.toString());
-      });
-    }
-
-
     super.initState();
-    _runDelayedTask();
+    _runDelayedTask(userDataVO);
   }
 
-  Future<void> _runDelayedTask() async {
+  Future<void> _runDelayedTask(UserDataVO? userDataVO) async {
    // print('Starting the delayed task');
     await Future.delayed(Duration(seconds: 3));
    // print('Delayed task completed');
     setState(() {
       _taskCompleted = true;
-      _navigateToLogin(context);
+      print('check token ${usertoken}');
+      if(usertoken == null || usertoken == "")
+      {
+        _navigateToLogin(context);
+      }else{
+
+        _navigateToHome(context,userDataVO);
+      }
+     // _navigateToLogin(context);
 
     });
   }
@@ -88,7 +89,19 @@ class _LoadingPageState extends State<LoadingPage> {
     return Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginPage(),
+        builder: (context) => LoginPage(paramPhoneNumber: "",),
+      ),
+    );
+
+
+  }
+
+  Future<dynamic> _navigateToHome(BuildContext context,UserDataVO? userDataVO) {
+    print("from loading page loacation data ${userDataVO?.selectedLocationName}");
+    return Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainPage(cityVOName: userDataVO?.selectedLocationName??"",),
       ),
     );
 

@@ -33,142 +33,142 @@ const String SEAT_TYPE_TAKEN = "taken";
 const String SEAT_TYPE_TEXT = "text";
 const String SEAT_TYPE_EMPTY = "space";
 const String SEAT_TYPE_SELECTION = "selection";
-const String SEAT_TYPE_GOLD_TAKEN = "goldTaken";
-const String SEAT_TYPE_GOLD_AVAILABLE = "goldAvailable";
-const String SEAT_TYPE_GOLD_SELECTION = "goldSelection";
+// const String SEAT_TYPE_GOLD_TAKEN = "goldTaken";
+// const String SEAT_TYPE_GOLD_AVAILABLE = "goldAvailable";
+// const String SEAT_TYPE_GOLD_SELECTION = "goldSelection";
 
 
-var showMovieSeatList = <MovieSeatListViewObj>[
-
-  MovieSeatListViewObj("Normal(4500ks)",showNormalSeatObject),
-  MovieSeatListViewObj("Executive(6500ks)",showExecutiveSeatObject),
-  MovieSeatListViewObj("Premium(8500ks)",showPremiumSeatObject),
-  MovieSeatListViewObj("Gold(10000ks)", showGoldSeatObject)
-];
-var showNormalSeatObject = <MovieSeatGridListViewObject>[
-  MovieSeatGridListViewObject(title: "A", type: SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "A", type: SEAT_TYPE_TEXT),
-
-  MovieSeatGridListViewObject(title : "B", type : SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title : "B", type : SEAT_TYPE_TEXT),
-];
-var showExecutiveSeatObject = <MovieSeatGridListViewObject>[
-  MovieSeatGridListViewObject(title: "C", type: SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "C", type: SEAT_TYPE_TEXT),
-
-  MovieSeatGridListViewObject(title : "D", type : SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title : "D", type : SEAT_TYPE_TEXT),
-];
-var showPremiumSeatObject = <MovieSeatGridListViewObject>[
-  MovieSeatGridListViewObject(title: "E", type: SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_SELECTION),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_SELECTION),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "E", type: SEAT_TYPE_TEXT),
-
-  MovieSeatGridListViewObject(title : "F", type : SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title : "F", type : SEAT_TYPE_TEXT),
-];
-var showGoldSeatObject = <MovieSeatGridListViewObject>[
-  MovieSeatGridListViewObject(title: "G", type: SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_TAKEN),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_AVAILABLE),
-
-
-  MovieSeatGridListViewObject(title: "G", type: SEAT_TYPE_TEXT),
-
-  MovieSeatGridListViewObject(title: "H", type: SEAT_TYPE_TEXT),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_TAKEN),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
-
-  MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_TAKEN),
-
-
-  MovieSeatGridListViewObject(title: "H", type: SEAT_TYPE_TEXT),
-];
+// var showMovieSeatList = <MovieSeatListViewObj>[
+//
+//   MovieSeatListViewObj("Normal(4500ks)",showNormalSeatObject),
+//   MovieSeatListViewObj("Executive(6500ks)",showExecutiveSeatObject),
+//   MovieSeatListViewObj("Premium(8500ks)",showPremiumSeatObject),
+//   MovieSeatListViewObj("Gold(10000ks)", showGoldSeatObject)
+// ];
+// var showNormalSeatObject = <MovieSeatGridListViewObject>[
+//   MovieSeatGridListViewObject(title: "A", type: SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "A", type: SEAT_TYPE_TEXT),
+//
+//   MovieSeatGridListViewObject(title : "B", type : SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title : "B", type : SEAT_TYPE_TEXT),
+// ];
+// var showExecutiveSeatObject = <MovieSeatGridListViewObject>[
+//   MovieSeatGridListViewObject(title: "C", type: SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "C", type: SEAT_TYPE_TEXT),
+//
+//   MovieSeatGridListViewObject(title : "D", type : SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title : "D", type : SEAT_TYPE_TEXT),
+// ];
+// var showPremiumSeatObject = <MovieSeatGridListViewObject>[
+//   MovieSeatGridListViewObject(title: "E", type: SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_SELECTION),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_SELECTION),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "E", type: SEAT_TYPE_TEXT),
+//
+//   MovieSeatGridListViewObject(title : "F", type : SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title : "F", type : SEAT_TYPE_TEXT),
+// ];
+// var showGoldSeatObject = <MovieSeatGridListViewObject>[
+//   MovieSeatGridListViewObject(title: "G", type: SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_TAKEN),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_AVAILABLE),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_AVAILABLE),
+//
+//
+//   MovieSeatGridListViewObject(title: "G", type: SEAT_TYPE_TEXT),
+//
+//   MovieSeatGridListViewObject(title: "H", type: SEAT_TYPE_TEXT),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_TAKEN),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_TAKEN),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_EMPTY),
+//
+//   MovieSeatGridListViewObject(title: "", type : SEAT_TYPE_GOLD_TAKEN),
+//
+//
+//   MovieSeatGridListViewObject(title: "H", type: SEAT_TYPE_TEXT),
+// ];
 
 
 //Ticket Section

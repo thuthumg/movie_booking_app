@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/resources/colors.dart';
+import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
 
 class PhoneNumberTextField extends StatefulWidget {
-
+  final String paramPhoneNumber;
   final Function(String) onClickVerifyBtn;
 
-  const PhoneNumberTextField({Key? key,required this.onClickVerifyBtn}) : super(key: key);
+  const PhoneNumberTextField({Key? key,required this.onClickVerifyBtn,
+  required this.paramPhoneNumber}) : super(key: key);
 
   @override
   _PhoneNumberTextFieldState createState() => _PhoneNumberTextFieldState();
@@ -43,7 +45,7 @@ class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
     return TextField(
       keyboardType: TextInputType.phone,
       controller: _controller,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white,fontSize: TEXT_REGULAR_1X),
       decoration: InputDecoration(
         //labelText: MOBILE_NUMBER_TEXT,
         enabledBorder: UnderlineInputBorder(
@@ -54,12 +56,18 @@ class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
         ),
         hintText: MOBILE_NUMBER_TEXT,
           hintStyle:
-          TextStyle(color: COUNTRY_CODE_AND_MOBILE_NUMBER_TEXT_COLOR),
+          TextStyle(color: COUNTRY_CODE_AND_MOBILE_NUMBER_TEXT_COLOR,fontSize: TEXT_REGULAR_1X),
+        label:Visibility(
+          visible: widget.paramPhoneNumber != null,
+          child:  Text(widget.paramPhoneNumber?? ""),
+        )
+
         // errorText: _isValidPhoneNumber(_controller.text)
         //     ? null
         //     : 'Please enter a valid phone number',
       ),
       onChanged: _onTextChanged,
+
     );
   }
 

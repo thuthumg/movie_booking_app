@@ -25,13 +25,14 @@ class UserDataVOAdapter extends TypeAdapter<UserDataVO> {
       fields[5] as String?,
       fields[6] as String?,
       fields[7] as String?,
+      fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserDataVO obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class UserDataVOAdapter extends TypeAdapter<UserDataVO> {
       ..writeByte(6)
       ..write(obj.userToken)
       ..writeByte(7)
-      ..write(obj.message);
+      ..write(obj.message)
+      ..writeByte(8)
+      ..write(obj.selectedLocationName);
   }
 
   @override
@@ -74,6 +77,7 @@ UserDataVO _$UserDataVOFromJson(Map<String, dynamic> json) => UserDataVO(
       json['profile_image'] as String?,
       json['userToken'] as String?,
       json['message'] as String?,
+      json['selectedLocationName'] as String?,
     );
 
 Map<String, dynamic> _$UserDataVOToJson(UserDataVO instance) =>
@@ -86,4 +90,5 @@ Map<String, dynamic> _$UserDataVOToJson(UserDataVO instance) =>
       'profile_image': instance.profileImage,
       'userToken': instance.userToken,
       'message': instance.message,
+      'selectedLocationName': instance.selectedLocationName,
     };

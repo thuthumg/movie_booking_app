@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_booking_app/constants/filter_obj.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
@@ -93,7 +94,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
                 moviesList: moviesList??[],
                searchText:
                 _searchText,
-                 onTapItemView: () => {_navigateToMovieDetailPage(context,_isNowShowing)})
+                 onTapItemView: (MovieVO movieVO) => {_navigateToMovieDetailPage(context,_isNowShowing,movieVO,movieBookingAppModel)})
 
           ],
         ),
@@ -102,17 +103,57 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
   }
 }
 
-Future<dynamic> _navigateToMovieDetailPage(BuildContext context,bool _isNowShowing) {
+Future<dynamic> _navigateToMovieDetailPage(BuildContext context,
+    bool _isNowShowing,
+    MovieVO movieVO,
+    MovieBookingAppModel movieBookingAppModel) {
+
+ // return movieBookingAppModel.getMovieDetails(movieVO.id??0).then((movieDetails) {
+
+    // this.movieDetails = movieDetails;
+    //  this.cast =movieDetails?.casts;
+
+  //   if(movieDetails != null)
+  //   {
+  //     return Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => MovieDetailPage(_isNowShowing,
+  //           movieVO: movieDetails,),
+  //       ),
+  //     );
+  //   }else{
+  //     return  Fluttertoast.showToast(
+  //         msg: "Fail",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.CENTER,
+  //         backgroundColor: Colors.grey,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0
+  //     );
+  //   }
+  //
+  //
+  // }).catchError((error) {
+  //   return  Fluttertoast.showToast(
+  //       msg: error.toString(),
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.CENTER,
+  //       backgroundColor: Colors.grey,
+  //       textColor: Colors.white,
+  //       fontSize: 16.0
+  //   );
+  // });
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => MovieDetailPage(_isNowShowing),
+      builder: (context) => MovieDetailPage(_isNowShowing,movieId: movieVO?.id??0,),
     ),
   );
 }
 class GridMoviesListSection extends StatelessWidget {
   final bool _isNowShowing;
-  final Function onTapItemView;
+  final Function(MovieVO) onTapItemView;
   final String searchText;
   final List<MovieVO> moviesList;
 
@@ -141,7 +182,7 @@ class GridMoviesListSection extends StatelessWidget {
               // movieObjListForComingSoon[index]
               movieListObjItem :moviesList.elementAt(index)
               , onTapItemView:  () {
-            this.onTapItemView();
+            this.onTapItemView(moviesList.elementAt(index));
           }) : Container();
         },
         childCount:

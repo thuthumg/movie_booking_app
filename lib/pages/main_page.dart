@@ -14,10 +14,10 @@ import 'package:movie_booking_app/resources/dimens.dart';
 
 
 class MainPage extends StatefulWidget {
-  final CityVO cityVO;
-
-  MainPage({Key? key,required this.cityVO}) : super(key: key);
-
+ // final CityVO cityVO;
+  final String cityVOName;
+ // MainPage({Key? key,required this.cityVO}) : super(key: key);
+  MainPage({Key? key,required this.cityVOName}) : super(key: key);
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -28,25 +28,23 @@ class _MainPageState extends State<MainPage> {
   String profileImageLink = "";
   @override
   void initState() {
-    movieBookingAppModel.getUserDataFromDatabase(paramTokenStr).then((userDataVO) {
-      profileImageLink = userDataVO?.profileImage.toString()??"";
-      print("string profile link ${profileImageLink}");
+
+    movieBookingAppModel.getUserDataFromDatabase().then((userDataVO) {
+      setState(() {
+        profileImageLink = userDataVO?.profileImage.toString()??"";
+        print("string profile link ${profileImageLink}");
+      });
+
     }).catchError((error) {
       debugPrint(error.toString());
     });
+
     super.initState();
   }
 
 
   int _selectedScreenIndex = 0;
   bool appBarVisible = true;
-
- /* final List _screens = [
-    {"screen": MoviePage(cityVO: CityVO(1,"Yangon")), "title": "Movies"},
-    {"screen": CinemaPage(), "title": "Cinema"},
-    {"screen": const TicketListPage(), "title": "Ticket"},
-    {"screen": ProfilePage(profileImageLink), "title": "Profile"}
-  ];*/
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   int _currentIndex = 0;
@@ -75,10 +73,11 @@ class _MainPageState extends State<MainPage> {
       // navigatorKey.currentState.pushNamed('/tab$index');
     });
   }
-  Widget _getPage(int pageName) {
+  Widget _getPage(int pageName, String cityVONameParam) {
+    print("from main page loacation data ${cityVONameParam}");
     switch (pageName) {
       case 0:
-        return MoviePage(cityVO: widget.cityVO,);
+        return MoviePage(cityVOName: cityVONameParam,);
       case 1:
         return CinemaPage();
       case 2:
@@ -86,7 +85,7 @@ class _MainPageState extends State<MainPage> {
       case 3:
         return ProfilePage(profileImageLink: profileImageLink,);
       default:
-        return MoviePage(cityVO: widget.cityVO,);
+        return MoviePage(cityVOName: cityVONameParam,);
     /*
     switch (pageName) {
       case '/tab0':
@@ -107,7 +106,7 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: PRIMARY_COLOR,
 
         body:
-        _getPage(_selectedScreenIndex),
+        _getPage(_selectedScreenIndex,widget.cityVOName),
        // _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: PRIMARY_COLOR,

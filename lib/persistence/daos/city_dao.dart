@@ -30,4 +30,5 @@ class CityDao{
   Box<CityVO> getCityBox(){
     return Hive.box<CityVO>(BOX_NAME_CITY_VO);
   }
+
 }

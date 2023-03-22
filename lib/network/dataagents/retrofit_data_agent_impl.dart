@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/data/vos/banner_vo.dart';
+import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/data/vos/config_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/network/dataagents/movie_booking_app_data_agent.dart';
@@ -119,5 +122,53 @@ class RetrofitDataAgentImpl extends MovieBookingAppDataAgent {
 
 
 
+  }
+
+  @override
+  Future<String?> logout(String paramTokenStr) {
+   return mMovieBookingApi
+       .logout(paramTokenStr)
+       .asStream()
+       .map((response) => response.message)
+       .first;
+  }
+
+  @override
+  Future<MovieVO?> getMovieDetails(int movieId) {
+    return mMovieBookingApi
+        .getMovieDetails(movieId.toString())
+        .asStream()
+        .map((response) => response.movieVO)
+        .first;
+  }
+
+  @override
+  Future<List<ConfigVO>?> getConfigurations() {
+   return mMovieBookingApi
+       .getConfigurations()
+       .asStream()
+       .map((response) => response.cinemaAndShowTimeByDateVO)
+       .first;
+  }
+
+  @override
+  Future<List<CinemaAndShowTimeByDateVO>?> getCinemaAndShowTimeByDate(
+      String tokenStr, String date) {
+    print("check tokenstr in retrofit data agent ${tokenStr}");
+    return mMovieBookingApi
+        .getCinemaAndShowTimeByDate(tokenStr, date)
+        .asStream()
+        .map((response) => response.cinemaAndShowTimeByDateVO)
+        .first;
+  }
+
+  @override
+  Future<List<List<SeatVO>>?> getSeatingPlanByShowTime(String tokenStr, String date, int cinemaDayTimeSlotId) {
+    return mMovieBookingApi
+        .getSeatingPlanByShowTime(
+        tokenStr, cinemaDayTimeSlotId, date)
+        .asStream()
+        .map((response) => response.seatVOList)
+        .first;
   }
 }

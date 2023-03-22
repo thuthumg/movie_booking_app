@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
 import 'package:movie_booking_app/data/vos/banner_vo.dart';
@@ -16,9 +17,11 @@ import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/movie_item_view.dart';
 
 class MoviePage extends StatefulWidget {
-  final CityVO cityVO;
+  //final CityVO cityVO;
 
-  const MoviePage({Key? key, required this.cityVO}) : super(key: key);
+  final String cityVOName;
+
+  const MoviePage({Key? key, required this.cityVOName}) : super(key: key);
 
   @override
   State<MoviePage> createState() => _MoviePageState();
@@ -66,6 +69,7 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("from movie page loacation data ${widget.cityVOName}");
     if (nowShowingOrComingSoon == 'NowShowing') {
       _isNowShowing = true;
       _isComingSoon = false;
@@ -80,7 +84,7 @@ class _MoviePageState extends State<MoviePage> {
       appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
         title: Text(
-          widget.cityVO.name.toString(),
+          widget.cityVOName.toString(),
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.white,
@@ -150,6 +154,16 @@ class _MoviePageState extends State<MoviePage> {
                                 } else {
                                   nowShowingOrComingSoon = "ComingSoon";
                                 }
+
+                                movieBookingAppModel.getMovieList(nowShowingOrComingSoon).then((moviesList) {
+                                  setState(() {
+                                    this.moviesList = moviesList;
+                                  });
+                                }).catchError((error) {
+                                  debugPrint(error.toString());
+                                });
+
+
                               });
                             },
                             child: Container(
@@ -191,6 +205,17 @@ class _MoviePageState extends State<MoviePage> {
                                 } else {
                                   nowShowingOrComingSoon = 'NowShowing';
                                 }
+
+
+                                movieBookingAppModel.getMovieList(nowShowingOrComingSoon).then((moviesList) {
+                                  setState(() {
+                                    this.moviesList = moviesList;
+                                  });
+                                }).catchError((error) {
+                                  debugPrint(error.toString());
+                                });
+
+
                               });
                             },
                             child: Container(
@@ -232,8 +257,25 @@ class _MoviePageState extends State<MoviePage> {
             GridMoviesListSection(
                 moviesList: moviesList,
                 _isNowShowing,
-                onTapItemView: () =>
-                    {_navigateToMovieDetailPage(context, _isNowShowing)})
+                onTapItemView: (MovieVO? movieVO)
+                    {
+
+                      if(movieVO != null)
+                      {
+                        _navigateToMovieDetailPage(context, _isNowShowing, movieVO,movieBookingAppModel);
+                      }else{
+                        Fluttertoast.showToast(
+                            msg: "Can't go to the Move detail page.",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            backgroundColor: Colors.grey,
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                        );
+                      }
+
+
+                    })
           ],
         ),
       ),
@@ -436,7 +478,7 @@ class _NowShowingAndComingSoonButtonViewState
 
 class GridMoviesListSection extends StatelessWidget {
   final bool _uiChangeFlag;
-  final Function onTapItemView;
+  final Function(MovieVO?) onTapItemView;
   final List<MovieVO>? moviesList;
 
   GridMoviesListSection(this._uiChangeFlag,
@@ -444,6 +486,9 @@ class GridMoviesListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint("check movie list = ${moviesList.toString()}");
+
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -453,6 +498,7 @@ class GridMoviesListSection extends StatelessWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
+          debugPrint("check movie list object = ${moviesList?.elementAt(index).toString()}");
           return MovieItemView(
               uiChangeFlag: _uiChangeFlag,
               movieListObjItem:   moviesList?.elementAt(index)        
@@ -461,7 +507,7 @@ class GridMoviesListSection extends StatelessWidget {
                   : moviesList[index]*/
               ,
                   onTapItemView: () {
-            this.onTapItemView();
+            this.onTapItemView(moviesList?.elementAt(index));
           });
         },
         childCount: _uiChangeFlag
@@ -604,13 +650,59 @@ class MovieListSliverAppBarView extends StatelessWidget {
 }
 
 Future<dynamic> _navigateToMovieDetailPage(
-    BuildContext context, bool _isNowShowing) {
+    BuildContext context, bool _isNowShowing,
+    MovieVO movieVO,
+    MovieBookingAppModel movieBookingAppModel) {
+
+
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => MovieDetailPage(_isNowShowing),
+      builder: (context) => MovieDetailPage(_isNowShowing,
+        movieId: movieVO.id??0,),
     ),
   );
+
+  ///Movie Detail data
+ // return movieBookingAppModel.getMovieDetails(movieVO.id??0).then((movieDetails) {
+ //
+ //     // this.movieDetails = movieDetails;
+ //    //  this.cast =movieDetails?.casts;
+ //
+ //      if(movieDetails != null)
+ //        {
+ //          print("not null movie detail ${movieDetails.toString()}");
+ //          return Navigator.push(
+ //            context,
+ //            MaterialPageRoute(
+ //              builder: (context) => MovieDetailPage(_isNowShowing,
+ //                movieVO: movieDetails,),
+ //            ),
+ //          );
+ //        }else{
+ //        print("null movie detail");
+ //        return  Fluttertoast.showToast(
+ //          msg: "Fail",
+ //          toastLength: Toast.LENGTH_SHORT,
+ //          gravity: ToastGravity.CENTER,
+ //          backgroundColor: Colors.grey,
+ //          textColor: Colors.white,
+ //          fontSize: 16.0
+ //      );
+ //      }
+ //
+ //
+ //  }).catchError((error) {
+ //   print("error movie detail");
+ //  return  Fluttertoast.showToast(
+ //        msg: error.toString(),
+ //        toastLength: Toast.LENGTH_SHORT,
+ //        gravity: ToastGravity.CENTER,
+ //        backgroundColor: Colors.grey,
+ //        textColor: Colors.white,
+ //        fontSize: 16.0
+ //    );
+ //  });
 }
 
 Future<dynamic> _navigateSearchPage(

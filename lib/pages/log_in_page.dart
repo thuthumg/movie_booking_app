@@ -12,8 +12,8 @@ import 'package:movie_booking_app/widgets/phone_number_text_field_view.dart';
 
 class LoginPage extends StatefulWidget {
 
-
-  const LoginPage({Key? key}) : super(key: key);
+  final String paramPhoneNumber;
+   LoginPage({Key? key,required this.paramPhoneNumber}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -24,8 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   String _chooseCountryCode  = '';
   MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
-
-
   void _onClickVerifyBtn(String text){
     setState(() {
       _enterMobileNoText = text;
@@ -35,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   }
   void _onTapCountryCode(String text){
     setState(() {
+      _selectedCountryCode = text;
       _chooseCountryCode = text;
 
 
@@ -66,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: VERIFITED_YOUR_PH_NO_AND_COUNTRY_CODE_SPACE,
               ),
               CountryCodeAndMobileTextFieldView(
+                  paramPhoneNumber:widget.paramPhoneNumber,
                   onClickVerifyBtn:_onClickVerifyBtn,
                   onTapCountryCode:_onTapCountryCode,
                   selectedcountryCode : _selectedCountryCode??"+95"),
@@ -195,6 +195,7 @@ class GoogleButton extends StatelessWidget {
 }
 
 class CountryCodeAndMobileTextFieldView extends StatefulWidget {
+  final String paramPhoneNumber;
   final Function(String) onClickVerifyBtn;
   final Function(String) onTapCountryCode;
   String selectedcountryCode;
@@ -202,6 +203,7 @@ class CountryCodeAndMobileTextFieldView extends StatefulWidget {
   CountryCodeAndMobileTextFieldView(
   {
     Key? key,
+    required this.paramPhoneNumber,
     required this.onClickVerifyBtn,
     required this.onTapCountryCode,
     required this.selectedcountryCode
@@ -225,7 +227,8 @@ class _CountryCodeAndMobileTextFieldViewState extends State<CountryCodeAndMobile
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 33, right: 33),
-      child: Column(
+      child:
+      Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Align(
@@ -244,7 +247,9 @@ class _CountryCodeAndMobileTextFieldViewState extends State<CountryCodeAndMobile
               Expanded(
                 flex: 1,
                 child:
-                  PhoneNumberTextField(onClickVerifyBtn:onClickVerifyBtn),
+                  PhoneNumberTextField(
+                      onClickVerifyBtn:onClickVerifyBtn,
+                      paramPhoneNumber:widget.paramPhoneNumber),
                 // Column(
                 //   children: [
                 //     TextField(
@@ -351,12 +356,12 @@ class CountryCodeDropdown extends StatefulWidget {
 class _CountryCodeDropdownState extends State<CountryCodeDropdown> {
  // String _selectedCountryCode = '+95'; //'+1';
 
-  final List<String> _countryCodes = ['+95','+1', '+44', '+33', '+81', '+86'];
+  final List<String> _countryCodes = ['+1', '+44', '+33', '+81', '+86','+95'];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: MARGIN_MEDIUM, right: MARGIN_MEDIUM),
+      margin: const EdgeInsets.only(top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM),
       child: DropdownButton<String>(
         value: widget.selectCountryCode,
         dropdownColor: PRIMARY_COLOR,
@@ -420,7 +425,7 @@ Future<dynamic>? _navigateToOTPPage(BuildContext context,
 
         if(API_SUCCESS_CODE == value)
           {
-            return Navigator.push(
+            return Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => GetOTPPage(paramPhoneNumber: validPhoneNo),
@@ -466,25 +471,38 @@ Future<dynamic>? _navigateToOTPPage(BuildContext context,
     }
 
 
-    //callAPi
-
   }
 
 
 
 }
-bool phoneNoVerificationFunc(String phoneNo) {
-  final RegExp _phoneNumberRegExp = RegExp(r'^\+959\d{8,9}$');
-  return _phoneNumberRegExp.hasMatch(phoneNo);
-
-
-}
-// bool checkPlusNineFiveNineFunc(String phoneNo){
+// bool phoneNoVerificationFunc(String phoneNo) {
+//   final RegExp _phoneNumberRegExp = RegExp(r'^\+959\d{8,9}$');
+//   return _phoneNumberRegExp.hasMatch(phoneNo);
 //
-//   var subStringData = phoneNo.substring(0, 4);
-//   if (subStringData == "+959") {
-//     return true;
-//   } else {
-//     return false;
-//   }
+//
 // }
+bool phoneNoVerificationFunc(String phoneNo) {
+  if (phoneNo.length >= 10) {
+    var subStringDataTwo = phoneNo.substring(0, 2);
+    if (subStringDataTwo == "09") {
+      phoneNo = phoneNo.replaceRange(0, 2, "+959");
+      print(phoneNo);
+      return checkPlusNineFiveNineFunc(phoneNo);
+    }else{
+      return checkPlusNineFiveNineFunc(phoneNo);
+    }
+
+  } else {
+    return false;
+  }
+}
+bool checkPlusNineFiveNineFunc(String phoneNo){
+
+  var subStringData = phoneNo.substring(0, 4);
+  if (subStringData == "+959") {
+    return true;
+  } else {
+    return false;
+  }
+}

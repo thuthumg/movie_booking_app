@@ -38,9 +38,20 @@ class UserDataVO{
   @HiveField(7)
   String? message;
 
+  @HiveField(8)
+  String? selectedLocationName;
 
-  UserDataVO(this.id, this.name, this.email, this.phone, this.totalExpense,
-      this.profileImage, this.userToken, this.message);
+
+  UserDataVO(
+      this.id,
+      this.name,
+      this.email,
+      this.phone,
+      this.totalExpense,
+      this.profileImage,
+      this.userToken,
+      this.message,
+      this.selectedLocationName);
 
   factory UserDataVO.fromJson(Map<String,dynamic> json) =>_$UserDataVOFromJson(json);
   Map<String,dynamic> toJson()=> _$UserDataVOToJson(this);

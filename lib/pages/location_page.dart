@@ -5,6 +5,7 @@ import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
+import 'package:movie_booking_app/persistence/daos/user_data_dao.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/viewitems/city_view.dart';
@@ -17,19 +18,16 @@ class LocationPage extends StatefulWidget {
 }
 
 class _LocationPageState extends State<LocationPage> {
-  MovieBookingAppModel mMovieBookingAppModel = MovieBookingAppModelImpl();
-
-
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
   ///State Variables
   List<CityVO>? citiesDataList;
-
-
+  UserDataVO? userDataVO;
  @override
   void initState() {
 
    ///cities from Database
-   mMovieBookingAppModel.getCitiesFromDatabase().then((citiesList) {
+   movieBookingAppModel.getCitiesFromDatabase().then((citiesList) {
      setState(() {
        citiesDataList = citiesList;
      });
@@ -37,8 +35,15 @@ class _LocationPageState extends State<LocationPage> {
      debugPrint(error.toString());
    });
 
+///userdata from Database
+   movieBookingAppModel.getUserDataFromDatabase().then((paramUserDataVO) {
+     setState(() {
+       userDataVO = paramUserDataVO;
+     });
 
-
+   }).catchError((error) {
+     debugPrint(error.toString());
+   });
    super.initState();
   }
   @override
@@ -92,7 +97,15 @@ class _LocationPageState extends State<LocationPage> {
                 height: 20,
               ),
               CitiesListView(
-                      onTapCity: (CityVO cityVO) => _navigateToHomeScreen(context,cityVO),
+                      onTapCity: (CityVO cityVO) {
+                        setState(() {
+                          _navigateToHomeScreen(
+                              context,
+                              cityVO,
+                              userDataVO,
+                              movieBookingAppModel);
+                        });
+                      } ,
               citiesList:  citiesDataList?? [],)
             ],
           ),
@@ -130,9 +143,20 @@ class CitiesTitleView extends StatelessWidget {
   }
 }
 
-Future<dynamic> _navigateToHomeScreen(BuildContext context, CityVO cityVO) {
+Future<dynamic> _navigateToHomeScreen(BuildContext context,
+    CityVO cityVO,
+    UserDataVO? userDataVO,
+    MovieBookingAppModel mMovieBookingAppModel) {
+ // print("check select location and update = ${userDataVO?.selectedLocationName} ${userDataVO?.userToken}");
+
+  userDataVO?.selectedLocationName = cityVO.name;
+
+  print("check select location and update = ${userDataVO?.selectedLocationName} ${userDataVO?.userToken}");
+  mMovieBookingAppModel.updateUserDataVO(userDataVO);
+
+
   return Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => MainPage(cityVO: cityVO)));
+      context, MaterialPageRoute(builder: (context) => MainPage(cityVOName: cityVO.name??"")));
 }
 
 class SearchSection extends StatelessWidget {
@@ -204,7 +228,7 @@ class SearchSection extends StatelessWidget {
   }
 }
 
-class CitiesListView extends StatelessWidget {
+class CitiesListView extends StatefulWidget {
   final Function(CityVO) onTapCity;
   List<CityVO> citiesList;
 /*
@@ -220,18 +244,23 @@ class CitiesListView extends StatelessWidget {
   CitiesListView({required this.onTapCity,required this.citiesList});
 
   @override
+  State<CitiesListView> createState() => _CitiesListViewState();
+}
+
+class _CitiesListViewState extends State<CitiesListView> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: citiesList.length,
+        itemCount: widget.citiesList.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: (){
-              onTapCity(citiesList.elementAt(index));
+              widget.onTapCity(widget.citiesList.elementAt(index));
             },
-            child: CityView(citiesList.elementAt(index).name.toString()),
+            child: CityView(widget.citiesList.elementAt(index).name.toString()),
           );
         },
       ),

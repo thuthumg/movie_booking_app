@@ -320,9 +320,9 @@ Future<dynamic>? _navigateToLocationPage(BuildContext context,
     );
   } else {
     movieBookingAppModel?.getSignInWithPhone(phoneNum, pinText).then((value) {
-      debugPrint("otp data = ${value?.userToken}");
+      debugPrint("token data = ${value?.userToken}");
       String tokenStr = value?.userToken?? "";
-      paramTokenStr = tokenStr;
+
       if(tokenStr.isNotEmpty)
         {
          // removeAllPreviousRoutes(context);

@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
 import 'package:movie_booking_app/network/api_constants.dart';
+import 'package:movie_booking_app/pages/log_in_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
@@ -17,23 +18,24 @@ class ProfilePage extends StatefulWidget {
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
-
-
 }
 
 class _ProfilePageState extends State<ProfilePage> {
- // MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
- // String profileImageLink = "";
- /* @override
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+  String? userTokenStr;
+
+
+  @override
   void initState() {
-    movieBookingAppModel.getUserDataFromDatabase(paramTokenStr).then((userDataVO) {
-      profileImageLink = userDataVO?.profileImage.toString()??"";
-      print("string profile link ${profileImageLink}");
+    movieBookingAppModel.getUserDataFromDatabase().then((userDataVO) {
+      setState(() {
+        userTokenStr = userDataVO?.userToken.toString()??"";
+      });
     }).catchError((error) {
       debugPrint(error.toString());
     });
     super.initState();
-  }*/
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -49,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ProfileView(profileImageLink: widget.profileImageLink),
                 ProfileListView( (String titletxt)=>{
                   if(titletxt == "Logout")
-                  _showMyDialog(context)
+                  _showMyDialog(context,movieBookingAppModel,userTokenStr)
                 })
 
               ],
@@ -152,7 +154,7 @@ class ProfilePhoto_Login_SingUpView extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.red,
+                    color: Colors.black,
                     width: 2.0,
                   ),
                   image: DecorationImage(
@@ -243,17 +245,20 @@ class ProfileBackgroundImageView extends StatelessWidget {
         ],
       );*/
 
-Future<void> _showMyDialog(BuildContext context) async {
+Future<void> _showMyDialog(BuildContext context, MovieBookingAppModel movieBookingAppModel, String? userTokenStr) async {
+
+  print("user token Str ${userTokenStr}");
+
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return
         AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             side: BorderSide(color: SECONDARY_COLOR),
             borderRadius: BorderRadius.all(
-              Radius.circular(8.0),
+              Radius.circular(MARGIN_MEDIUM),
             ),
           ),
           backgroundColor: PRIMARY_COLOR,
@@ -286,30 +291,56 @@ Future<void> _showMyDialog(BuildContext context) async {
                       textFontSize: TEXT_REGULAR_2X,
                       iconPath: '',
                       isShowIcon: false, () async{
-                    await Hive.deleteFromDisk();
-                    paramTokenStr = "";
-                    //Navigator.of(context).pop();
-                  //  Navigator.of(context).pushNamedAndRemoveUntil('/log_in_page', (Route route) => false);
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                        print("call logout api = Bearer ${userTokenStr??""}");
+
+                    if(movieBookingAppModel.logout("Bearer ${userTokenStr??""}").toString().isNotEmpty)
+                      {
+                        _navigatorToLogin(context);
+                      }
+                    //Navigator.of(context).popUntil((route) => route.isFirst);
                   }),
                 ),
                 SizedBox(width: 20,),
-                Container(
-                  width: 50,
-                  child: CustomButtonView(
-                      buttonContainerBgColor: Colors.black,
-                      buttonContainerHeight: LOGIN_PAGE_BUTTON_HEIGHT,
-                      buttonContainerRadius: BORDER_RADIUS,
-                      iconPadding: 0,
-                      iconWidthHeight: 0,
-                      textColor: SECONDARY_COLOR,
-                      textDesc: "NO",
-                      textFontSize: TEXT_REGULAR_2X,
-                      iconPath: '',
-                      isShowIcon: false, () {
+                GestureDetector(
+                  onTap: (){
                     Navigator.of(context).pop();
-                  }),
-                ),
+                  },
+                  child: Container(
+                   // width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                      border: Border.all(color: SECONDARY_COLOR,width: 1),
+                      color: PRIMARY_COLOR,
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
+                      child: Text(
+                        "NO",
+                        style: TextStyle(
+                          color: SECONDARY_COLOR,
+                          fontSize: TEXT_REGULAR_2X,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+
+                // Container(
+                //   width: 50,
+                //   child: CustomButtonView(
+                //       buttonContainerBgColor: Colors.black,
+                //       buttonContainerHeight: LOGIN_PAGE_BUTTON_HEIGHT,
+                //       buttonContainerRadius: BORDER_RADIUS,
+                //       iconPadding: 0,
+                //       iconWidthHeight: 0,
+                //       textColor: SECONDARY_COLOR,
+                //       textDesc: "NO",
+                //       textFontSize: TEXT_REGULAR_2X,
+                //       iconPath: '',
+                //       isShowIcon: false, () {
+                //     Navigator.of(context).pop();
+                //   }),
+                // ),
               ],
             )
 
@@ -318,5 +349,14 @@ Future<void> _showMyDialog(BuildContext context) async {
 
 
     },
+  );
+}
+
+Future<dynamic>? _navigatorToLogin(BuildContext context) {
+  return Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => LoginPage(paramPhoneNumber: "",),
+    ),
   );
 }

@@ -1,5 +1,10 @@
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/cast_vo.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/pages/booking_date_time_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -17,8 +22,9 @@ import 'package:video_player/video_player.dart';
 
 class MovieDetailPage extends StatefulWidget {
   bool _isNowShowing;
+  final int movieId;
 
-  MovieDetailPage(this._isNowShowing);
+  MovieDetailPage(this._isNowShowing,{required this.movieId});
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
@@ -26,6 +32,13 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   late FlickManager flickManager;
+  ///Model
+  MovieBookingAppModel _movieBookingAppModel = MovieBookingAppModelImpl();
+
+  ///State Variables
+  MovieVO? movieDetails;
+  List<CastVO>? cast;
+
 
   @override
   void initState() {
@@ -35,6 +48,18 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       videoPlayerController: VideoPlayerController.network(
           "https://storage.googleapis.com/biograf-video-files/videos/dd-ep-4/mp4/v-1080p-4500k-libx264.mp4"),
     );
+
+
+    ///Movie Detail data
+    _movieBookingAppModel.getMovieDetails(widget.movieId).then((movieDetails) {
+      setState(() {
+        this.movieDetails = movieDetails;
+        this.cast =movieDetails?.casts;
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+
   }
 
   @override
@@ -45,6 +70,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    print("check movie detail data ${widget.movieId}");
+
     return Scaffold(
       body: Container(
         color: PRIMARY_COLOR,
@@ -53,7 +81,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             CustomScrollView(
               slivers: [
                 MovieDetailsSliverAppBarView(
-                  () => Navigator.pop(context),flickManager
+                  onTapBack: () => Navigator.pop(context),
+                  flickManager: flickManager,
+                  movieVO: movieDetails,
                 ),
 
                 SliverList(
@@ -83,7 +113,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   Container(
                     margin: const EdgeInsets.only(
                         left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
-                    child: StoryLineView(),
+                    child: StoryLineView(storyLineStr:movieDetails?.overview),
                   ),
                   const SizedBox(
                     height: MARGIN_MEDIUM_2,
@@ -91,7 +121,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   Container(
                       margin: const EdgeInsets.only(
                           left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
-                      child: CastSectionView()),
+                      child: CastSectionView(castVOList:movieDetails?.casts)),
                   const SizedBox(
                     height: MARGIN_MEDIUM_2,
                   ),
@@ -262,8 +292,12 @@ class ReleaseingNotiView extends StatelessWidget {
 }
 
 class CastSectionView extends StatelessWidget {
+
+  final List<CastVO>? castVOList;
+
   const CastSectionView({
     Key? key,
+    required this.castVOList
   }) : super(key: key);
 
   @override
@@ -279,24 +313,29 @@ class CastSectionView extends StatelessWidget {
               fontSize: TEXT_REGULAR_1X,
               fontWeight: FontWeight.bold),
         ),
-        HorizontalCastListView(),
+        HorizontalCastListView(castVOList: castVOList),
       ],
     ));
   }
 }
 
 class HorizontalCastListView extends StatelessWidget {
+
+  final List<CastVO>? castVOList;
+
+  HorizontalCastListView({this.castVOList});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 100,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: 10,
+          itemCount: castVOList?.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.only(right: MARGIN_CARD_MEDIUM_2),
-              child: CircleImageView(),
+              child: CircleImageView(strProfile:castVOList?.elementAt(index).profilePath),
             );
           }),
     );
@@ -325,13 +364,19 @@ class GenreChipView extends StatelessWidget {
 
 class MovieDetailsSliverAppBarView extends StatelessWidget {
   final Function onTapBack;
+  final MovieVO? movieVO;
 
-  final List<String> genreList = ["Action", "Adventure", "Drama", "Animation"];
+ // final List<String> genreList = ["Action", "Adventure", "Drama", "Animation"];
 
 
   FlickManager flickManager;
 
-  MovieDetailsSliverAppBarView(this.onTapBack,this.flickManager);
+  MovieDetailsSliverAppBarView(
+
+
+      {required this.onTapBack,
+        required  this.flickManager,
+        required this.movieVO});
 
   @override
   Widget build(BuildContext context) {
@@ -357,12 +402,12 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
               child: Container(
                 width: 125,
                 height: 175,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                     image: DecorationImage(
                         fit: BoxFit.cover,
                         image:
-                            AssetImage('assets/images/sample_grid_img_3.png'))),
+                            NetworkImage('${MOVIE_LIST_IMAGE_BASE_URL}${movieVO?.posterPath}'))),
               ),
             ),
             Positioned(
@@ -378,9 +423,9 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Text(
-                            "Black Widow",
-                            style: TextStyle(
+                          Text(
+                           movieVO?.originalTitle??"",
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: TEXT_REGULAR_1X,
                                 fontWeight: FontWeight.w500),
@@ -388,9 +433,9 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
                           SizedBox(
                               height: 30,
                               child: Image.asset('assets/images/ic_imbd.png')),
-                          const Text(
-                            "7.1",
-                            style: TextStyle(
+                          Text(
+                            '${movieVO?.rating}',
+                            style: const TextStyle(
                                 fontStyle: FontStyle.italic,
                                 color: Colors.white,
                                 fontSize: TEXT_REGULAR_1X,
@@ -398,16 +443,16 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Text(
-                        "2D, 3D, 3D IMAX, 3D, DBOX",
-                        style: TextStyle(
+                      Text(
+                        movieVO?.getGenreListAsCommaSeparatedString() ?? "",
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: TEXT_REGULAR_1X,
                             fontWeight: FontWeight.w500),
                       ),
                       Wrap(
                         direction: Axis.horizontal,
-                        children: genreList
+                        children: (movieVO?.getGenreListAsStringList() ?? [])
                             .map(
                               (genre) => GenreChipView(genre),
                             )
@@ -510,30 +555,33 @@ class MovieDetailsAppBarVideoView extends StatelessWidget {
 }
 
 class StoryLineView extends StatelessWidget {
+
+  final String? storyLineStr;
   const StoryLineView({
     Key? key,
+    this.storyLineStr
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        SizedBox(
+      children: [
+        const SizedBox(
           height: MARGIN_MEDIUM,
         ),
-        Text(
+        const Text(
           "Story Line",
           style: TextStyle(
               color: Colors.white,
               fontSize: TEXT_REGULAR,
               fontWeight: FontWeight.bold),
         ),
-        SizedBox(
+        const SizedBox(
           height: MARGIN_MEDIUM,
         ),
         Text(
-          "In the 1970s, young Gru tries to join a group of supervillains called the Vicious 6 after they outst their leader-- the legendary figher Wild Kunckles.When the interview truns disastrous,Gru and his Minions go on the run with the Vicious 6 hot on their tails.Luckily, he finds an unlikely source of guidance-- Wild Kunckles himself-- and sonn discouvers that even bad guys need a little help from their friends.",
+          storyLineStr??"",
           style: TextStyle(color: Colors.white, fontSize: TEXT_REGULAR_2X),
         ),
       ],

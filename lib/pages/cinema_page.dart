@@ -26,7 +26,7 @@ class CinemaPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.all(MARGIN_MEDIUM_3),
-          child: BookingMovieTheatersView(),
+          child: BookingMovieTheatersView(cinemaAndShowTimeByDateVO: [],selectedDateStr: '',),
         ),
       ),
     );

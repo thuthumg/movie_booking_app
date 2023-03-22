@@ -18,12 +18,27 @@ class UserDataDao{
     return getUserDataBox().put(userDataVO.id, userDataVO);
   }
 
-  UserDataVO? getUserDataByToken(String userToken){
-    return getUserDataBox().values
-        .where((data) => data.userToken == userToken).toList().first;
+
+  // UserDataVO? getUserDataByToken(String userToken){
+  //   return getUserDataBox().values
+  //       .where((data) => data.userToken == userToken).toList().first;
+  // }
+
+  UserDataVO? getUserDataByToken(){
+
+    if (getUserDataBox().isEmpty) {
+      return null; // or return a default value
+    } else {
+      return getUserDataBox().values.toList().first;
+    }
+
   }
 
   Box<UserDataVO> getUserDataBox(){
     return Hive.box<UserDataVO>(BOX_NAME_USER_DATA_VO);
+  }
+
+  void deleteBox(){
+    getUserDataBox().delete('BOX_NAME_USER_DATA_VO');
   }
 }

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_booking_app/constants/date_list_item.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
@@ -15,8 +21,71 @@ class BookingDateTimePage extends StatefulWidget {
 }
 
 class _BookingDateTimePageState extends State<BookingDateTimePage> {
+
+  ///Model
+  MovieBookingAppModel _movieBookingAppModel = MovieBookingAppModelImpl();
+
+  ///State Variables
+  UserDataVO? userVO;
+
+  List<CinemaAndShowTimeByDateVO>? cinemaAndShowTimeByDateVO;
+  String? selectedDateStr;
+
+  String currentDate() {
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(now);
+  }
+
+  @override
+  void initState() {
+
+    ///userdata from Network
+    _movieBookingAppModel.getUserDataFromDatabase().then((paramUserVO) {
+      print("check user VO from timeslot page ${paramUserVO?.userToken}");
+    setState(() {
+      userVO = paramUserVO;
+      selectedDateStr = currentDate();
+      ///cinema date time list from Network
+      _movieBookingAppModel.getCinemaAndShowTimeByDate(
+          'Bearer ${userVO?.userToken??""}',
+          currentDate()).then((paramCinemaAndShowTimeByDateVO){
+        setState(() {
+          cinemaAndShowTimeByDateVO = paramCinemaAndShowTimeByDateVO;
+        });
+
+      }).catchError((error) {
+        showToastMessage(error.toString());
+      });
+
+
+    });
+      print("check user VO from timeslot page 2 ${userVO?.userToken}");
+    }).catchError((error) {
+      showToastMessage(error.toString());
+    });
+
+    super.initState();
+  }
+
+  void showToastMessage(String msgString) {
+    Fluttertoast.showToast(
+        msg: msgString,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+    print("check user VO from timeslot page 3 ${userVO?.userToken}");
+
+
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
@@ -61,7 +130,22 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
                 const SizedBox(height: SIZE_BOX_HEIGHT_MEDIUM,),
                 Container(
                     margin: const EdgeInsets.only(left: MARGIN_SMALL,right: MARGIN_SMALL),
-                    child: DateListView()),
+                    child: DateListView((String paramDateStr){
+                      setState(() {
+                        selectedDateStr = paramDateStr;
+                        ///cinema date time list from Network
+                        _movieBookingAppModel.getCinemaAndShowTimeByDate(
+                            'Bearer ${userVO?.userToken??""}',
+                            paramDateStr).then((paramCinemaAndShowTimeByDateVO){
+                          setState(() {
+                            cinemaAndShowTimeByDateVO = paramCinemaAndShowTimeByDateVO;
+                          });
+
+                        }).catchError((error) {
+                          showToastMessage(error.toString());
+                        });
+                      });
+                    })),
                 const SizedBox(height: SIZE_BOX_HEIGHT_SMALL,),
                 Container(
                     margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
@@ -71,7 +155,8 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
                 const SizedBox(height: SIZE_BOX_HEIGHT_MEDIUM,),
                 Container(
                     margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
-                    child: BookingMovieTheatersView())
+                    child: BookingMovieTheatersView(cinemaAndShowTimeByDateVO: cinemaAndShowTimeByDateVO??[],
+                        selectedDateStr: selectedDateStr))
 
               ])
           ),
@@ -220,6 +305,7 @@ class _MovieViewTypeState extends State<MovieViewType> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -280,6 +366,10 @@ class _MovieViewTypeState extends State<MovieViewType> {
 
 class DateListView extends StatefulWidget {
 
+  final Function(String) onTapDateListView;
+
+
+  DateListView(this.onTapDateListView);
 
   @override
   State<DateListView> createState() => _DateListViewState();
@@ -304,10 +394,13 @@ class _DateListViewState extends State<DateListView> {
 
   var dates = <DateTime>[];
   var showMovieDateList = <DateListItem>[];
-  void _toggleSelection(int index) {
+  void _toggleSelection(int index, String dateTimeStr) {
     setState(() {
       position = index;
-     // showMovieDateList[index].isSelected = !showMovieDateList[index].isSelected;
+
+      widget.onTapDateListView(dateTimeStr);
+
+      // showMovieDateList[index].isSelected = !showMovieDateList[index].isSelected;
     //  print("check select after = ${showMovieDateList[index].isSelected}");
      // showMovieDateList = showMovieDateList;
     });
@@ -339,26 +432,29 @@ class _DateListViewState extends State<DateListView> {
                 DateListItem(
                     "Today",
                     (monthNames[date.month -1]).toString(),
-                    (date.day).toString())
+                    (date.day).toString(),'${date.year}-${date.month}-${date.day}')
             );
           }else if (aDate == tomorrow){
             showMovieDateList.add(
                 DateListItem(
                     "Tomorrow",
                     (monthNames[date.month -1]).toString(),
-                    (date.day).toString())
+                    (date.day).toString(),'${date.year}-${date.month}-${date.day}')
             );
           }else{
             showMovieDateList.add(
                 DateListItem(
                     (weekDayNames[date.weekday -1]).toString(),
                     (monthNames[date.month -1]).toString(),
-                    (date.day).toString())
+                    (date.day).toString(),'${date.year}-${date.month}-${date.day}')
             );
           }
           print(showMovieDateList.toString());
         }
         showMovieDateList[0].isSelected = true;
+       // print("check date list ${showMovieDateList[0].}")
+
+
       }else{
       for(int i=0 ; i<showMovieDateList.length; i++){
 
@@ -390,8 +486,8 @@ class _DateListViewState extends State<DateListView> {
                 showMovieDateList[index].dayStr,
                 showMovieDateList[index].isSelected,
                 (){
-                  print("toggleselection");
-                  _toggleSelection(index);
+                 // print("toggleselection");
+                  _toggleSelection(index, showMovieDateList[index].dateTimeStr);
                 });
            }
           ),

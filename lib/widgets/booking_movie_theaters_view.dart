@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/constants/theater_booking_time_obj.dart';
+import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
+import 'package:movie_booking_app/data/vos/timeslots_vo.dart';
 import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/seating_plan_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
@@ -9,6 +11,13 @@ import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
 import 'package:movie_booking_app/widgets/booking_time_view.dart';
 
 class BookingMovieTheatersView extends StatefulWidget {
+
+  List<CinemaAndShowTimeByDateVO?> cinemaAndShowTimeByDateVO;
+  String? selectedDateStr;
+
+  BookingMovieTheatersView(
+  {required this.cinemaAndShowTimeByDateVO,required this.selectedDateStr});
+
 
   @override
   State<BookingMovieTheatersView> createState() => _BookingMovieTheatersViewState();
@@ -21,7 +30,7 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
   @override
   Widget build(BuildContext context) {
 
-    for(int i=0 ; i<theaterListObjList.length; i++){
+   /* for(int i=0 ; i<theaterListObjList.length; i++){
 
       if(position == i)
       {
@@ -30,13 +39,24 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
         theaterListObjList[i].isSelected = false;
       }
 
+    }*/
+
+    for(int i=0 ; i<widget.cinemaAndShowTimeByDateVO.length; i++){
+
+      if(position == i)
+      {
+        widget.cinemaAndShowTimeByDateVO[i]?.isSelected = !(widget.cinemaAndShowTimeByDateVO[i]?.isSelected ?? false);
+      }else{
+        widget.cinemaAndShowTimeByDateVO[i]?.isSelected = false;
+      }
+
     }
 
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       scrollDirection: Axis.vertical,
-      itemCount: theaterListObjList.length,
+      itemCount: widget.cinemaAndShowTimeByDateVO.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
           margin: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
@@ -50,7 +70,7 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
                           position = index;
                         });
                       },
-                      child: TheaterNameSpaceView(theaterListObjList[index].theaterName)),
+                      child: TheaterNameSpaceView(widget.cinemaAndShowTimeByDateVO[index]?.cinema??"")),
                  const Spacer(),
                   GestureDetector(
                     onTap: (){
@@ -93,7 +113,7 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
               ),
               const SizedBox(height: 15,),
               Visibility(
-                visible: theaterListObjList[index].isSelected,
+                visible: widget.cinemaAndShowTimeByDateVO[index]?.isSelected ?? false,
                 child: Container(
                   margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
                   child: GridView.builder(
@@ -108,15 +128,17 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
                       return GestureDetector(
                           onTap: (){
                             setState((){
-                              _navigateToSeatPage(context);
+                              _navigateToSeatPage(context,
+                                  widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex],
+                                  widget.selectedDateStr);
                             });
                           },
-                          child: BookingTimeView(theaterListObjList[index].theaterBookingTimeList[gridIndex]));
+                          child: BookingTimeView(widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex]));
                       //Text('Item $index');
                       // BookingTimeView();
 
                     },
-                    itemCount: theaterListObjList[index].theaterBookingTimeList.length, // n
+                    itemCount: widget.cinemaAndShowTimeByDateVO[index]?.timeslots?.length, // n
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                   ),
@@ -206,11 +228,14 @@ class WheelChairView extends StatelessWidget {
   }
 }
 
-  Future<dynamic> _navigateToSeatPage(BuildContext context) {
+  Future<dynamic> _navigateToSeatPage(BuildContext context,
+      TimeslotsVO? timeslot,
+      String? dateString) {
     return Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SeatingPlanPage(),
+        builder: (context) => SeatingPlanPage(bookinig_date: dateString??"",
+        theater_show_timeslot_id: timeslot?.cinemaDayTimeslotId??0,),
       ),
     );
   }

@@ -83,7 +83,7 @@ class CinemaFilterListSectionView extends StatelessWidget {
       margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
       child: Column(
         children: [
-          BookingMovieTheatersView(),
+          BookingMovieTheatersView(cinemaAndShowTimeByDateVO:[],selectedDateStr: '',),
         ],
       ),
     );

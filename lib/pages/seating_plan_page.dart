@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_booking_app/constants/movie_seat_grid_list_view_obj.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/pages/snack_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -9,7 +14,73 @@ import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
 import 'package:movie_booking_app/widgets/slider_view.dart';
 
-class SeatingPlanPage extends StatelessWidget {
+class SeatingPlanPage extends StatefulWidget {
+
+  final String bookinig_date;
+  final int theater_show_timeslot_id;
+
+  SeatingPlanPage({required this.bookinig_date,
+    required this.theater_show_timeslot_id});
+
+  @override
+  State<SeatingPlanPage> createState() => _SeatingPlanPageState();
+}
+
+class _SeatingPlanPageState extends State<SeatingPlanPage> {
+
+  ///State Variables
+  UserDataVO? userVO;
+  List<List<SeatVO>>? showMovieSeatList;
+
+
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+
+  @override
+  void initState() {
+
+
+
+    ///uservo from Database
+    movieBookingAppModel.getUserDataFromDatabase().then((paramUserVO) {
+      setState(() {
+        userVO = paramUserVO;
+
+        ///getseat data from Network
+        movieBookingAppModel.getSeatingPlanByShowTime(
+            'Bearer ${userVO?.userToken??""}',
+            widget.bookinig_date,
+            widget.theater_show_timeslot_id).then((seatVOList){
+
+             setState(() {
+               showMovieSeatList =seatVOList;
+             });
+        })
+        .catchError((error){
+          showToastMessage(error.toString());
+        });
+
+      });
+
+
+
+    }).catchError((error) {
+      debugPrint("error = "+error.toString());
+    });
+
+
+
+    super.initState();
+  }
+  void showToastMessage(String msgString) {
+    Fluttertoast.showToast(
+        msg: msgString,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +103,9 @@ class SeatingPlanPage extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       TitleImageView(),
-                      SeatListView(),
+                      SeatListView(seatList: showMovieSeatList??[]),
                     ],
                   ),
                 ),
@@ -237,11 +308,20 @@ class SeekBarView extends StatelessWidget {
   }
 }
 
-class SeatListView extends StatelessWidget {
-  const SeatListView({
+class SeatListView extends StatefulWidget {
+
+  final List<List<SeatVO>> seatList;
+
+  SeatListView({
     Key? key,
+    required this.seatList
   }) : super(key: key);
 
+  @override
+  State<SeatListView> createState() => _SeatListViewState();
+}
+
+class _SeatListViewState extends State<SeatListView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -249,20 +329,20 @@ class SeatListView extends StatelessWidget {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2),
-        itemCount: showMovieSeatList.length,
+        itemCount: widget.seatList.length,
         itemBuilder: (BuildContext context, int index) {
           //
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                height: MARGIN_CARD_MEDIUM_2,
-              ),
-              PriceTextView(showMovieSeatList[index].seatingArrangement),
-              SizedBox(
-                height: MARGIN_CARD_MEDIUM_2,
-              ),
-              SeatView(showMovieSeatList[index].movieSeatGridListViewObj)
+              // SizedBox(
+              //   height: MARGIN_CARD_MEDIUM_2,
+              // ),
+             // PriceTextView( widget.seatList[index].seatingArrangement),
+             //  SizedBox(
+             //    height: MARGIN_CARD_MEDIUM_2,
+             //  ),
+              SeatView(seatVOList: widget.seatList[index])
             ],
           );
         });
@@ -303,48 +383,61 @@ class TitleImageView extends StatelessWidget {
   }
 }
 
-class SeatView extends StatelessWidget {
-  List<MovieSeatGridListViewObject> movieSeatGridListViewObj =
-      <MovieSeatGridListViewObject>[];
+class SeatView extends StatefulWidget {
+  // List<MovieSeatGridListViewObject> movieSeatGridListViewObj =
+  //     <MovieSeatGridListViewObject>[];
 
-  SeatView(this.movieSeatGridListViewObj);
+  final List<SeatVO> seatVOList;
 
+  SeatView({required this.seatVOList});
+
+  @override
+  State<SeatView> createState() => _SeatViewState();
+}
+
+class _SeatViewState extends State<SeatView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.1,
+      height: MediaQuery.of(context).size.height * 0.08, //MediaQuery.of(context).size.height * 0.1
       child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 11, // number of columns
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.seatVOList.length, // number of columns
           mainAxisSpacing: 10, // vertical space between items
           crossAxisSpacing: 10, // horizontal space between items
-          childAspectRatio: 1, // aspect ratio of each item
+          childAspectRatio:1//aspect ratio of each item
         ),
         // umber of items in the grid
         itemBuilder: (BuildContext context, int index) {
-          if (movieSeatGridListViewObj[index].type == SEAT_TYPE_TEXT) {
+          if (widget.seatVOList[index].type == SEAT_TYPE_TEXT) {
             return Text(
-              movieSeatGridListViewObj[index].title.toString(),
+              widget.seatVOList[index].symbol.toString(),
               style: TextStyle(color: Colors.white),
             );
-          } else if (movieSeatGridListViewObj[index].type == SEAT_TYPE_EMPTY) {
+          } else if (widget.seatVOList[index].type == SEAT_TYPE_EMPTY) {
             return SizedBox(
               width: 10,
             );
-          } else if (movieSeatGridListViewObj[index].type ==
+          } else if (widget.seatVOList[index].type ==
               SEAT_TYPE_AVAILABLE) {
-            return Container(
-              width: 30,
-              height: 30,
-              child: Image.asset("assets/icons/ic_chair_available.png"),
+            return GestureDetector(
+              onTap: () {
+                // Implement your click function here
+                print('Clicked item $index');
+              },
+              child: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset("assets/icons/ic_chair_available.png"),
+              ),
             );
-          } else if (movieSeatGridListViewObj[index].type == SEAT_TYPE_TAKEN) {
+          } else if (widget.seatVOList[index].type == SEAT_TYPE_TAKEN) {
             return Container(
               width: 30,
               height: 30,
               child: Image.asset("assets/icons/ic_chair_taken.png"),
             );
-          } else if (movieSeatGridListViewObj[index].type ==
+          } else if (widget.seatVOList[index].type ==
               SEAT_TYPE_SELECTION) {
             return Container(
               width: 30,
@@ -352,21 +445,25 @@ class SeatView extends StatelessWidget {
               child: Image.asset("assets/icons/ic_chair_available.png",
                 color: SECONDARY_COLOR,),
             );
-          } else if (movieSeatGridListViewObj[index].type ==
-              SEAT_TYPE_GOLD_AVAILABLE) {
-            return Container(
-              width: 30,
-              height: 30,
-              child: Image.asset("assets/icons/ic_couple_seat_available.png"),
-            );
-          } else if (movieSeatGridListViewObj[index].type ==
-              SEAT_TYPE_GOLD_TAKEN) {
-            return Container(
-              width: 30,
-              height: 30,
-              child: Image.asset("assets/icons/ic_couple_seat_taken.png"),
-            );
-          } else {
+          }
+          //
+          // else if (widget.seatVOList[index].type ==
+          //     SEAT_TYPE_GOLD_AVAILABLE) {
+          //   return Container(
+          //     width: 30,
+          //     height: 30,
+          //     child: Image.asset("assets/icons/ic_couple_seat_available.png"),
+          //   );
+          // } else if (widget.seatVOList[index].type ==
+          //     SEAT_TYPE_GOLD_TAKEN) {
+          //   return Container(
+          //     width: 30,
+          //     height: 30,
+          //     child: Image.asset("assets/icons/ic_couple_seat_taken.png"),
+          //   );
+          // }
+
+          else {
             return Container(
               width: 30,
               height: 30,
@@ -374,24 +471,8 @@ class SeatView extends StatelessWidget {
             );
           }
 
-          /*if (index == 0 || index == 10) {
-            return Container(
-              child:  Text(
-                "A",
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
-          else if(index == 5){
-            return Container(child: Spacer(),);
-          }
-          else {
-            return Container(
-              child: Image.asset("assets/icons/ic_chair_available.png"),
-            );
-          }*/
         },
-        itemCount: movieSeatGridListViewObj.length,
+        itemCount: widget.seatVOList.length,
         // n
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
