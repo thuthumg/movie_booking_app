@@ -5,6 +5,7 @@ import 'package:movie_booking_app/constants/date_list_item.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
 import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -14,7 +15,10 @@ import 'package:movie_booking_app/widgets/booking_movie_theaters_view.dart';
 import 'package:movie_booking_app/widgets/date_time_card.dart';
 
 class BookingDateTimePage extends StatefulWidget {
-  const BookingDateTimePage({Key? key}) : super(key: key);
+
+  MovieVO? movieDetailsObj;
+
+  BookingDateTimePage({Key? key,required this.movieDetailsObj}) : super(key: key);
 
   @override
   State<BookingDateTimePage> createState() => _BookingDateTimePageState();
@@ -156,7 +160,7 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
                 Container(
                     margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2,right: MARGIN_MEDIUM_2),
                     child: BookingMovieTheatersView(cinemaAndShowTimeByDateVO: cinemaAndShowTimeByDateVO??[],
-                        selectedDateStr: selectedDateStr))
+                        selectedDateStr: selectedDateStr,movieDetailsObj: widget.movieDetailsObj,))
 
               ])
           ),

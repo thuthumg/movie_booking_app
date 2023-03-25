@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_booking_app/constants/movie_seat_grid_list_view_obj.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/pages/snack_page.dart';
@@ -19,8 +20,19 @@ class SeatingPlanPage extends StatefulWidget {
   final String bookinig_date;
   final int theater_show_timeslot_id;
 
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+
+
   SeatingPlanPage({required this.bookinig_date,
-    required this.theater_show_timeslot_id});
+    required this.theater_show_timeslot_id,
+    required this.cinemaName,
+    required this.timeslotTime,
+    required this.dateString,
+    required this.movieDetailsObj});
 
   @override
   State<SeatingPlanPage> createState() => _SeatingPlanPageState();
@@ -32,14 +44,15 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
   UserDataVO? userVO;
   List<List<SeatVO>>? showMovieSeatList;
 
-
+  int totalAmount = 0;
+  int totalCount = 0;
   MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
 
   @override
   void initState() {
 
 
-
+    selectedSeatVOList = [];
     ///uservo from Database
     movieBookingAppModel.getUserDataFromDatabase().then((paramUserVO) {
       setState(() {
@@ -83,6 +96,8 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
   }
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
@@ -105,7 +120,21 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TitleImageView(),
-                      SeatListView(seatList: showMovieSeatList??[]),
+                      SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (selectIndex,selectedSeatVOList){
+
+                        setState(() {
+                          totalAmount = 0;
+                          totalCount = 0;
+                          for(int i = 0;i<selectedSeatVOList.length;i++)
+
+                          {
+                            print("check selected VO list = ${selectedSeatVOList[i].seatName}");
+                            totalAmount += selectedSeatVOList[i].price??0;
+                            totalCount ++;
+                          }
+                        });
+
+                      }),
                     ],
                   ),
                 ),
@@ -115,10 +144,15 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
            // height: MediaQuery.of(context).size.height*0.35,
            // color: PRIMARY_COLOR,
             child: Column(
-              children: const [
+              children: [
                 SeatColorSpecificationsView(),
                 SeekBarView(),
-                TotalTicketView()
+                TotalTicketView(totalAmount: totalAmount,totalCount: totalCount,
+                cinemaName: widget.cinemaName,
+                    timeslotTime: widget.timeslotTime,
+                    dateString: widget.dateString,
+                    movieDetailsObj: widget.movieDetailsObj,
+                    selectedSeatedVOList:selectedSeatVOList)
               ],
             ),
           )
@@ -188,8 +222,25 @@ class SeatColorSpecificationsView extends StatelessWidget {
 }
 
 class TotalTicketView extends StatelessWidget {
-  const TotalTicketView({
+
+  final int totalAmount,totalCount;
+
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+
+  TotalTicketView({
     Key? key,
+    required this.totalAmount,
+    required this.totalCount,
+    required this.cinemaName,
+    required this.timeslotTime,
+    required this.dateString,
+    required this.movieDetailsObj,
+    required this.selectedSeatedVOList
   }) : super(key: key);
 
   @override
@@ -204,20 +255,20 @@ class TotalTicketView extends StatelessWidget {
                   left: MARGIN_MEDIUM_3, bottom: MARGIN_MEDIUM_3),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    "2 Tickets",
-                    style: TextStyle(
+                    "$totalCount ${(totalCount==0 || totalCount == 1)? 'Ticket': 'Tickets'}",
+                    style: const TextStyle(
                         fontSize: TEXT_REGULAR_2X,
                         fontWeight: FontWeight.w600,
                         color: Colors.white),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    "17000KS",
-                    style: TextStyle(
+                    "$totalAmount KS",
+                    style: const TextStyle(
                         fontSize: TEXT_REGULAR_4X,
                         fontWeight: FontWeight.w600,
                         color: SECONDARY_COLOR),
@@ -230,7 +281,13 @@ class TotalTicketView extends StatelessWidget {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  _navigateToSnackPage(context);
+                  _navigateToSnackPage(context,
+                      cinemaName,
+                      timeslotTime,
+                      dateString,
+                      movieDetailsObj,
+                    selectedSeatedVOList
+                  );
                 },
                 child: Container(
                   height: 50,
@@ -309,12 +366,13 @@ class SeekBarView extends StatelessWidget {
 }
 
 class SeatListView extends StatefulWidget {
-
+  final Function(int,List<SeatVO>) onTapSeatView;
   final List<List<SeatVO>> seatList;
 
   SeatListView({
     Key? key,
-    required this.seatList
+    required this.seatList,
+    required this.onTapSeatView
   }) : super(key: key);
 
   @override
@@ -342,7 +400,8 @@ class _SeatListViewState extends State<SeatListView> {
              //  SizedBox(
              //    height: MARGIN_CARD_MEDIUM_2,
              //  ),
-              SeatView(seatVOList: widget.seatList[index])
+              SeatView(seatVOList: widget.seatList[index],onTapSeatView:widget.onTapSeatView)
+
             ],
           );
         });
@@ -386,18 +445,24 @@ class TitleImageView extends StatelessWidget {
 class SeatView extends StatefulWidget {
   // List<MovieSeatGridListViewObject> movieSeatGridListViewObj =
   //     <MovieSeatGridListViewObject>[];
-
+  final Function(int,List<SeatVO>) onTapSeatView;
   final List<SeatVO> seatVOList;
 
-  SeatView({required this.seatVOList});
+
+  SeatView({required this.seatVOList,required this.onTapSeatView});
 
   @override
   State<SeatView> createState() => _SeatViewState();
 }
 
 class _SeatViewState extends State<SeatView> {
+
+  bool chair_available_flag = false;
+ // int ticketCount = 0;
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.08, //MediaQuery.of(context).size.height * 0.1
       child: GridView.builder(
@@ -409,6 +474,7 @@ class _SeatViewState extends State<SeatView> {
         ),
         // umber of items in the grid
         itemBuilder: (BuildContext context, int index) {
+
           if (widget.seatVOList[index].type == SEAT_TYPE_TEXT) {
             return Text(
               widget.seatVOList[index].symbol.toString(),
@@ -420,15 +486,64 @@ class _SeatViewState extends State<SeatView> {
             );
           } else if (widget.seatVOList[index].type ==
               SEAT_TYPE_AVAILABLE) {
+
             return GestureDetector(
               onTap: () {
                 // Implement your click function here
+
                 print('Clicked item $index');
+
+                //  chair_available_flag = !chair_available_flag;
+                //  widget.seatVOList[index].isSelected = !widget.seatVOList[index].isSelected;
+
+                  if(widget.seatVOList[index].isSelected == true)
+                    {
+                      widget.seatVOList[index].isSelected = false;
+                    }else{
+                    widget.seatVOList[index].isSelected = true;
+                  }
+                 // print("AAA ${widget.seatVOList[index].isSelected}");
+                 var objId =  widget.seatVOList[index].id;
+
+                  if(selectedSeatVOList.isEmpty)
+                    {
+                      selectedSeatVOList.add(widget.seatVOList[index]);
+                    }else{
+                   // selectedSeatVOList.add(widget.seatVOList[index]);
+
+                    if(widget.seatVOList[index].isSelected == true)
+                      {
+                        selectedSeatVOList.add(widget.seatVOList[index]);
+                      }else{
+                      for(int i = 0; i<selectedSeatVOList.length;i++)
+                      {
+                        if(selectedSeatVOList[i].id == objId &&
+                            selectedSeatVOList[i].symbol == widget.seatVOList[index].symbol)
+                        {
+                          print("remove condition");
+                          selectedSeatVOList.removeAt(i);
+                          break;
+                        }
+                      }
+                    }
+
+
+
+
+                  }
+
+
+                setState(() {
+                  widget.onTapSeatView(index,selectedSeatVOList);
+                  //widget.seatVOList[index].isSelected = chair_available_flag;
+                });
               },
-              child: Container(
+              child:
+              Container(
                 width: 30,
                 height: 30,
-                child: Image.asset("assets/icons/ic_chair_available.png"),
+                child: Image.asset("assets/icons/ic_chair_available.png",
+                  color: (widget.seatVOList[index].isSelected??false)? SECONDARY_COLOR : Colors.white,),
               ),
             );
           } else if (widget.seatVOList[index].type == SEAT_TYPE_TAKEN) {
@@ -439,6 +554,7 @@ class _SeatViewState extends State<SeatView> {
             );
           } else if (widget.seatVOList[index].type ==
               SEAT_TYPE_SELECTION) {
+            print("selection condition");
             return Container(
               width: 30,
               height: 30,
@@ -527,11 +643,22 @@ class SelectionView extends StatelessWidget {
   }
 }
 
-Future<dynamic> _navigateToSnackPage(BuildContext context) {
+Future<dynamic> _navigateToSnackPage(BuildContext context ,
+    String? cinemaName,
+String? timeslotTime,
+String? dateString,
+MovieVO? movieDetailsObj, List<SeatVO>? selectedSeatedVOList,) {
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => SnackPage(),
+      builder: (context) => SnackPage(
+        cinemaName: cinemaName,
+        timeslotTime: timeslotTime,
+        dateString: dateString,
+        movieDetailsObj: movieDetailsObj,
+        selectedSeatedVOList: selectedSeatedVOList,
+
+      ),
     ),
   );
 }

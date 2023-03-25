@@ -10,6 +10,8 @@ import 'package:movie_booking_app/network/responses/get_movie_list_response.dart
 import 'package:movie_booking_app/network/responses/get_otp_response.dart';
 import 'package:movie_booking_app/network/responses/get_seating_plan_by_show_time_response.dart';
 import 'package:movie_booking_app/network/responses/get_sign_in_with_phone_response.dart';
+import 'package:movie_booking_app/network/responses/get_snack_categories_response.dart';
+import 'package:movie_booking_app/network/responses/get_snacks_response.dart';
 import 'package:movie_booking_app/network/responses/logout_response.dart';
 import 'package:retrofit/http.dart';
 
@@ -62,4 +64,14 @@ abstract class TheMovieBookingApi {
     @Query(PARAM_CINEMA_DAY_TIMESLOT_ID) int PARAM_CINEMA_DAY_TIMESLOT_ID,
     @Query(PARAM_BOOKING_DATE) String PARAM_BOOKING_DATE,
   );
+
+  @GET(ENDPOINT_GET_SNACK_CATEGORY)
+  Future<GetSnackCategoriesResponse> getSnackCategory(@Header(PARAM_HEADER) String PARAM_HEADER);
+
+
+  @GET(ENDPOINT_GET_SNACKS)
+  Future<GetSnacksResponse> getSnacks(
+      @Header(PARAM_HEADER) String PARAM_HEADER,
+      @Query(PARAM_CATEGORY_ID) int PARAM_CATEGORY_ID);
+
 }

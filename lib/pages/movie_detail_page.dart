@@ -150,7 +150,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 child:
 
                 GestureDetector(
-                  onTap: ()=> _navigateToBookingDateTimePage(context),
+                  onTap: ()=> _navigateToBookingDateTimePage(context,movieDetails),
                   child: Container(
                     height: 50,
                     margin: EdgeInsets.only(bottom: MARGIN_MEDIUM_2),
@@ -199,11 +199,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 }
-Future<dynamic> _navigateToBookingDateTimePage(BuildContext context) {
+Future<dynamic> _navigateToBookingDateTimePage(BuildContext context, MovieVO? movieDetails) {
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => BookingDateTimePage(),
+      builder: (context) => BookingDateTimePage(movieDetailsObj:movieDetails),
     ),
   );
 }

@@ -6,6 +6,8 @@ import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/config_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_category_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/data/vos/timeslots_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/network/dataagents/movie_booking_app_data_agent.dart';
@@ -168,103 +170,27 @@ class MovieBookingAppModelImpl extends MovieBookingAppModel{
       String tokenStr, String date) {
    return _dataAgent.getCinemaAndShowTimeByDate(
        tokenStr, date).then((paramCinemaAndShowTimeByDateVO) async{
-      print("getCinemaAndShowTimeByDate fun");
-     // List<CinemaTimeslotStatusColorVO> cinemaTimeslotStatusColorList =
-     // cinemaTimeslotStatusColorDao.getAllCinemaTimeSlotStatusColorVOs();
+
 
      List<CinemaAndShowTimeByDateVO> cinemaTimesAndDateList = paramCinemaAndShowTimeByDateVO??[];
 
      for(int i=0 ; i<cinemaTimesAndDateList.length; i++) {
        List<TimeslotsVO> timeslotVOList = cinemaTimesAndDateList[i].timeslots ??
            [];
-       print("getCinemaAndShowTimeByDate fun first loop = ${timeslotVOList.length}");
+
        for (int j = 0; j < timeslotVOList.length; j++) {
 
          List<CinemaTimeslotStatusColorVO> cinemaTimeslotStatusColorList =
          cinemaTimeslotStatusColorDao.getAllCinemaTimeSlotStatusColorVOs();
 
-         //
-         // for (int id in timeslotVOList) {
-         //   if (cinemaTimeslotStatusColorList.contains(id)) {
-         //     print('$id exists in doubleArray');
-         //   } else {
-         //     print('$id does not exist in doubleArray');
-         //   }
-         // }
-         print("getCinemaAndShowTimeByDate fun second loop = ${cinemaTimeslotStatusColorList.length}");
          for (int k = 0; k < cinemaTimeslotStatusColorList.length; k++) {
 
-          // print("getCinemaAndShowTimeByDate fun third loop");
-            print("check status id ${timeslotVOList[j].status} ${cinemaTimeslotStatusColorList[k].id}");
            if (timeslotVOList[j].status ==
                cinemaTimeslotStatusColorList[k].id) {
              timeslotVOList[j].color = cinemaTimeslotStatusColorList[k].color;
             // break;
            }
-
-
-           // for (TimeslotsVO checkObject in timeslotVOList) {//bool exists =
-
-
-           // List<DoubleObject> matchingObjects = cinemaTimesAndDateList.where((cinemaDateTimeList) =>
-           //     timeslotVOList.map((checkObj) => checkObj.status).contains(doubleObj.timeslots)
-           // ).toList();
-           //
-           // print('Matching objects:');
-           // matchingObjects.forEach((doubleObj) => print(doubleObj.id));
-
-           /* cinemaTimeslotStatusColorList.map((doubleObj)=>
-
-           doubleObj.id
-
-         ).any((id)
-         {
-           if(id == checkObject.status)
-               {
-                 checkObject.color = doubleObj.color;
-               }
-
          }
-
-
-         );*/
-           /* cinemaTimeslotStatusColorList.map((doubleObj){doubleObj.id}).any((id){
-           id == checkObject.status;
-           checkObject.color = doubleObj.color;
-         }
-
-         );*/
-           /*if (exists) {
-           print('${checkObject.id} exists in doubleObjectArray');
-
-         } else {
-
-           print('${checkObject.id} does not exist in doubleObjectArray');
-         }*/
-         }
-
-         /*
-
-       for(int j=0 ; j<timeslotVOList.length; j++){
-         List<CinemaTimeslotStatusColorVO> cinemaTimeslotStatusColorList =
-         cinemaTimeslotStatusColorDao.getAllCinemaTimeSlotStatusColorVOs();
-
-
-         for (int id in timeslotVOList) {
-           if (cinemaTimeslotStatusColorList.contains(id)) {
-             print('$id exists in doubleArray');
-           } else {
-             print('$id does not exist in doubleArray');
-           }
-         }
-
-         for(int k=0 ; k<cinemaTimeslotStatusColorList.length; k++){
-            print("check status id ${timeslotVOList[j].status} ${cinemaTimeslotStatusColorList[k].id}");
-            if(timeslotVOList[j].status == cinemaTimeslotStatusColorList[k].id)
-              {
-                  timeslotVOList[j].color = cinemaTimeslotStatusColorList[k].color;
-                  break;
-              }*/
        }
      }
 
@@ -282,12 +208,15 @@ class MovieBookingAppModelImpl extends MovieBookingAppModel{
       for(int i=0 ; i<paramGetSeatingPlanByShowTimeData.length; i++) {
         List<SeatVO> seatVOList = paramGetSeatingPlanByShowTimeData[i];
         for (int j = 0; j < seatVOList.length; j++) {
-          if(j == 3 || j == 4)
+          if(j == 3 || j == 4 || j== 9 || j == 10)
           {
             seatVOList[j].type = "space";
-          }else if(j == 9 || j == 10){
-            seatVOList[j].type = "space";
+
           }
+          // else if(j == 9 || j == 10){
+          //   seatVOList[j].type = "space";
+          //
+          // }
          // changeSeatVOList.add(seatVOList[j]);
           }
 
@@ -299,6 +228,29 @@ class MovieBookingAppModelImpl extends MovieBookingAppModel{
       return Future.value(paramGetSeatingPlanByShowTimeData);
     });
   }
-//{"id":1,"type":"text","seat_name":"","symbol":"A","price":0},{"id":2,"type":"space","seat_name":"","symbol":"A","price":0}
+
+  @override
+  Future<List<SnackCategoryVO>?> getSnackCategoriesList(String paramTokenStr) {
+    return _dataAgent.getSnackCategoriesList(paramTokenStr).then((snackCategories) async{
+      // Get the reversed iterable
+      Iterable<SnackCategoryVO> reversedSnackCategoriesList = snackCategories?.reversed??[];
+
+      // Convert the iterable back to a list
+      List<SnackCategoryVO> reversedList = reversedSnackCategoriesList.toList();
+
+      reversedList.add(SnackCategoryVO(0, "All", "All", 1));
+
+      return Future.value(reversedList.reversed.toList());
+    });
+  }
+
+  @override
+  Future<List<SnackVO>?> getSnacksList(String paramTokenStr, int categoryId) {
+
+    return _dataAgent.getSnacksList(paramTokenStr, categoryId).then((snacks) async{
+      return Future.value(snacks);
+    });
+
+  }
 
 }

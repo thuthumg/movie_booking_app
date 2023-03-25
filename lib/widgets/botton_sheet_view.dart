@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/pages/snack_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/total_amount_button_view.dart';
 
 class BottomSheetView extends StatelessWidget {
+
+  final List<SnackVO> snackList;
+
+  BottomSheetView({required this.snackList});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,10 +21,14 @@ class BottomSheetView extends StatelessWidget {
         top: MARGIN_MEDIUM_3),
         child: Column(
           children: [
-            SnackListView(),
-            TotalAmountButtonView((){ Navigator.of(context).pop();},(){
+            SnackListView(snackList: snackList),
+            TotalAmountButtonView(
+                snacksList: snackList,
+                    snackTotalAmt: 0,
+                   onTapFoodAndBeverageView: (){ Navigator.of(context).pop();},
+                   onTapGoToCheckOut: (){
               Navigator.of(context).pop();
-            },true)
+            },isBottomSheetView: true)
           ],
         )
         // Column(
@@ -93,26 +103,48 @@ class BottomSheetView extends StatelessWidget {
 
 
 class SnackListView extends StatelessWidget {
-  const SnackListView({
+  final List<SnackVO> snackList;
+
+  SnackListView({
     Key? key,
+    required this.snackList
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<SnackVO> selectedSnackList = [];
+
+    snackList.forEach((snackVO) {
+      var snackQty = snackVO.qty?.toInt();
+      if(snackQty!= null)
+        {
+          if(snackQty >= 1)
+          {
+            selectedSnackList.add(snackVO);
+          }
+        }
+     
+    });
+
+
     return Container(
       height: 100,
       child: ListView.builder(
-          itemCount: 3,
+          itemCount: selectedSnackList.length,
           itemBuilder: (BuildContext context, int index) {
-            return FoodAndBeverageEachItemView();
+            return FoodAndBeverageEachItemView(snackVO: selectedSnackList[index]);
           }),
     );
   }
 }
 
 class FoodAndBeverageEachItemView extends StatelessWidget {
-  const FoodAndBeverageEachItemView({
+
+  SnackVO snackVO;
+
+  FoodAndBeverageEachItemView({
     Key? key,
+    required this.snackVO
   }) : super(key: key);
 
   @override
@@ -130,9 +162,9 @@ class FoodAndBeverageEachItemView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(
                   top: MARGIN_MEDIUM, bottom: MARGIN_MEDIUM),
-              child: const Text(
-                "Large Cola",
-                style: TextStyle(
+              child: Text(
+                snackVO.name.toString(),
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR_2X,
                     fontWeight: FontWeight.w500),
@@ -153,9 +185,9 @@ class FoodAndBeverageEachItemView extends StatelessWidget {
                       top: MARGIN_MEDIUM, bottom: MARGIN_MEDIUM),
                  // width: 50,
                   height: 50,
-                  child: const Text(
-                    "1",
-                    style: TextStyle(
+                  child:  Text(
+                    snackVO.qty.toString(),
+                    style: const TextStyle(
                         fontSize: TEXT_REGULAR_2X,
                         color: SECONDARY_COLOR,
                         fontWeight: FontWeight.w500),
@@ -173,9 +205,9 @@ class FoodAndBeverageEachItemView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(
                   top: MARGIN_MEDIUM, bottom: MARGIN_MEDIUM),
-              child: const Text(
-                "1000Ks",
-                style: TextStyle(
+              child: Text(
+               snackVO.price.toString(),
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_REGULAR_2X,
                     fontWeight: FontWeight.w500),

@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 
 class SnackListItemView extends StatefulWidget {
-  const SnackListItemView({
+
+  Function(int) onTapAddButton;
+  Function(int) onTapPlusButton;
+  Function(int) onTapMinusButton;
+
+  SnackVO snackVO;
+  SnackListItemView({
     Key? key,
+    required this.snackVO,
+    required this.onTapAddButton,
+    required this.onTapPlusButton,
+    required this.onTapMinusButton
   }) : super(key: key);
 
   @override
@@ -16,8 +27,10 @@ class _SnackListItemViewState extends State<SnackListItemView> {
 
   @override
   Widget build(BuildContext context) {
+    int snackQty = widget.snackVO.qty??0;
     return Container(
       // height: 300,
+
       margin: const EdgeInsets.only(
           left: MARGIN_MEDIUM_2,
           right: MARGIN_MEDIUM,
@@ -40,25 +53,38 @@ class _SnackListItemViewState extends State<SnackListItemView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SnackImageView(),
+            SnackImageView(imageLink: widget.snackVO.image??""),
             const SizedBox(
               height: 10,
             ),
-            SnackTitleTextView(),
+            SnackTitleTextView(titleText: widget.snackVO.name??""),
             const SizedBox(
               height: 10,
             ),
-            SnackPriceTextView(),
+            SnackPriceTextView(priceText: widget.snackVO.price??0),
             const SizedBox(
               height: 10,
             ),
-            _isShowPlusMinusSection
-                ? QtyPlusMinusControlView()
+           // _isShowPlusMinusSection
+            snackQty >= 1
+                ? QtyPlusMinusControlView(snackVO: widget.snackVO,
+                onTapPlusButton: (snackId)=>widget.onTapPlusButton(snackId),
+                onTapMinusButton: (snackId)=>widget.onTapMinusButton(snackId),
+                // onTapButton:
+                // (showPlusMinusSection){
+                //   setState(() {
+                //    // _isShowPlusMinusSection = showPlusMinusSection;
+                //   });
+                //
+                // }
+
+            )
                 : GestureDetector(
                     onTap: () {
-                      setState(() {
-                        _isShowPlusMinusSection = !this._isShowPlusMinusSection;
-                      });
+                      widget.onTapAddButton(widget.snackVO.id??0);
+                      // setState(() {
+                      //   _isShowPlusMinusSection = !this._isShowPlusMinusSection;
+                      // });
                     },
                     child: AddButtonView())
           ],
@@ -101,27 +127,38 @@ class AddButtonView extends StatelessWidget {
 }
 
 class QtyPlusMinusControlView extends StatefulWidget {
+  final SnackVO snackVO;
+ // Function(bool) onTapButton;
+
+  Function(int) onTapPlusButton;
+  Function(int) onTapMinusButton;
+
+  QtyPlusMinusControlView({
+    required this.snackVO,
+   // required this.onTapButton,
+    required this.onTapPlusButton,required this.onTapMinusButton});
+
   @override
   State<QtyPlusMinusControlView> createState() =>
       _QtyPlusMinusControlViewState();
 }
 
 class _QtyPlusMinusControlViewState extends State<QtyPlusMinusControlView> {
-  int quantity = 0;
+  int quantity = 1;
 
   void updateQuantity(bool isIncrement) {
     setState(() {
-      if (isIncrement) {
-        quantity++;
-      } else {
-        if(quantity <= 0)
-          {
-            quantity;
-          }else{
-          quantity--;
-        }
-
-      }
+      // if (isIncrement) {
+      //   quantity++;
+      // } else {
+      //   if(quantity <= 0)
+      //     {
+      //       quantity;
+      //     }else{
+      //     quantity--;
+      //   }
+      //
+      // }
     });
   }
 
@@ -133,13 +170,17 @@ class _QtyPlusMinusControlViewState extends State<QtyPlusMinusControlView> {
         Spacer(),
         GestureDetector(
             onTap: () {
-              updateQuantity(true);
+             // updateQuantity(true);
+              widget.onTapPlusButton(widget.snackVO.id??0);
             },
             child: PlusButtonView()),
-        QtyView(quantity),
+        QtyView(widget.snackVO.qty??0),
         GestureDetector(
             onTap: () {
-              updateQuantity(false);
+             // updateQuantity(false);
+             // if(quantity == 0)
+            //  widget.onTapButton(false);
+              widget.onTapMinusButton(widget.snackVO.id??0);
             },
             child: MinusButtonView()),
       ],
@@ -190,7 +231,7 @@ class QtyView extends StatelessWidget {
       height: 50,
       child: Text(
         this.qtyCount.toString(),
-        style: TextStyle(
+        style: const TextStyle(
             fontSize: TEXT_REGULAR_2X,
             color: SECONDARY_COLOR,
             fontWeight: FontWeight.w500),
@@ -211,8 +252,10 @@ int calculateQuantity(
 }
 
 class SnackImageView extends StatelessWidget {
-  const SnackImageView({
+  String imageLink;
+  SnackImageView({
     Key? key,
+    required this.imageLink
   }) : super(key: key);
 
   @override
@@ -220,10 +263,10 @@ class SnackImageView extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(MARGIN_CARD_MEDIUM_2),
-        child: Image.asset(
+        child: Image.network(
           width: 100,
           height: 100,
-          "assets/images/snack_sample_photo.png",
+         imageLink,
         ),
       ),
     );
@@ -231,15 +274,17 @@ class SnackImageView extends StatelessWidget {
 }
 
 class SnackPriceTextView extends StatelessWidget {
-  const SnackPriceTextView({
+  int priceText;
+  SnackPriceTextView({
     Key? key,
+    required this.priceText
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      "1000KS",
-      style: TextStyle(
+    return Text(
+      "${priceText} KS",
+      style: const TextStyle(
         color: SECONDARY_COLOR,
         fontSize: TEXT_REGULAR_1X,
         fontWeight: FontWeight.w600,
@@ -249,15 +294,17 @@ class SnackPriceTextView extends StatelessWidget {
 }
 
 class SnackTitleTextView extends StatelessWidget {
-  const SnackTitleTextView({
+  String titleText;
+  SnackTitleTextView({
     Key? key,
+    required this.titleText
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      "Potato Chips",
-      style: TextStyle(
+    return Text(
+     titleText,
+      style: const TextStyle(
         color: Colors.white,
         fontSize: TEXT_REGULAR_1X,
         fontWeight: FontWeight.w600,

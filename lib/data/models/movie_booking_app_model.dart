@@ -5,6 +5,8 @@ import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/config_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_category_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 
 abstract class MovieBookingAppModel{
@@ -34,4 +36,9 @@ abstract class MovieBookingAppModel{
   Future<List<CityVO>?> getCitiesFromDatabase();
 
   void updateUserDataVO(UserDataVO? userDataVO);
+
+  Future<List<SnackCategoryVO>?>  getSnackCategoriesList(String paramTokenStr);
+
+  Future<List<SnackVO>?>  getSnacksList(String paramTokenStr,int categoryId);
+
 }

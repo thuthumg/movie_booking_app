@@ -6,6 +6,7 @@ import 'package:movie_booking_app/constants/movie_seat_grid_list_view_obj.dart';
 import 'package:movie_booking_app/constants/movie_seat_list_view_obj.dart';
 import 'package:movie_booking_app/constants/theater_booking_time_obj.dart';
 import 'package:movie_booking_app/constants/theater_list_obj.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/profile_page.dart';
 import 'package:movie_booking_app/pages/ticket_page.dart';
@@ -33,6 +34,10 @@ const String SEAT_TYPE_TAKEN = "taken";
 const String SEAT_TYPE_TEXT = "text";
 const String SEAT_TYPE_EMPTY = "space";
 const String SEAT_TYPE_SELECTION = "selection";
+
+
+List<SeatVO> selectedSeatVOList = [];
+
 // const String SEAT_TYPE_GOLD_TAKEN = "goldTaken";
 // const String SEAT_TYPE_GOLD_AVAILABLE = "goldAvailable";
 // const String SEAT_TYPE_GOLD_SELECTION = "goldSelection";

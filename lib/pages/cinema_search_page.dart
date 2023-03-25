@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/widgets/time_range_slider_view.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -11,7 +12,7 @@ import 'package:movie_booking_app/widgets/search_widget_view.dart';
 import '../widgets/search_box_view.dart';
 
 class CinemaSearchPage extends StatefulWidget {
-
+  MovieVO? movieDetailsObj;
   @override
   State<CinemaSearchPage> createState() => _CinemaSearchPageState();
 }
@@ -83,7 +84,7 @@ class CinemaFilterListSectionView extends StatelessWidget {
       margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
       child: Column(
         children: [
-          BookingMovieTheatersView(cinemaAndShowTimeByDateVO:[],selectedDateStr: '',),
+          BookingMovieTheatersView(cinemaAndShowTimeByDateVO:[],selectedDateStr: '',movieDetailsObj:  null,),
         ],
       ),
     );

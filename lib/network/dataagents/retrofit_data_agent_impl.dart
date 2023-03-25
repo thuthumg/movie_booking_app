@@ -6,6 +6,8 @@ import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/config_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_category_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/network/dataagents/movie_booking_app_data_agent.dart';
@@ -170,5 +172,23 @@ class RetrofitDataAgentImpl extends MovieBookingAppDataAgent {
         .asStream()
         .map((response) => response.seatVOList)
         .first;
+  }
+
+  @override
+  Future<List<SnackCategoryVO>?> getSnackCategoriesList(String paramTokenStr) {
+    return mMovieBookingApi
+        .getSnackCategory(paramTokenStr)
+        .asStream()
+        .map((response) => response.data)
+        .first;
+  }
+
+  @override
+  Future<List<SnackVO>?> getSnacksList(String paramTokenStr, int categoryId) {
+   return mMovieBookingApi
+       .getSnacks(paramTokenStr, categoryId)
+       .asStream()
+       .map((response) => response.data)
+       .first;
   }
 }

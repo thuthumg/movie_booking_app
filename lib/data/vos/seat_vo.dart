@@ -22,8 +22,11 @@ class SeatVO{
   @JsonKey(name: "price")
   int? price;
 
+  bool? isSelected;
 
-  SeatVO(this.id, this.type, this.seatName, this.symbol, this.price);
+
+  SeatVO(this.id, this.type, this.seatName, this.symbol, this.price,
+      this.isSelected);
 
   factory SeatVO.fromJson(Map<String,dynamic> json) =>_$SeatVOFromJson(json);
   Map<String,dynamic> toJson()=> _$SeatVOToJson(this);

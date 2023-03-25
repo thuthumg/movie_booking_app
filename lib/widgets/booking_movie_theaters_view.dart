@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/constants/theater_booking_time_obj.dart';
 import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/timeslots_vo.dart';
 import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/seating_plan_page.dart';
@@ -15,8 +16,11 @@ class BookingMovieTheatersView extends StatefulWidget {
   List<CinemaAndShowTimeByDateVO?> cinemaAndShowTimeByDateVO;
   String? selectedDateStr;
 
+  MovieVO? movieDetailsObj;
+
   BookingMovieTheatersView(
-  {required this.cinemaAndShowTimeByDateVO,required this.selectedDateStr});
+  {required this.cinemaAndShowTimeByDateVO,required this.selectedDateStr,
+  required this.movieDetailsObj});
 
 
   @override
@@ -130,7 +134,12 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
                             setState((){
                               _navigateToSeatPage(context,
                                   widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex],
-                                  widget.selectedDateStr);
+
+                                  widget.cinemaAndShowTimeByDateVO[index]?.cinema,
+                                  widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex].startTime,
+                                  widget.selectedDateStr,
+
+                                  widget.movieDetailsObj);
                             });
                           },
                           child: BookingTimeView(widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex]));
@@ -229,13 +238,17 @@ class WheelChairView extends StatelessWidget {
 }
 
   Future<dynamic> _navigateToSeatPage(BuildContext context,
-      TimeslotsVO? timeslot,
-      String? dateString) {
+      TimeslotsVO? timeslot, String? cinemaName,String? timeslotTime,
+      String? dateString, MovieVO? movieDetailsObj) {
     return Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SeatingPlanPage(bookinig_date: dateString??"",
-        theater_show_timeslot_id: timeslot?.cinemaDayTimeslotId??0,),
+        theater_show_timeslot_id: timeslot?.cinemaDayTimeslotId??0,
+        cinemaName: cinemaName,
+        timeslotTime: timeslotTime,
+        dateString: dateString,
+        movieDetailsObj: movieDetailsObj,),
       ),
     );
   }

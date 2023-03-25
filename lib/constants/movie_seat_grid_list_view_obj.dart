@@ -29,17 +29,17 @@ class MovieSeatGridListViewObject{
     return type == SEAT_TYPE_SELECTION;
   }
 
-  bool isMovieSeatGoldTaken(){
-    return type == SEAT_TYPE_GOLD_TAKEN;
-  }
-
-
-  bool isMovieSeatGoldAvailable(){
-    return type == SEAT_TYPE_GOLD_AVAILABLE;
-  }
-
-  bool isMovieSeatGoldYourSelection(){
-    return type == SEAT_TYPE_GOLD_SELECTION;
-  }
+  // bool isMovieSeatGoldTaken(){
+  //   return type == SEAT_TYPE_GOLD_TAKEN;
+  // }
+  //
+  //
+  // bool isMovieSeatGoldAvailable(){
+  //   return type == SEAT_TYPE_GOLD_AVAILABLE;
+  // }
+  //
+  // bool isMovieSeatGoldYourSelection(){
+  //   return type == SEAT_TYPE_GOLD_SELECTION;
+  // }
 
 }

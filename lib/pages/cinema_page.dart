@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/pages/cinema_search_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/widgets/booking_movie_theaters_view.dart';
 
 class CinemaPage extends StatelessWidget {
+
+  MovieVO? movieDetailsObj;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,10 +26,14 @@ class CinemaPage extends StatelessWidget {
           Image.asset("assets/icons/ic_scan.png")
         ],
       ),
-      body: SingleChildScrollView(
+      body:
+
+      SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.all(MARGIN_MEDIUM_3),
-          child: BookingMovieTheatersView(cinemaAndShowTimeByDateVO: [],selectedDateStr: '',),
+          child: BookingMovieTheatersView(
+              cinemaAndShowTimeByDateVO: [],selectedDateStr: '',
+              movieDetailsObj: movieDetailsObj),
         ),
       ),
     );
