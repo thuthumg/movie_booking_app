@@ -1,16 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/data/vos/banner_vo.dart';
+import 'package:movie_booking_app/data/vos/check_out_vo.dart';
 import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/config_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/payment_type_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_category_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/network/dataagents/movie_booking_app_data_agent.dart';
+import 'package:movie_booking_app/network/requests/check_out_request.dart';
 import 'package:movie_booking_app/network/responses/get_sign_in_with_phone_response.dart';
 import 'package:movie_booking_app/network/the_movie_booking_api.dart';
 
@@ -29,11 +32,11 @@ class RetrofitDataAgentImpl extends MovieBookingAppDataAgent {
   RetrofitDataAgentImpl._internal() {
     final dio = Dio();
     final interceptor = LogInterceptor(
-      requestHeader: false,
+      requestHeader: true,
       // don't log request headers
       requestBody: true,
       // don't log request body
-      responseHeader: false,
+      responseHeader: true,
       // don't log response headers
       responseBody: true,
       // log response body only
@@ -190,5 +193,26 @@ class RetrofitDataAgentImpl extends MovieBookingAppDataAgent {
        .asStream()
        .map((response) => response.data)
        .first;
+  }
+
+  @override
+  Future<List<PaymentTypeVO>?> getPaymentTypesList(String paramTokenStr) {
+    return mMovieBookingApi
+        .getPaymentTypes(paramTokenStr)
+        .asStream()
+        .map((response) => response.data)
+        .first;
+  }
+
+  @override
+  Future<CheckOutVO?> checkOut(String paramTokenStr, CheckOutRequest checkOutRequest) {
+
+    print("check checkout request param data = ${paramTokenStr} /// ${checkOutRequest}");
+
+    return mMovieBookingApi
+        .checkOut(paramTokenStr, "application/json",checkOutRequest)
+        .asStream()
+        .map((response) => response.data)
+        .first;
   }
 }

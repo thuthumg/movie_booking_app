@@ -30,12 +30,12 @@ class _TotalAmountButtonViewState extends State<TotalAmountButtonView> {
     var selectedSnackCount = 0;
     var selectedTotalPrice = 0;
     widget.snacksList.forEach((snackVO) {
-        if((snackVO.qty??0) >= 1)
+        if((snackVO.quantity??0) >= 1)
           {
             selectedSnackCount +=1;
-            print("${snackVO.qty}------${snackVO.price}");
+            print("${snackVO.quantity}------${snackVO.price}");
            // print("snackAmt ${(snackVO.price??0)*( snackVO.qty??0).toInt()}");
-            selectedTotalPrice += ((snackVO.qty??0).toInt() * (snackVO.price??0).toInt()).toInt();
+            selectedTotalPrice += ((snackVO.quantity??0).toInt() * (snackVO.price??0).toInt()).toInt();
            // print("selectedTotalPrice ${selectedTotalPrice}");
           }
 

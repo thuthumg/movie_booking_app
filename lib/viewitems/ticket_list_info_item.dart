@@ -1,13 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/vos/check_out_vo.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/widgets/dashed_divider_view.dart';
 
 class TicketListInfoItem extends StatelessWidget {
 
+  CheckOutVO? checkOutVO;
   Function onTapTicketItem;
 
-  TicketListInfoItem(this.onTapTicketItem);
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+  int theaterShowTimeslotId;
+  int paymentId;
+
+  TicketListInfoItem({
+    required this.checkOutVO,
+  required this.onTapTicketItem,
+    required this.cinemaName,
+    required this.timeslotTime,
+    required this.dateString,
+    required this.movieDetailsObj,
+    required this.selectedSeatedVOList,
+    required this.selectedSnackVOList,
+    required this.theaterShowTimeslotId,
+    required this.paymentId,
+});
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +71,19 @@ class TicketListInfoItem extends StatelessWidget {
                     children: [
                       Container(
                         height: 120,
-                        child: TicketConfirmationInfoView(),
+                        child: TicketConfirmationInfoView(checkOutVO: checkOutVO,
+                            movieVO: movieDetailsObj,
+                            cinemaName: cinemaName,
+                            selectedSeatedVOList: selectedSeatedVOList),
                       ),
                       SizedBox(
                         height: 40,
                       ),
                       Container(
                         height: 120,
-                        child: BookingDateTimeAndLocationView(),
+                        child: BookingDateTimeAndLocationView(
+                            dateString: dateString,
+                            timeslotTime: timeslotTime),
                       )
                     ],
                   )),
@@ -98,8 +131,14 @@ class TicketListInfoItem extends StatelessWidget {
 }
 
 class BookingDateTimeAndLocationView extends StatelessWidget {
-  const BookingDateTimeAndLocationView({
+
+  String? timeslotTime;
+  String? dateString;
+
+  BookingDateTimeAndLocationView({
     Key? key,
+    required this.timeslotTime,
+    required this.dateString
   }) : super(key: key);
 
   @override
@@ -129,7 +168,7 @@ class BookingDateTimeAndLocationView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Sat,18 Jun, 2022",
+                    "${convertDateFunction(dateString??currentDate())}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                     softWrap: false,
@@ -161,7 +200,7 @@ class BookingDateTimeAndLocationView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "3:30PM",
+                    "${timeslotTime}",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: TEXT_REGULAR,
@@ -217,8 +256,18 @@ class BookingDateTimeAndLocationView extends StatelessWidget {
 }
 
 class TicketConfirmationInfoView extends StatelessWidget {
-  const TicketConfirmationInfoView({
+
+  CheckOutVO? checkOutVO;
+  MovieVO? movieVO;
+  String? cinemaName;
+  List<SeatVO>? selectedSeatedVOList;
+
+  TicketConfirmationInfoView({
     Key? key,
+    required this.checkOutVO,
+    required this.movieVO,
+    required this.cinemaName,
+    required this.selectedSeatedVOList
   }) : super(key: key);
 
   @override
@@ -234,8 +283,8 @@ class TicketConfirmationInfoView extends StatelessWidget {
                 Container(
                   width: 100,
                   height: 100,
-                  child: Image.asset(
-                      "assets/images/ticket_confirm_sample_img.png"),
+                  child: Image.network(
+                      "${MOVIE_LIST_IMAGE_BASE_URL}${movieVO?.posterPath}"),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -244,8 +293,8 @@ class TicketConfirmationInfoView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
                       child: RichText(
-                        text: const TextSpan(
-                          text: "Black Widow",
+                        text: TextSpan(
+                          text:movieVO?.originalTitle.toString()??"",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: TEXT_REGULAR_2X,
@@ -264,8 +313,8 @@ class TicketConfirmationInfoView extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
-                      child: const Text(
-                        "JCGV:Junction City",
+                      child: Text(
+                        cinemaName??"",
                         style: TextStyle(
                             color: SECONDARY_COLOR,
                             fontSize: TEXT_REGULAR_2X,
@@ -273,9 +322,9 @@ class TicketConfirmationInfoView extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
+                      padding: EdgeInsets.only(bottom: MARGIN_MEDIUM),
                       child: RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           text: "M-Ticket(",
                           style: TextStyle(
                               color: Colors.white70,
@@ -283,7 +332,7 @@ class TicketConfirmationInfoView extends StatelessWidget {
                               fontWeight: FontWeight.w400),
                           children: <TextSpan>[
                             TextSpan(
-                              text: "2",
+                              text: "${checkOutVO?.totalSeat}",
                               style: TextStyle(
                                   color: SECONDARY_COLOR,
                                   fontSize: TEXT_REGULAR,
@@ -301,8 +350,8 @@ class TicketConfirmationInfoView extends StatelessWidget {
                       ),
                     ),
                     RichText(
-                      text: const TextSpan(
-                        text: "Gold-G8,G7",
+                      text: TextSpan(
+                        text: "${checkOutVO?.seat}",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: TEXT_REGULAR_1X,

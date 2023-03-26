@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking_app/constants/food_and_beverage_item_obj.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
@@ -8,12 +11,37 @@ import 'package:movie_booking_app/widgets/dashed_divider_view.dart';
 import 'package:movie_booking_app/widgets/ticket_cancellation_alert_box_view.dart';
 
 class TicketDetailsPage extends StatefulWidget {
+
+
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+
+
+  TicketDetailsPage({
+    required this.cinemaName,
+    required this.timeslotTime,
+    required this.dateString,
+    required this.movieDetailsObj,
+    required this.selectedSeatedVOList,
+    required this.selectedSnackVOList
+  });
   @override
   State<TicketDetailsPage> createState() => _TicketDetailsPageState();
 }
 
 class _TicketDetailsPageState extends State<TicketDetailsPage> {
-  bool changeHeight = (foodAndBeverageItemList.length >0) ? true : false;
+ // bool changeHeight = (foodAndBeverageItemList.length >0) ? true : false;
+  late bool changeHeight;
+  @override
+  void initState() {
+    changeHeight = (((widget.selectedSnackVOList??[]).length) >0) ? true : false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +96,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                            child: SnackView(foodAndBeverageItemList,(bool changeHeightParam){
+                            child: SnackView(widget.selectedSnackVOList??[],(bool changeHeightParam){
 
                               setState(() {
                                 this.changeHeight = changeHeightParam;
@@ -93,7 +121,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                   Positioned(
                     left: 0,
                     right: 0,
-                    top: (changeHeight && foodAndBeverageItemList.length >0)? (300.0 + (30*foodAndBeverageItemList.length)) : 300.0,
+                    top: (changeHeight && (widget.selectedSnackVOList??[]).length >0)? (300.0 + (30*(widget.selectedSnackVOList??[]).length)) : 300.0,
                     child: Container(
                         width: MediaQuery.of(context).size.width,
                         // margin: EdgeInsets.only(right: 50),
@@ -105,7 +133,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                   Positioned(
                       left: 0,
                       right: 0,
-                      top: (changeHeight && foodAndBeverageItemList.length >0)? (280.0+(30*foodAndBeverageItemList.length)) : 280.0,
+                      top: (changeHeight && (widget.selectedSnackVOList??[]).length >0)? (280.0+(30*(widget.selectedSnackVOList??[]).length)) : 280.0,
                       child: ClipSectionView())
                 ],
               ),
@@ -356,7 +384,10 @@ Widget _buildPopupDialog(BuildContext context) {
 }
 
 class SnackView extends StatefulWidget {
-  List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
+ // List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
+
+  List<SnackVO> foodAndBeverageItemList = [];
+
   Function onTapSnackViewShowHeight;
   SnackView(this.foodAndBeverageItemList,this.onTapSnackViewShowHeight);
 
@@ -369,8 +400,8 @@ class _SnackViewState extends State<SnackView> {
   bool isLisShowDetails = true;
   Function onTapSnackViewShowHeight;
 
-  List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
-
+  //List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
+  List<SnackVO> foodAndBeverageItemList = [];
   _SnackViewState(this.foodAndBeverageItemList,this.onTapSnackViewShowHeight);
 
   @override
@@ -392,7 +423,7 @@ class _SnackViewState extends State<SnackView> {
               shrinkWrap: true,
               itemCount: foodAndBeverageItemList.length,
               itemBuilder: (BuildContext context, int index) {
-                return FoodAndBeverageListItemView(
+                return FoodAndBeverageListItemView(foodAndBeverageItem:
                     foodAndBeverageItemList[index]);
               },
             )),
@@ -405,9 +436,10 @@ class _SnackViewState extends State<SnackView> {
 }
 
 class FoodAndBeverageListItemView extends StatelessWidget {
-  final FoodAndBeverageItemObj foodAndBeverageItemObj;
+ // final FoodAndBeverageItemObj foodAndBeverageItemObj;
+  final SnackVO foodAndBeverageItem;
 
-  FoodAndBeverageListItemView(this.foodAndBeverageItemObj);
+  FoodAndBeverageListItemView({required this.foodAndBeverageItem});
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +457,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
               width: 10,
             ),
             Text(
-              "${foodAndBeverageItemObj.title}(Qt.${foodAndBeverageItemObj.qty})",
+              "${foodAndBeverageItem.name}(Qt.${foodAndBeverageItem.quantity})",
               style: TextStyle(
                   color: GRAY_COLOR_2,
                   fontSize: TEXT_REGULAR_1X,
@@ -433,7 +465,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
             ),
             Spacer(),
             Text(
-              "${foodAndBeverageItemObj.price}Ks",
+              "${foodAndBeverageItem.price}Ks",
               style: TextStyle(
                   color: GRAY_COLOR_2,
                   fontSize: TEXT_REGULAR_1X,

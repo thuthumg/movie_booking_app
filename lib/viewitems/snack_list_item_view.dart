@@ -27,7 +27,7 @@ class _SnackListItemViewState extends State<SnackListItemView> {
 
   @override
   Widget build(BuildContext context) {
-    int snackQty = widget.snackVO.qty??0;
+    int snackQty = widget.snackVO.quantity??0;
     return Container(
       // height: 300,
 
@@ -174,7 +174,7 @@ class _QtyPlusMinusControlViewState extends State<QtyPlusMinusControlView> {
               widget.onTapPlusButton(widget.snackVO.id??0);
             },
             child: PlusButtonView()),
-        QtyView(widget.snackVO.qty??0),
+        QtyView(widget.snackVO.quantity??0),
         GestureDetector(
             onTap: () {
              // updateQuantity(false);

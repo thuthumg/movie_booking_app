@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/network/api_constants.dart';
+import 'package:movie_booking_app/network/requests/check_out_request.dart';
 import 'package:movie_booking_app/network/responses/get_banners_response.dart';
+import 'package:movie_booking_app/network/responses/get_check_out_response.dart';
 import 'package:movie_booking_app/network/responses/get_cinema_day_timeslots_response.dart';
 import 'package:movie_booking_app/network/responses/get_cities_response.dart';
 import 'package:movie_booking_app/network/responses/get_config_response.dart';
 import 'package:movie_booking_app/network/responses/get_movie_detail_response.dart';
 import 'package:movie_booking_app/network/responses/get_movie_list_response.dart';
 import 'package:movie_booking_app/network/responses/get_otp_response.dart';
+import 'package:movie_booking_app/network/responses/get_payment_type_response.dart';
 import 'package:movie_booking_app/network/responses/get_seating_plan_by_show_time_response.dart';
 import 'package:movie_booking_app/network/responses/get_sign_in_with_phone_response.dart';
 import 'package:movie_booking_app/network/responses/get_snack_categories_response.dart';
@@ -73,5 +76,17 @@ abstract class TheMovieBookingApi {
   Future<GetSnacksResponse> getSnacks(
       @Header(PARAM_HEADER) String PARAM_HEADER,
       @Query(PARAM_CATEGORY_ID) int PARAM_CATEGORY_ID);
+
+
+  @GET(ENDPOINT_GET_PAYMENT_TYPES)
+  Future<GetPaymentTypeResponse> getPaymentTypes(@Header(PARAM_HEADER) String PARAM_HEADER);
+
+
+
+  @POST(ENDPOINT_CHECKOUT)
+  Future<GetCheckOutResponse> checkOut(
+      @Header(PARAM_HEADER) String PARAM_HEADER,
+      @Header(PARAM_CONTENT_TYPE) String PARAM_CONTENT_TYPE,
+      @Body() CheckOutRequest checkOutRequest);
 
 }

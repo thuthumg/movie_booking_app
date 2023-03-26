@@ -26,7 +26,7 @@ class PaymentTypeItemView extends StatelessWidget {
               margin: EdgeInsets.only(left: MARGIN_CARD_MEDIUM_2,right: MARGIN_CARD_MEDIUM_2),
               width: 30,
               height: 30,
-              child: Image.asset(iconLinkLabel),
+              child: Image.network(iconLinkLabel),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

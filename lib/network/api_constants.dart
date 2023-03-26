@@ -17,6 +17,8 @@ const String ENDPOINT_GET_CONFIG = "/api/v2/configurations";
 const String ENDPOINT_GET_SEATING_PLAN_BY_SHOW_TIME = "/api/v2/seat-plan";
 const String ENDPOINT_GET_SNACK_CATEGORY = "/api/v2/snack-categories";
 const String ENDPOINT_GET_SNACKS = "/api/v2/snacks";
+const String ENDPOINT_GET_PAYMENT_TYPES = "/api/v2/payment-types";
+const String ENDPOINT_CHECKOUT = '/api/v2/checkout';
 
 
 ///Parameters
@@ -24,6 +26,7 @@ const String PARAM_API_KEY = "api_key";
 const String PARAM_PHONE = "phone";
 const String PARAM_OTP = "otp";
 const String PARAM_HEADER = "Authorization";
+const String PARAM_CONTENT_TYPE = "Content-Type";
 const String PARAM_STATUS = "status";
 const String PARAM_DATE = "date";
 const String PARAM_CINEMA_DAY_TIMESLOT_ID = "cinema_day_timeslot_id";

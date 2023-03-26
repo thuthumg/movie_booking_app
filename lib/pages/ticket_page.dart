@@ -1,12 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/payment_type_vo.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/pages/ticket_confirmation_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
 import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/payment_type_item_view.dart';
 
-class TicketPage extends StatelessWidget {
-  const TicketPage({Key? key}) : super(key: key);
+class TicketPage extends StatefulWidget {
+
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+  int theaterShowTimeslotId;
+
+  TicketPage({Key? key,
+  required this.cinemaName,
+    required this.timeslotTime,
+    required this.dateString,
+    required this.movieDetailsObj,
+    required this.selectedSeatedVOList,
+    required this.selectedSnackVOList,
+    required this.theaterShowTimeslotId
+  }) : super(key: key);
+
+  @override
+  State<TicketPage> createState() => _TicketPageState();
+}
+
+class _TicketPageState extends State<TicketPage> {
+
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+
+  ///State Variables
+  List<PaymentTypeVO>? paymentTypeVOList;
+  UserDataVO? userDataVO;
+
+  @override
+  void initState() {
+    ///userdata from Database
+    movieBookingAppModel.getUserDataFromDatabase().then((paramUserDataVO) {
+      setState(() {
+        userDataVO = paramUserDataVO;
+        print("user token from ticket page= ${userDataVO?.userToken}");
+
+        ///payment type from Network
+        movieBookingAppModel
+            .getPaymentTypesList("Bearer ${userDataVO?.userToken ?? ""}")
+            .then((paymentTypeList) {
+          setState(() {
+            paymentTypeVOList = paymentTypeList;
+
+          });
+        }).catchError((error) {
+          debugPrint(error.toString());
+        });
+
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+
+    print("check param data = ${widget.cinemaName}// ${widget.dateString} // ${widget.theaterShowTimeslotId} //"
+        "${widget.cinemaName} // ${widget.movieDetailsObj?.id}");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +120,17 @@ class TicketPage extends StatelessWidget {
                 padding: EdgeInsets.only(
                     left: MARGIN_MEDIUM, right: MARGIN_MEDIUM),
                 child: PaymentTypeListView(
-                    ()=>{
-                      _navigateToTicketConfirmPage(context)
+                    paymentTypeVOList: paymentTypeVOList,
+                    onTapTicketItem: (paymentId)=>{
+                      _navigateToTicketConfirmPage(context,
+                          widget.cinemaName,
+                          widget.timeslotTime,
+                          widget.dateString,
+                          widget.movieDetailsObj,
+                          widget.selectedSeatedVOList,
+                          widget.selectedSnackVOList,
+                          widget.theaterShowTimeslotId,
+                          paymentId)
                     }
                 ),
               )
@@ -72,10 +148,15 @@ class PaymentTypeObject {
 }
 
 class PaymentTypeListView extends StatelessWidget {
+  final List<PaymentTypeVO>? paymentTypeVOList;
+  final Function(int) onTapTicketItem;
 
-  final Function onTapTicketItem;
+  PaymentTypeListView(
+  {
+    required this.paymentTypeVOList,
+    required this.onTapTicketItem
 
-  PaymentTypeListView(this.onTapTicketItem);
+});
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +165,40 @@ class PaymentTypeListView extends StatelessWidget {
       margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
       child: ListView.builder(
           scrollDirection: Axis.vertical,
-          itemCount: paymentTypeList.length,
+          itemCount: paymentTypeVOList?.length,
           itemBuilder: (BuildContext context, int index) {
             return PaymentTypeItemView(
-                paymentTypeList[index].title,
-                paymentTypeList[index].iconLink,
+                paymentTypeVOList?[index].title??"",
+                paymentTypeVOList?[index].icon??"",
                 (){
-                  this.onTapTicketItem();
+                  this.onTapTicketItem(paymentTypeVOList?[index].id??0);
                 });
           }),
     );
   }
 }
-Future<dynamic> _navigateToTicketConfirmPage(BuildContext context) {
+Future<dynamic> _navigateToTicketConfirmPage(BuildContext context,
+    String? cinemaName,
+String? timeslotTime,
+String? dateString,
+MovieVO? movieDetailsObj,
+List<SeatVO>? selectedSeatedVOList,
+List<SnackVO>? selectedSnackVOList,
+int theaterShowTimeslotId,
+ int paymentId) {
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => TicketConfirmationPage(),
+      builder: (context) => TicketConfirmationPage(
+          cinemaName : cinemaName,
+          timeslotTime : timeslotTime,
+          dateString : dateString,
+          movieDetailsObj:movieDetailsObj,
+          selectedSeatedVOList:selectedSeatedVOList,
+          selectedSnackVOList:selectedSnackVOList,
+          theaterShowTimeslotId:theaterShowTimeslotId,
+          paymentId: paymentId
+      ),
     ),
   );
 }

@@ -134,11 +134,9 @@ class _BookingMovieTheatersViewState extends State<BookingMovieTheatersView> {
                             setState((){
                               _navigateToSeatPage(context,
                                   widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex],
-
                                   widget.cinemaAndShowTimeByDateVO[index]?.cinema,
                                   widget.cinemaAndShowTimeByDateVO[index]?.timeslots?[gridIndex].startTime,
                                   widget.selectedDateStr,
-
                                   widget.movieDetailsObj);
                             });
                           },

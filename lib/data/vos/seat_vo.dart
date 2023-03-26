@@ -48,6 +48,4 @@ class SeatVO{
     return type == SEAT_TYPE_SELECTION;
   }
 
-
-
 }

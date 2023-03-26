@@ -35,11 +35,6 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
   List<CinemaAndShowTimeByDateVO>? cinemaAndShowTimeByDateVO;
   String? selectedDateStr;
 
-  String currentDate() {
-    var now = DateTime.now();
-    var formatter = DateFormat('yyyy-MM-dd');
-    return formatter.format(now);
-  }
 
   @override
   void initState() {
@@ -430,27 +425,37 @@ class _DateListViewState extends State<DateListView> {
         final tomorrow = DateTime(now.year, now.month, now.day + 1);
         for (var date in dates) {
           final aDate = DateTime(date.year, date.month, date.day);
+
+          DateTime changeFormatDate = date;
+          String formattedDate = DateFormat('yyyy-MM-dd').format(changeFormatDate);
+
           if(aDate == today)
           {
             showMovieDateList.add(
                 DateListItem(
                     "Today",
                     (monthNames[date.month -1]).toString(),
-                    (date.day).toString(),'${date.year}-${date.month}-${date.day}')
+                    (date.day).toString(),
+                    formattedDate)
+                   // '${date.year}-${date.month}-${date.day}')
             );
           }else if (aDate == tomorrow){
             showMovieDateList.add(
                 DateListItem(
                     "Tomorrow",
                     (monthNames[date.month -1]).toString(),
-                    (date.day).toString(),'${date.year}-${date.month}-${date.day}')
+                    (date.day).toString(),
+                    formattedDate)
+                   // '${date.year}-${date.month}-${date.day}')
             );
           }else{
             showMovieDateList.add(
                 DateListItem(
                     (weekDayNames[date.weekday -1]).toString(),
                     (monthNames[date.month -1]).toString(),
-                    (date.day).toString(),'${date.year}-${date.month}-${date.day}')
+                    (date.day).toString(),
+                    formattedDate)
+                    //'${date.year}-${date.month}-${date.day}')
             );
           }
           print(showMovieDateList.toString());

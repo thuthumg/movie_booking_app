@@ -5,6 +5,7 @@ import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_category_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_vo.dart';
+import 'package:movie_booking_app/data/vos/timeslots_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/pages/check_out_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
@@ -14,22 +15,21 @@ import 'package:movie_booking_app/widgets/botton_sheet_view.dart';
 import 'package:movie_booking_app/widgets/total_amount_button_view.dart';
 
 class SnackPage extends StatefulWidget {
-
   ///data param for checkout function
   String? cinemaName;
   String? timeslotTime;
   String? dateString;
   MovieVO? movieDetailsObj;
   List<SeatVO>? selectedSeatedVOList;
+  int theaterShowTimeslotId;
 
-  SnackPage({
-    required this.cinemaName,
-    required this.timeslotTime,
-    required this.dateString,
-    required this.movieDetailsObj,
-    required this.selectedSeatedVOList
-
-  });
+  SnackPage(
+      {required this.cinemaName,
+      required this.timeslotTime,
+      required this.dateString,
+      required this.movieDetailsObj,
+      required this.selectedSeatedVOList,
+      required this.theaterShowTimeslotId});
 
   @override
   State<SnackPage> createState() => _SnackPageState();
@@ -58,8 +58,9 @@ class _SnackPageState extends State<SnackPage> {
         print("user token from snack page= ${userDataVO?.userToken}");
 
         ///snack category from Network
-        movieBookingAppModel.getSnackCategoriesList(
-            "Bearer ${userDataVO?.userToken ?? ""}").then((snackCategoryList) {
+        movieBookingAppModel
+            .getSnackCategoriesList("Bearer ${userDataVO?.userToken ?? ""}")
+            .then((snackCategoryList) {
           setState(() {
             snackTabList = snackCategoryList;
             print("snack list= ${snackTabList}");
@@ -119,12 +120,14 @@ class _SnackPageState extends State<SnackPage> {
             children: [
               Expanded(
                 flex: 1,
-                child: SnackTabBar(snackTabList: snackTabList ?? [],
+                child: SnackTabBar(
+                  snackTabList: snackTabList ?? [],
                   onChooseSnackCategory: (categoryId) {
                     if (categoryId != null) {
                       getSnackListByCategoryId(categoryId);
                     }
-                  },),
+                  },
+                ),
               ),
               Expanded(
                 flex: 10,
@@ -134,34 +137,33 @@ class _SnackPageState extends State<SnackPage> {
                   onTapAddButton: (snackId) {
                     setState(() {
                       print("page level set state");
-                      var snacksListByCategoryId = this.snacksByCategoryId ??
-                          [];
+                      var snacksListByCategoryId =
+                          this.snacksByCategoryId ?? [];
                       for (int i = 0; i < snacksListByCategoryId.length; i++) {
                         print(
-                            "page level set state for loop ------${snacksListByCategoryId[i]
-                                .id} ${snackId}");
+                            "page level set state for loop ------${snacksListByCategoryId[i].id} ${snackId}");
                         if (snacksListByCategoryId[i].id == snackId) {
                           print("page level set state for loop ------");
-                          int? nullableInteger = snacksListByCategoryId[i].qty;
+                          int? nullableInteger = snacksListByCategoryId[i].quantity;
                           print(
                               "page level set state for loop qty null case ------ ${nullableInteger}");
                           if (nullableInteger != null) {
                             // add one to the integer value using the null-aware operator
                             nullableInteger += 1;
-                            snacksListByCategoryId[i].qty = nullableInteger;
+                            snacksListByCategoryId[i].quantity = nullableInteger;
                           } else {
-                            snacksListByCategoryId[i].qty = 1;
+                            snacksListByCategoryId[i].quantity = 1;
                           }
 
                           break;
                         }
                       }
-                      print("page level set state ${snacksListByCategoryId[0]
-                          .qty}");
-                      snacksListByCategoryId.forEach((snackVO) {
-                        if ((snackVO.qty ?? 0).toInt() >= 1)
+                      print(
+                          "page level set state ${snacksListByCategoryId[0].quantity}");
+                      for (var snackVO in snacksListByCategoryId) {
+                        if ((snackVO.quantity ?? 0).toInt() >= 1)
                           snackTotalAmt += snackVO.calculateSnackItemAmt();
-                      });
+                      }
 
                       this.snacksByCategoryId = snacksListByCategoryId;
                     });
@@ -169,35 +171,34 @@ class _SnackPageState extends State<SnackPage> {
                   onTapPlusButton: (snackId) {
                     setState(() {
                       print("page level set state");
-                      var snacksListByCategoryId = this.snacksByCategoryId ??
-                          [];
+                      var snacksListByCategoryId =
+                          this.snacksByCategoryId ?? [];
                       for (int i = 0; i < snacksListByCategoryId.length; i++) {
                         print(
-                            "page level set state for loop ------${snacksListByCategoryId[i]
-                                .id} ${snackId}");
+                            "page level set state for loop ------${snacksListByCategoryId[i].id} ${snackId}");
                         if (snacksListByCategoryId[i].id == snackId) {
                           print("page level set state for loop ------");
-                          int? nullableInteger = snacksListByCategoryId[i].qty;
+                          int? nullableInteger = snacksListByCategoryId[i].quantity;
                           print(
                               "page level set state for loop qty null case ------ ${nullableInteger}");
                           if (nullableInteger != null) {
                             // add one to the integer value using the null-aware operator
                             nullableInteger += 1;
-                            snacksListByCategoryId[i].qty = nullableInteger;
+                            snacksListByCategoryId[i].quantity = nullableInteger;
                             // assign the updated value back to the object using the null-aware assignment operator
                             // nullableInteger ??= 0;
                           } else {
-                            snacksListByCategoryId[i].qty = 1;
+                            snacksListByCategoryId[i].quantity = 1;
                           }
 
                           break;
                         }
                       }
-                      print("page level set state ${snacksListByCategoryId[0]
-                          .qty}");
+                      print(
+                          "page level set state ${snacksListByCategoryId[0].quantity}");
                       snackTotalAmt = 0;
                       snacksListByCategoryId.forEach((snackVO) {
-                        if ((snackVO.qty ?? 0).toInt() >= 1)
+                        if ((snackVO.quantity ?? 0).toInt() >= 1)
                           snackTotalAmt += snackVO.calculateSnackItemAmt();
                       });
 
@@ -207,15 +208,14 @@ class _SnackPageState extends State<SnackPage> {
                   onTapMinusButton: (snackId) {
                     setState(() {
                       print("page level set state");
-                      var snacksListByCategoryId = this.snacksByCategoryId ??
-                          [];
+                      var snacksListByCategoryId =
+                          this.snacksByCategoryId ?? [];
                       for (int i = 0; i < snacksListByCategoryId.length; i++) {
                         print(
-                            "page level set state for loop ------${snacksListByCategoryId[i]
-                                .id} ${snackId}");
+                            "page level set state for loop ------${snacksListByCategoryId[i].id} ${snackId}");
                         if (snacksListByCategoryId[i].id == snackId) {
                           print("page level set state for loop ------");
-                          int? nullableInteger = snacksListByCategoryId[i].qty;
+                          int? nullableInteger = snacksListByCategoryId[i].quantity;
                           print(
                               "page level set state for loop qty null case ------ ${nullableInteger}");
                           if (nullableInteger != null) {
@@ -226,28 +226,35 @@ class _SnackPageState extends State<SnackPage> {
                               nullableInteger = 0;
                             }
 
-                            snacksListByCategoryId[i].qty = nullableInteger;
+                            snacksListByCategoryId[i].quantity = nullableInteger;
                             // assign the updated value back to the object using the null-aware assignment operator
                             // nullableInteger ??= 0;
                           } else {
-                            snacksListByCategoryId[i].qty = 0;
+                            snacksListByCategoryId[i].quantity = 0;
                           }
 
                           break;
                         }
                       }
-                      print("page level set state ${snacksListByCategoryId[0]
-                          .qty}");
+                      print(
+                          "page level set state ${snacksListByCategoryId[0].quantity}");
                       // snackTotalAmt = 0;
                       snacksListByCategoryId.forEach((snackVO) {
-                        if ((snackVO.qty ?? 0).toInt() >= 1) {
+                        if ((snackVO.quantity ?? 0).toInt() >= 1) {
                           snackTotalAmt -= snackVO.calculateSnackItemAmt();
                         }
                       });
 
                       this.snacksByCategoryId = snacksListByCategoryId;
                     });
-                  },),
+                  },
+                  cinemaName: widget.cinemaName,
+                  timeslotTime: widget.timeslotTime,
+                  dateString: widget.dateString,
+                  movieDetailsObj: widget.movieDetailsObj,
+                  selectedSeatedVOList: widget.selectedSeatedVOList,
+                  theaterShowTimeslotId: widget.theaterShowTimeslotId,
+                ),
               ),
             ],
           ),
@@ -255,8 +262,9 @@ class _SnackPageState extends State<SnackPage> {
   }
 
   void getSnackListByCategoryId(int categoryId) {
-    movieBookingAppModel.getSnacksList(
-        "Bearer ${this.userDataVO?.userToken}", categoryId).then((snackList) {
+    movieBookingAppModel
+        .getSnacksList("Bearer ${this.userDataVO?.userToken}", categoryId)
+        .then((snackList) {
       setState(() {
         this.snacksByCategoryId = snackList ?? [];
       });
@@ -270,12 +278,11 @@ class SnackTabBar extends StatelessWidget {
   final List<SnackCategoryVO> snackTabList;
   final Function(int?) onChooseSnackCategory;
 
-  SnackTabBar({
-    Key? key,
-    required this.snackTabList,
-    required this.onChooseSnackCategory
-  }) : super(key: key);
-
+  SnackTabBar(
+      {Key? key,
+      required this.snackTabList,
+      required this.onChooseSnackCategory})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -291,11 +298,10 @@ class SnackTabBar extends StatelessWidget {
             unselectedLabelColor: Colors.white,
             tabs: snackTabList
                 .map(
-                  (snackCategory) =>
-                  Tab(
+                  (snackCategory) => Tab(
                     child: Text(snackCategory.title.toString()),
                   ),
-            )
+                )
                 .toList(),
             onTap: (index) {
               onChooseSnackCategory(snackTabList[index].id);
@@ -314,14 +320,29 @@ class SnackListViewAndTotalAmountView extends StatefulWidget {
   Function(int) onTapMinusButton;
   int snackTotalAmt;
 
-  SnackListViewAndTotalAmountView({
-    Key? key,
-    required this.snacksList,
-    required this.snackTotalAmt,
-    required this.onTapAddButton,
-    required this.onTapPlusButton,
-    required this.onTapMinusButton
-  }) : super(key: key);
+
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  int theaterShowTimeslotId;
+
+  SnackListViewAndTotalAmountView(
+      {Key? key,
+      required this.snacksList,
+      required this.snackTotalAmt,
+      required this.onTapAddButton,
+      required this.onTapPlusButton,
+      required this.onTapMinusButton,
+      required this.cinemaName,
+      required this.timeslotTime,
+      required this.dateString,
+      required this.movieDetailsObj,
+      required this.selectedSeatedVOList,
+      required this.theaterShowTimeslotId})
+      : super(key: key);
 
   @override
   State<SnackListViewAndTotalAmountView> createState() =>
@@ -338,23 +359,21 @@ class _SnackListViewAndTotalAmountViewState
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color.fromRGBO(34, 34, 34, 1),
-                Color.fromRGBO(17, 17, 17, 0.1),
-                Color.fromRGBO(17, 17, 17, 1)
-              ])
-      ),
+            Color.fromRGBO(34, 34, 34, 1),
+            Color.fromRGBO(17, 17, 17, 0.1),
+            Color.fromRGBO(17, 17, 17, 1)
+          ])),
 
       // color: Color.fromRGBO(17, 17, 17, 0.2),
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
+      height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          SnackListGridView(snacksList: widget.snacksList,
+          SnackListGridView(
+            snacksList: widget.snacksList,
             onTapAddButton: (snackId) => widget.onTapAddButton(snackId),
             onTapPlusButton: (snackId) => widget.onTapPlusButton(snackId),
-            onTapMinusButton: (snackId) => widget.onTapMinusButton(snackId),),
+            onTapMinusButton: (snackId) => widget.onTapMinusButton(snackId),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -366,7 +385,8 @@ class _SnackListViewAndTotalAmountViewState
               decoration: const BoxDecoration(
                 color: PRIMARY_COLOR,
               ),
-              child: TotalAmountButtonView(snacksList: widget.snacksList,
+              child: TotalAmountButtonView(
+                  snacksList: widget.snacksList,
                   snackTotalAmt: widget.snackTotalAmt,
                   onTapFoodAndBeverageView: () {
                     showModalBottomSheet<dynamic>(
@@ -377,7 +397,7 @@ class _SnackListViewAndTotalAmountViewState
                           return Wrap(children: <Widget>[
                             Container(
                               decoration: const BoxDecoration(
-                                // color: forDialog ? Color(0xFF737373) : Colors.white,
+                                  // color: forDialog ? Color(0xFF737373) : Colors.white,
                                   color: PRIMARY_COLOR,
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(25.0),
@@ -389,7 +409,31 @@ class _SnackListViewAndTotalAmountViewState
                         });
                   },
                   onTapGoToCheckOut: () {
-                    _navigateToCheckOutPage(context);
+
+
+                    List<SnackVO> selectedSnackListArray = [];
+
+                    widget.snacksList.forEach((snackVO) {
+                      if((snackVO.quantity??0) >= 1)
+                      {
+                        selectedSnackListArray.add(snackVO);
+
+                      }
+
+
+                    });
+
+
+                    _navigateToCheckOutPage(
+                        context,
+                        widget.cinemaName ?? "",
+                        widget.timeslotTime ?? "",
+                        widget.dateString ?? "",
+                        widget.movieDetailsObj,
+                        widget.selectedSeatedVOList ?? [],
+                        selectedSnackListArray,
+                    widget.theaterShowTimeslotId);
+                        //widget.snacksList);
                   },
                   isBottomSheetView: false),
             ),
@@ -406,13 +450,13 @@ class SnackListGridView extends StatefulWidget {
   Function(int) onTapPlusButton;
   Function(int) onTapMinusButton;
 
-  SnackListGridView({
-    Key? key,
-    required this.snacksList,
-    required this.onTapAddButton,
-    required this.onTapPlusButton,
-    required this.onTapMinusButton
-  }) : super(key: key);
+  SnackListGridView(
+      {Key? key,
+      required this.snacksList,
+      required this.onTapAddButton,
+      required this.onTapPlusButton,
+      required this.onTapMinusButton})
+      : super(key: key);
 
   @override
   State<SnackListGridView> createState() => _SnackListGridViewState();
@@ -435,16 +479,16 @@ class _SnackListGridViewState extends State<SnackListGridView> {
               childAspectRatio: 1,
               //
               mainAxisExtent: 290
-            // aspect ratio of each item
-          ),
+              // aspect ratio of each item
+              ),
           // umber of items in the grid
           itemBuilder: (BuildContext context, int index) {
-            return SnackListItemView(snackVO: widget.snacksList[index],
+            return SnackListItemView(
+              snackVO: widget.snacksList[index],
               onTapAddButton: (snackId) => widget.onTapAddButton(snackId),
               onTapPlusButton: (snackId) => widget.onTapPlusButton(snackId),
-              onTapMinusButton: (snackId) => widget.onTapMinusButton(snackId)
-
-              ,);
+              onTapMinusButton: (snackId) => widget.onTapMinusButton(snackId),
+            );
           },
           itemCount: this.widget.snacksList.length,
           // n
@@ -456,17 +500,31 @@ class _SnackListGridViewState extends State<SnackListGridView> {
   }
 }
 
-
-BottomSheetView _navigateToBottomSheet(BuildContext context,
-    List<SnackVO> snacksList) {
+BottomSheetView _navigateToBottomSheet(
+    BuildContext context, List<SnackVO> snacksList) {
   return BottomSheetView(snackList: snacksList);
 }
 
-Future<dynamic> _navigateToCheckOutPage(BuildContext context) {
+Future<dynamic> _navigateToCheckOutPage(
+    BuildContext context,
+    String cinemaName,
+    String timeslotTime,
+    String dateString,
+    MovieVO? movieDetailsObj,
+    List<SeatVO> selectedSeatedVOList,
+    List<SnackVO> snackVOList, int theaterShowTimeslotId) {
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => CheckOutPage(),
+      builder: (context) => CheckOutPage(
+        cinemaName: cinemaName,
+        timeslotTime: timeslotTime,
+        dateString: dateString,
+        movieDetailsObj: movieDetailsObj,
+        selectedSeatedVOList: selectedSeatedVOList,
+        selectedSnackVOList: snackVOList,
+          theaterShowTimeslotId: theaterShowTimeslotId
+      ),
     ),
   );
 }

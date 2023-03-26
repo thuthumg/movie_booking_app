@@ -1,12 +1,15 @@
 import 'package:movie_booking_app/data/vos/banner_vo.dart';
+import 'package:movie_booking_app/data/vos/check_out_vo.dart';
 import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/config_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/payment_type_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_category_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
+import 'package:movie_booking_app/network/requests/check_out_request.dart';
 
 abstract class MovieBookingAppDataAgent{
   Future<List<CityVO>?>  getCities();
@@ -30,4 +33,8 @@ abstract class MovieBookingAppDataAgent{
 
   Future<List<SnackVO>?>  getSnacksList(String paramTokenStr,int categoryId);
 
+  Future<List<PaymentTypeVO>?>  getPaymentTypesList(String paramTokenStr);
+
+
+  Future<CheckOutVO?>  checkOut(String paramTokenStr,CheckOutRequest checkOutRequest);
 }

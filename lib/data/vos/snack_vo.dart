@@ -25,18 +25,23 @@ class SnackVO{
   String? image;
 
 
-  int? qty = 0;
+  @JsonKey(name: "total_price")
+  int? total_price;
 
+  @JsonKey(name: "quantity")
+  int? quantity=0;
 
   SnackVO(this.id, this.name, this.description, this.price, this.category_id,
-      this.image, this.qty);
+      this.image, this.total_price, this.quantity); // int? qty = 0;
+
+
 
   factory SnackVO.fromJson(Map<String,dynamic> json) =>_$SnackVOFromJson(json);
   Map<String,dynamic> toJson()=> _$SnackVOToJson(this);
 
 
   int calculateSnackItemAmt(){
-    var snackQty = qty??0;
+    var snackQty = quantity??0;
     var snackPrice = price??0;
     var snackTotalPrice =0;
     if(snackQty.toInt() >=1 )

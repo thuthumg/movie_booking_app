@@ -7,6 +7,7 @@ import 'package:movie_booking_app/constants/movie_seat_list_view_obj.dart';
 import 'package:movie_booking_app/constants/theater_booking_time_obj.dart';
 import 'package:movie_booking_app/constants/theater_list_obj.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/pages/cinema_info_detail_page.dart';
 import 'package:movie_booking_app/pages/profile_page.dart';
 import 'package:movie_booking_app/pages/ticket_page.dart';
@@ -179,7 +180,7 @@ List<SeatVO> selectedSeatVOList = [];
 //Ticket Section
 const String TICKET_APP_BART_TITLE = "Payment";
 
-var paymentTypeList = <PaymentTypeObject>[
+/*var paymentTypeList = <PaymentTypeObject>[
 
   PaymentTypeObject("UPI","assets/icons/ic_upi.png"),
   PaymentTypeObject("Gift Voucher","assets/icons/ic_gift_voucher.png"),
@@ -188,7 +189,7 @@ var paymentTypeList = <PaymentTypeObject>[
   PaymentTypeObject("Redeem Ponit","assets/icons/ic_redeem_point.png"),
   PaymentTypeObject("Mobile Wallet","assets/icons/ic_mobile_wallet.png"),
   PaymentTypeObject("Net Banking","assets/icons/ic_net_banking.png"),
-];
+];*/
 
 const String CHOOSE_YOUR_PAYMENT_TYPE_TITLE_LABEL= "Choose your payment type";
 
@@ -241,11 +242,11 @@ var filterObjListForComingSoon = <FilterObj>[
 ];
 
 
-List<FoodAndBeverageItemObj> foodAndBeverageItemList = [
-  FoodAndBeverageItemObj("Potatoes", 1, 1000),
-  FoodAndBeverageItemObj("Cocala Large", 1, 1000),
-
-];
+// List<FoodAndBeverageItemObj> foodAndBeverageItemList = [
+//   FoodAndBeverageItemObj("Potatoes", 1, 1000),
+//   FoodAndBeverageItemObj("Cocala Large", 1, 1000),
+//
+// ];
 
 List<TheaterListObj> theaterListObjList = [
   TheaterListObj("JCGV:Junction City",[TheaterBookingTimeObject("9:30AM",
@@ -396,4 +397,51 @@ const WE_WILL_SENT_SIX_DIGIT_SMS_CODE_TEXT = "We will sent 6-digit sms code \n t
 const PLEASE_ENTER_A_VALID_PHONE_NUMBER_MSG = "Please enter a valid phone number";
 
 const ENTER_OTP_CODE = "Enter OTP Code";
+
+
+
+String currentDate() {
+  var now = DateTime.now();
+  var formatter = DateFormat('yyyy-MM-dd');
+  return formatter.format(now);
+}
+String convertDateFunction(String dateStr){
+  //String dateString = '2022-06-18';
+  DateTime date = DateTime.parse(dateStr);
+  String formattedDate = DateFormat('EEE, dd MMM, yyyy').format(date);
+  print(formattedDate); // Output: Sat, 18 Jun, 2022
+  return formattedDate;
+}
+
+
+
+String getSeatVOAsCommaSeparatedString(List<SeatVO> selectedSeatVOList){
+
+  return selectedSeatVOList.map((seatVO) => seatVO.seatName ?? "").toList().join(",") ?? "";
+
+}
+
+int getSeatVOCalculatePrice(List<SeatVO> selectedSeatVOList){
+
+  int? totalPrice = selectedSeatVOList.map((seatVO) => seatVO.price).reduce((value, element) => value??0 + (element??0));
+  print("The total price of all seats is $totalPrice");
+
+  return totalPrice??0;
+
+}
+
+int getSnackVOCalculatePrice(List<SnackVO> selectedSnackVOList){
+var selectedTotalPrice = 0;
+  for (var snackVO in selectedSnackVOList) {
+    if((snackVO.quantity??0) >= 1)
+    {
+      selectedTotalPrice += ((snackVO.quantity??0).toInt() * (snackVO.price??0).toInt()).toInt();
+    }
+
+  }
+  return selectedTotalPrice;
+
+}
+
+
 

@@ -81,7 +81,18 @@ class _MainPageState extends State<MainPage> {
       case 1:
         return CinemaPage();
       case 2:
-        return TicketListPage();
+        return TicketListPage(
+          checkOutVO: null,
+          cinemaName: "",
+          timeslotTime: "",
+          dateString: "",
+          movieDetailsObj: null,
+          selectedSeatedVOList: [],
+          selectedSnackVOList: [],
+          theaterShowTimeslotId: 0,
+          paymentId: 0,
+
+        );
       case 3:
         return ProfilePage(profileImageLink: profileImageLink,);
       default:

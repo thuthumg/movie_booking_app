@@ -18,9 +18,10 @@ import 'package:movie_booking_app/widgets/slider_view.dart';
 class SeatingPlanPage extends StatefulWidget {
 
   final String bookinig_date;
-  final int theater_show_timeslot_id;
+
 
   ///data param for checkout function
+  final int theater_show_timeslot_id;
   String? cinemaName;
   String? timeslotTime;
   String? dateString;
@@ -147,12 +148,15 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
               children: [
                 SeatColorSpecificationsView(),
                 SeekBarView(),
-                TotalTicketView(totalAmount: totalAmount,totalCount: totalCount,
+                TotalTicketView(
+                    totalAmount: totalAmount,
+                    totalCount: totalCount,
                 cinemaName: widget.cinemaName,
                     timeslotTime: widget.timeslotTime,
                     dateString: widget.dateString,
                     movieDetailsObj: widget.movieDetailsObj,
-                    selectedSeatedVOList:selectedSeatVOList)
+                    selectedSeatedVOList:selectedSeatVOList,
+                    timeslotId: widget.theater_show_timeslot_id)
               ],
             ),
           )
@@ -231,6 +235,7 @@ class TotalTicketView extends StatelessWidget {
   String? dateString;
   MovieVO? movieDetailsObj;
   List<SeatVO>? selectedSeatedVOList;
+  int timeslotId;
 
   TotalTicketView({
     Key? key,
@@ -240,7 +245,8 @@ class TotalTicketView extends StatelessWidget {
     required this.timeslotTime,
     required this.dateString,
     required this.movieDetailsObj,
-    required this.selectedSeatedVOList
+    required this.selectedSeatedVOList,
+    required this.timeslotId
   }) : super(key: key);
 
   @override
@@ -286,7 +292,8 @@ class TotalTicketView extends StatelessWidget {
                       timeslotTime,
                       dateString,
                       movieDetailsObj,
-                    selectedSeatedVOList
+                    selectedSeatedVOList,
+                      timeslotId
                   );
                 },
                 child: Container(
@@ -647,7 +654,7 @@ Future<dynamic> _navigateToSnackPage(BuildContext context ,
     String? cinemaName,
 String? timeslotTime,
 String? dateString,
-MovieVO? movieDetailsObj, List<SeatVO>? selectedSeatedVOList,) {
+MovieVO? movieDetailsObj, List<SeatVO>? selectedSeatedVOList, int theaterShowTimeslotId,) {
   return Navigator.push(
     context,
     MaterialPageRoute(
@@ -657,6 +664,7 @@ MovieVO? movieDetailsObj, List<SeatVO>? selectedSeatedVOList,) {
         dateString: dateString,
         movieDetailsObj: movieDetailsObj,
         selectedSeatedVOList: selectedSeatedVOList,
+          theaterShowTimeslotId: theaterShowTimeslotId
 
       ),
     ),

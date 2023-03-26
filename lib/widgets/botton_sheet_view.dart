@@ -115,7 +115,7 @@ class SnackListView extends StatelessWidget {
     List<SnackVO> selectedSnackList = [];
 
     snackList.forEach((snackVO) {
-      var snackQty = snackVO.qty?.toInt();
+      var snackQty = snackVO.quantity?.toInt();
       if(snackQty!= null)
         {
           if(snackQty >= 1)
@@ -186,7 +186,7 @@ class FoodAndBeverageEachItemView extends StatelessWidget {
                  // width: 50,
                   height: 50,
                   child:  Text(
-                    snackVO.qty.toString(),
+                    snackVO.quantity.toString(),
                     style: const TextStyle(
                         fontSize: TEXT_REGULAR_2X,
                         color: SECONDARY_COLOR,

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_booking_app/constants/food_and_beverage_item_obj.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/pages/ticket_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -11,20 +15,43 @@ import 'package:movie_booking_app/widgets/my_separator_view.dart';
 import 'package:movie_booking_app/widgets/ticket_cancellation_alert_box_view.dart';
 
 class CheckOutPage extends StatefulWidget {
-  bool changeHeight = (foodAndBeverageItemList.length >0) ? true : false;
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+  int theaterShowTimeslotId;
+
+  CheckOutPage(
+      {required this.cinemaName,
+      required this.timeslotTime,
+      required this.dateString,
+      required this.movieDetailsObj,
+      required this.selectedSeatedVOList,
+      required this.selectedSnackVOList,
+      required this.theaterShowTimeslotId});
 
   @override
-  State<CheckOutPage> createState() => _CheckOutPageState(this.changeHeight);
+  // State<CheckOutPage> createState() => _CheckOutPageState(this.changeHeight);
+  State<CheckOutPage> createState() => _CheckOutPageState();
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
-  bool changeHeight;
+  late bool changeHeight;
 
-  _CheckOutPageState(this.changeHeight);
+  // _CheckOutPageState(this.changeHeight);
+
+  @override
+  void initState() {
+    changeHeight =
+        (((widget.selectedSnackVOList ?? []).length) > 0) ? true : false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: PRIMARY_COLOR,
       appBar: AppBar(
@@ -57,67 +84,103 @@ class _CheckOutPageState extends State<CheckOutPage> {
                     right: 0,
                     top: 0,
                     child: Container(
-                        margin: EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage(
-                                "assets/images/ticket_confirmation_card_bg.png"),
-                          ),
+                      margin: EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage(
+                              "assets/images/ticket_confirmation_card_bg.png"),
                         ),
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding:
-                                  EdgeInsets.only(top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                              child: BookingTimePlaceAndSeatView(),
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: MARGIN_MEDIUM_2,
+                                right: MARGIN_MEDIUM_2,
+                                left: MARGIN_MEDIUM_2),
+                            child: BookingTimePlaceAndSeatView(
+                              cinemaName: widget.cinemaName,
+                              timeslotTime: widget.timeslotTime,
+                              dateString: widget.dateString,
+                              movieDetailsObj: widget.movieDetailsObj,
+                              selectedSeatedVOList: widget.selectedSeatedVOList,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                              child: SnackView(foodAndBeverageItemList,(bool changeHeightParam){
-
-                                setState(() {
-                                  this.changeHeight = changeHeightParam;
-                                  print("check height status = ${this.changeHeight}");
-                                });
-                              }),
-                            ),
-                            const SizedBox(height: 30,),
-                            const Padding(
-                                padding: EdgeInsets.only(
-                                    top: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                                child:
-                                    ConvenienceFeeAndTicketCancellationView()),
-                            SizedBox(height: 10,),
-                            const Padding(
-                              padding: EdgeInsets.only(right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
-                              child: TotalAmountView(),
-                            ),
-                          ],
-                        ),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                            //foodAndBeverageItemList
+                            child: SnackView(widget.selectedSnackVOList ?? [],
+                                (bool changeHeightParam) {
+                              setState(() {
+                                this.changeHeight = changeHeightParam;
+                                print(
+                                    "check height status = ${this.changeHeight}");
+                              });
+                            }),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.only(
+                                  top: MARGIN_MEDIUM_2,
+                                  right: MARGIN_MEDIUM_2,
+                                  left: MARGIN_MEDIUM_2),
+                              child: ConvenienceFeeAndTicketCancellationView()),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
+                            child: TotalAmountView(
+                                selectedSnackVOList: widget.selectedSnackVOList,
+                                selectedSeatedVOList:
+                                    widget.selectedSeatedVOList),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   Positioned(
                     left: 0,
                     right: 0,
-                    top: (changeHeight && foodAndBeverageItemList.length >0)? (300.0 + (30*foodAndBeverageItemList.length)) : 300.0,
+                    top: (changeHeight &&
+                            (widget.selectedSnackVOList?.length ?? 0) > 0)
+                        ? (300.0 +
+                            (30 * (widget.selectedSnackVOList?.length ?? 0)))
+                        : 300.0,
                     child: Container(
                         width: MediaQuery.of(context).size.width,
                         // margin: EdgeInsets.only(right: 50),
                         //  child:Image.asset("assets/images/dotted_line.png"),
                         child: DashedDividerView(
-                            height: 1.0, color: Colors.white30)
-                        ),
+                            height: 1.0, color: Colors.white30)),
                   ),
                   Positioned(
                       left: 0,
                       right: 0,
-                      top: (changeHeight && foodAndBeverageItemList.length >0)? (280.0+(30*foodAndBeverageItemList.length)) : 280.0,
+                      top: (changeHeight &&
+                              (widget.selectedSnackVOList?.length ?? 0) > 0)
+                          ? (280.0 +
+                              (30 * (widget.selectedSnackVOList?.length ?? 0)))
+                          : 280.0,
                       child: ClipSectionView())
                 ],
               ),
             ),
-            ContinueButtonView(),
+            ContinueButtonView(
+              cinemaName: widget.cinemaName,
+              timeslotTime: widget.timeslotTime,
+              dateString: widget.dateString,
+              movieDetailsObj: widget.movieDetailsObj,
+              selectedSeatedVOList: widget.selectedSeatedVOList,
+              selectedSnackVOList: widget.selectedSnackVOList,
+              theaterShowTimeslotId: widget.theaterShowTimeslotId,
+            ),
           ],
         ),
       ),
@@ -152,18 +215,28 @@ class ClipSectionView extends StatelessWidget {
     );
   }
 }
+
 class TotalAmountView extends StatelessWidget {
-  const TotalAmountView({
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+
+  TotalAmountView({
     Key? key,
+    this.selectedSeatedVOList,
+    this.selectedSnackVOList,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var totalPrice = getSeatVOCalculatePrice(selectedSeatVOList) +
+        getSnackVOCalculatePrice(selectedSnackVOList ?? []) +
+        500;
+
     return Container(
       height: 40,
       child: Stack(
-        children: const [
-          Positioned(
+        children: [
+          const Positioned(
             left: 0,
             child: Text(
               "Total",
@@ -176,8 +249,8 @@ class TotalAmountView extends StatelessWidget {
           Positioned(
             right: 0,
             child: Text(
-              "22500Ks",
-              style: TextStyle(
+              "${totalPrice}Ks",
+              style: const TextStyle(
                   color: SECONDARY_COLOR,
                   fontSize: TEXT_REGULAR_4X,
                   fontWeight: FontWeight.w600),
@@ -313,22 +386,25 @@ Widget _buildPopupDialog(BuildContext context) {
 }
 
 class SnackView extends StatefulWidget {
-  List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
+  // List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
+
+  List<SnackVO> snackVOList = [];
   Function onTapSnackViewShowHeight;
-  SnackView(this.foodAndBeverageItemList,this.onTapSnackViewShowHeight);
+
+  SnackView(this.snackVOList, this.onTapSnackViewShowHeight);
 
   @override
   State<SnackView> createState() =>
-      _SnackViewState(this.foodAndBeverageItemList,this.onTapSnackViewShowHeight);
+      _SnackViewState(this.snackVOList, this.onTapSnackViewShowHeight);
 }
 
 class _SnackViewState extends State<SnackView> {
   bool isLisShowDetails = true;
   Function onTapSnackViewShowHeight;
 
-  List<FoodAndBeverageItemObj> foodAndBeverageItemList = [];
+  List<SnackVO> snackVOList = [];
 
-  _SnackViewState(this.foodAndBeverageItemList,this.onTapSnackViewShowHeight);
+  _SnackViewState(this.snackVOList, this.onTapSnackViewShowHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -341,16 +417,22 @@ class _SnackViewState extends State<SnackView> {
                 this.onTapSnackViewShowHeight(isLisShowDetails);
               });
             },
-            child: FoodAndBeverageTitleViewAndTotalAmtView(isLisShowDetails)),
+            child: FoodAndBeverageTitleViewAndTotalAmtView(
+                snackVOList: snackVOList, isLisShowDetails: isLisShowDetails)),
         Visibility(
             visible: isLisShowDetails,
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: foodAndBeverageItemList.length,
+              itemCount: snackVOList.length,
               itemBuilder: (BuildContext context, int index) {
                 return FoodAndBeverageListItemView(
-                    foodAndBeverageItemList[index]);
+                    foodAndBeverageItemObj: snackVOList[index],
+                onTapDelete: (snackId){
+                      setState(() {
+                        snackVOList.remove(snackId);
+                      });
+                },);
               },
             )),
         SizedBox(
@@ -362,9 +444,13 @@ class _SnackViewState extends State<SnackView> {
 }
 
 class FoodAndBeverageListItemView extends StatelessWidget {
-  final FoodAndBeverageItemObj foodAndBeverageItemObj;
+  // final FoodAndBeverageItemObj foodAndBeverageItemObj;
+  final SnackVO foodAndBeverageItemObj;
 
-  FoodAndBeverageListItemView(this.foodAndBeverageItemObj);
+  Function(int?) onTapDelete;
+
+  FoodAndBeverageListItemView(
+      {required this.foodAndBeverageItemObj, required this.onTapDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -372,18 +458,23 @@ class FoodAndBeverageListItemView extends StatelessWidget {
         //  height: 30,
         child: Row(
       children: [
-        Container(
-          padding: EdgeInsets.only(right: MARGIN_MEDIUM),
-          width: 25,
-          height: 25,
-          child: Image.asset("assets/icons/ic_delete.png"),
+        GestureDetector(
+          onTap: () {
+            onTapDelete(foodAndBeverageItemObj.id);
+          },
+          child: Container(
+            padding: EdgeInsets.only(right: MARGIN_MEDIUM),
+            width: 25,
+            height: 25,
+            child: Image.asset("assets/icons/ic_delete.png"),
+          ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Text(
-          "${foodAndBeverageItemObj.title}(Qt.${foodAndBeverageItemObj.qty})",
-          style: TextStyle(
+          "${foodAndBeverageItemObj.name}(Qt.${foodAndBeverageItemObj.quantity})",
+          style: const TextStyle(
               color: Color.fromRGBO(136, 136, 136, 1),
               fontSize: TEXT_REGULAR_1X,
               fontWeight: FontWeight.w400),
@@ -391,7 +482,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
         Spacer(),
         Text(
           "${foodAndBeverageItemObj.price}Ks",
-          style: TextStyle(
+          style: const TextStyle(
               color: Color.fromRGBO(136, 136, 136, 1),
               fontSize: TEXT_REGULAR_1X,
               fontWeight: FontWeight.w400),
@@ -439,8 +530,10 @@ class FoodAndBeverageListItemView extends StatelessWidget {
 
 class FoodAndBeverageTitleViewAndTotalAmtView extends StatelessWidget {
   bool isLisShowDetails;
+  List<SnackVO> snackVOList;
 
-  FoodAndBeverageTitleViewAndTotalAmtView(this.isLisShowDetails);
+  FoodAndBeverageTitleViewAndTotalAmtView(
+      {required this.snackVOList, required this.isLisShowDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -462,17 +555,17 @@ class FoodAndBeverageTitleViewAndTotalAmtView extends StatelessWidget {
                 fontWeight: FontWeight.w600),
           ),
           isLisShowDetails
-              ? Icon(
+              ? const Icon(
                   Icons.keyboard_arrow_up,
                   color: Colors.white,
                 )
-              : Icon(
+              : const Icon(
                   Icons.keyboard_arrow_down,
                   color: Colors.white,
                 ),
           Spacer(),
           Text(
-            "20000Ks",
+            "${getSnackVOCalculatePrice(snackVOList)}Ks",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: TEXT_REGULAR_2X,
@@ -485,9 +578,20 @@ class FoodAndBeverageTitleViewAndTotalAmtView extends StatelessWidget {
 }
 
 class BookingTimePlaceAndSeatView extends StatelessWidget {
-  const BookingTimePlaceAndSeatView({
-    Key? key,
-  }) : super(key: key);
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+
+  BookingTimePlaceAndSeatView(
+      {Key? key,
+      required this.cinemaName,
+      required this.timeslotTime,
+      required this.dateString,
+      required this.movieDetailsObj,
+      required this.selectedSeatedVOList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -495,15 +599,17 @@ class BookingTimePlaceAndSeatView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MovieAndTheaterDataSectionView(),
+        MovieAndTheaterDataSectionView(
+            cinemaName: cinemaName, movieDetailsObj: movieDetailsObj),
         SizedBox(
           height: 20,
         ),
-        MovieDateTimeAndLocationSectionView(),
+        MovieDateTimeAndLocationSectionView(
+            timeslotTime: timeslotTime, dateString: dateString),
         SizedBox(
           height: 10,
         ),
-        SeatTicketSectionView(),
+        SeatTicketSectionView(selectedSeatedVOList: selectedSeatedVOList),
         SizedBox(
           height: 10,
         ),
@@ -516,9 +622,10 @@ class BookingTimePlaceAndSeatView extends StatelessWidget {
 }
 
 class SeatTicketSectionView extends StatelessWidget {
-  const SeatTicketSectionView({
-    Key? key,
-  }) : super(key: key);
+  List<SeatVO>? selectedSeatedVOList;
+
+  SeatTicketSectionView({Key? key, required this.selectedSeatedVOList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -527,7 +634,7 @@ class SeatTicketSectionView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: const TextSpan(
+          text: TextSpan(
             text: "M-Ticket(",
             style: TextStyle(
                 color: Colors.white70,
@@ -535,7 +642,7 @@ class SeatTicketSectionView extends StatelessWidget {
                 fontWeight: FontWeight.w400),
             children: <TextSpan>[
               TextSpan(
-                text: "2",
+                text: selectedSeatedVOList?.length.toString(),
                 style: TextStyle(
                     color: SECONDARY_COLOR,
                     fontSize: TEXT_REGULAR,
@@ -557,7 +664,8 @@ class SeatTicketSectionView extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Gold-G8,G7",
+              getSeatVOAsCommaSeparatedString(selectedSeatedVOList ?? []),
+              //??"Gold-G8,G7"
               style: TextStyle(
                   color: Colors.white,
                   fontSize: TEXT_REGULAR_2X,
@@ -565,7 +673,7 @@ class SeatTicketSectionView extends StatelessWidget {
             ),
             Spacer(),
             Text(
-              "20000Ks",
+              "${getSeatVOCalculatePrice(selectedSeatVOList)}Ks",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: TEXT_REGULAR_2X,
@@ -579,9 +687,12 @@ class SeatTicketSectionView extends StatelessWidget {
 }
 
 class MovieDateTimeAndLocationSectionView extends StatelessWidget {
-  const MovieDateTimeAndLocationSectionView({
-    Key? key,
-  }) : super(key: key);
+  String? timeslotTime;
+  String? dateString;
+
+  MovieDateTimeAndLocationSectionView(
+      {Key? key, required this.timeslotTime, required this.dateString})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -607,11 +718,11 @@ class MovieDateTimeAndLocationSectionView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Sat,18 Jun, 2022",
+                  convertDateFunction(dateString ?? currentDate()),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                   softWrap: false,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: TEXT_REGULAR,
                       fontWeight: FontWeight.w400),
@@ -639,8 +750,8 @@ class MovieDateTimeAndLocationSectionView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "3:30PM",
-                  style: TextStyle(
+                  timeslotTime ?? "3:30PM",
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: TEXT_REGULAR,
                       fontWeight: FontWeight.w400),
@@ -694,9 +805,12 @@ class MovieDateTimeAndLocationSectionView extends StatelessWidget {
 }
 
 class MovieAndTheaterDataSectionView extends StatelessWidget {
-  const MovieAndTheaterDataSectionView({
-    Key? key,
-  }) : super(key: key);
+  String? cinemaName;
+  MovieVO? movieDetailsObj;
+
+  MovieAndTheaterDataSectionView(
+      {Key? key, required this.cinemaName, required this.movieDetailsObj})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -705,15 +819,15 @@ class MovieAndTheaterDataSectionView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          text: const TextSpan(
-            text: "Black Widow",
-            style: TextStyle(
+          text: TextSpan(
+            text: movieDetailsObj?.originalTitle.toString(),
+            style: const TextStyle(
                 color: Colors.white,
                 fontSize: TEXT_REGULAR_2X,
                 fontWeight: FontWeight.w700),
-            children: <TextSpan>[
+            children: const <TextSpan>[
               TextSpan(
-                text: "  (3D)(U/A)",
+                text: "  (3D)(U/A)", //?
                 style: TextStyle(
                     color: Colors.white70,
                     fontSize: TEXT_REGULAR_2X,
@@ -726,13 +840,13 @@ class MovieAndTheaterDataSectionView extends StatelessWidget {
           height: 10,
         ),
         RichText(
-          text: const TextSpan(
-            text: "JCGV:Junction City",
-            style: TextStyle(
+          text: TextSpan(
+            text: cinemaName,
+            style: const TextStyle(
                 color: SECONDARY_COLOR,
                 fontSize: TEXT_REGULAR_2X,
                 fontWeight: FontWeight.w700),
-            children: <TextSpan>[
+            children: const <TextSpan>[
               TextSpan(
                 text: "  (SCREEN 2)",
                 style: TextStyle(
@@ -749,9 +863,25 @@ class MovieAndTheaterDataSectionView extends StatelessWidget {
 }
 
 class ContinueButtonView extends StatelessWidget {
-  const ContinueButtonView({
-    Key? key,
-  }) : super(key: key);
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+  int theaterShowTimeslotId;
+
+  ContinueButtonView(
+      {Key? key,
+      required this.cinemaName,
+      required this.timeslotTime,
+      required this.dateString,
+      required this.movieDetailsObj,
+      required this.selectedSeatedVOList,
+      required this.selectedSnackVOList,
+      required this.theaterShowTimeslotId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -762,19 +892,43 @@ class ContinueButtonView extends StatelessWidget {
         margin: EdgeInsets.only(bottom: MARGIN_XLARGE),
         child: GestureDetector(
             onTap: () {
-              _navigateToTicketPage(context);
+              _navigateToTicketPage(
+                  context,
+                  cinemaName,
+                  timeslotTime,
+                  dateString,
+                  movieDetailsObj,
+                  selectedSeatedVOList,
+                  selectedSnackVOList,
+                  theaterShowTimeslotId);
             },
-            child: CustomClipButtonView("Continue",SECONDARY_COLOR,Colors.black)),
+            child: CustomClipButtonView(
+                "Continue", SECONDARY_COLOR, Colors.black)),
       ),
     );
   }
 }
 
-Future<dynamic> _navigateToTicketPage(BuildContext context) {
+Future<dynamic> _navigateToTicketPage(
+    BuildContext context,
+    String? cinemaName,
+    String? timeslotTime,
+    String? dateString,
+    MovieVO? movieDetailsObj,
+    List<SeatVO>? selectedSeatedVOList,
+    List<SnackVO>? selectedSnackVOList,
+    int theaterShowTimeslotId) {
   return Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => TicketPage(),
+      builder: (context) => TicketPage(
+          cinemaName: cinemaName,
+          timeslotTime: timeslotTime,
+          dateString: dateString,
+          movieDetailsObj: movieDetailsObj,
+          selectedSeatedVOList: selectedSeatedVOList,
+          selectedSnackVOList: selectedSnackVOList,
+          theaterShowTimeslotId: theaterShowTimeslotId),
     ),
   );
 }

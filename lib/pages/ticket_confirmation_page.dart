@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/check_out_vo.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
+import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/seat_vo.dart';
+import 'package:movie_booking_app/data/vos/snack_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
+import 'package:movie_booking_app/network/api_constants.dart';
+import 'package:movie_booking_app/network/requests/check_out_request.dart';
+import 'package:movie_booking_app/network/requests/check_out_request_snack_vo.dart';
 import 'package:movie_booking_app/pages/main_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
+import 'package:movie_booking_app/resources/strings.dart';
 import 'package:movie_booking_app/viewitems/ticket_list_info_item.dart';
 import 'package:movie_booking_app/widgets/clip_date_card.dart';
 import 'package:movie_booking_app/widgets/custom_button_view.dart';
@@ -11,20 +22,84 @@ import 'package:movie_booking_app/widgets/my_separator_view.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class TicketConfirmationPage extends StatefulWidget {
-  const TicketConfirmationPage({Key? key}) : super(key: key);
+
+
+  ///data param for checkout function
+  String? cinemaName;
+  String? timeslotTime;
+  String? dateString;
+  MovieVO? movieDetailsObj;
+  List<SeatVO>? selectedSeatedVOList;
+  List<SnackVO>? selectedSnackVOList;
+  int theaterShowTimeslotId;
+  int paymentId;
+
+
+  TicketConfirmationPage({Key? key,
+    required this.cinemaName,
+    required this.timeslotTime,
+    required this.dateString,
+    required this.movieDetailsObj,
+    required this.selectedSeatedVOList,
+    required this.selectedSnackVOList,
+    required this.theaterShowTimeslotId,
+    required this.paymentId
+  }) : super(key: key);
 
   @override
   State<TicketConfirmationPage> createState() => _TicketConfirmationPageState();
 }
 
 class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
-  final String data = 'https://www.example.com';
+  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+
+  ///State Variables
+  CheckOutVO? checkOutVO;
+  UserDataVO? userDataVO;
+
+ // final String data = 'https://www.example.com';
   bool _taskLoadingCompleted = true;
  // CityVO cityVO = CityVO();
 
   @override
   void initState() {
-    // TODO: implement initState
+    ///userdata from Database
+    movieBookingAppModel.getUserDataFromDatabase().then((paramUserDataVO) {
+      setState(() {
+        userDataVO = paramUserDataVO;
+        print("user token from snack page= ${userDataVO?.userToken}");
+
+        List<CheckOutRequestSnackVO> checkoutRequestSnackVO=[];
+        widget.selectedSnackVOList?.map((snackVO){
+          checkoutRequestSnackVO.add(CheckOutRequestSnackVO(snackVO.id,
+              snackVO.quantity));
+        }).toString();
+        ///snack category from Network
+        movieBookingAppModel
+            .checkOut("Bearer ${userDataVO?.userToken ?? ""}",
+        CheckOutRequest(
+            cinemaDayTimeslotId: widget.theaterShowTimeslotId,
+            seatNumber: getSeatVOAsCommaSeparatedString(widget.selectedSeatedVOList??[]),
+            bookingDate: widget.dateString,
+            movieId: widget.movieDetailsObj?.id,
+            paymentTypeId: widget.paymentId,
+            snacks: checkoutRequestSnackVO)
+        )
+            .then((paramCheckoutVO) {
+
+          checkOutVO = paramCheckoutVO;
+
+          setState(() {
+           //
+          });
+        }).catchError((error) {
+          debugPrint(error.toString());
+        });
+
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
     super.initState();
     _runDelayedTask();
   }
@@ -65,11 +140,22 @@ class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TicketListInfoItem((){}),
+                     TicketListInfoItem(
+                         checkOutVO: checkOutVO,
+                         cinemaName: widget.cinemaName,
+                         timeslotTime:  widget.timeslotTime,
+                         dateString:  widget.dateString,
+                         movieDetailsObj:  widget.movieDetailsObj,
+                         selectedSeatedVOList:  widget.selectedSeatedVOList,
+                         selectedSnackVOList:  widget.selectedSnackVOList,
+                         theaterShowTimeslotId:  widget.theaterShowTimeslotId,
+                         paymentId:  widget.paymentId,
+                         onTapTicketItem: (){})
+                      ,
                       const SizedBox(
                         height: 20,
                       ),
-                      QRSectionView(data: data),
+                      QRSectionView(qrStr: "${IMAGE_BASE_URL}${checkOutVO?.qrCode}"),
                       DoneButtonView(),
                     ],
                   ),
@@ -179,7 +265,7 @@ class DoneButtonView extends StatelessWidget {
             isShowIcon: false,
             () {
 
-
+              Navigator.of(context).popUntil((route) => route.isFirst);
             /*
              For city VO condition(15.03.2023)
              Navigator.push(
@@ -200,19 +286,21 @@ class DoneButtonView extends StatelessWidget {
 }
 
 class QRSectionView extends StatelessWidget {
-  const QRSectionView({
+
+  String qrStr;
+
+  QRSectionView({
     Key? key,
-    required this.data,
+    required this.qrStr,
   }) : super(key: key);
 
-  final String data;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         QrImage(
-          data: data,
+          data: qrStr,
           version: QrVersions.auto,
           size: 100.0,
           foregroundColor: Colors.white,
