@@ -30,7 +30,12 @@ abstract class MovieBookingAppModel{
       String tokenStr,
       String date);
 
-  Future<List<List<SeatVO>>?> getSeatingPlanByShowTime(
+/*  Future<List<List<SeatVO>>?> getSeatingPlanByShowTime(
+      String tokenStr,
+      String date,
+      int cinemaDayTimeSlotId);*/
+
+  Future<List<SeatVO>?> getSeatingPlanByShowTime(
       String tokenStr,
       String date,
       int cinemaDayTimeSlotId);

@@ -47,8 +47,8 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
   double _sliderValue = 0.5;
   ///State Variables
   UserDataVO? userVO;
-  List<List<SeatVO>>? showMovieSeatList;
-
+//  List<List<SeatVO>>? showMovieSeatList;
+  List<SeatVO>? showMovieSeatList;
   int totalAmount = 0;
   int totalCount = 0;
   MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
@@ -63,12 +63,11 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
       setState(() {
         userVO = paramUserVO;
 
-        ///getseat data from Network
+        ///get seat data from Network
         movieBookingAppModel.getSeatingPlanByShowTime(
             'Bearer ${userVO?.userToken??""}',
             widget.bookinig_date,
             widget.theater_show_timeslot_id).then((seatVOList){
-
              setState(() {
                showMovieSeatList =seatVOList;
              });
@@ -455,7 +454,7 @@ class _SeekBarViewState extends State<SeekBarView> {
 
 class SeatListView extends StatefulWidget {
   final Function(int,List<SeatVO>) onTapSeatView;
-  final List<List<SeatVO>> seatList;
+  final List<SeatVO> seatList;
 
   SeatListView({
     Key? key,
@@ -470,7 +469,10 @@ class SeatListView extends StatefulWidget {
 class _SeatListViewState extends State<SeatListView> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return
+      SeatView(seatVOList: widget.seatList,onTapSeatView:widget.onTapSeatView);
+
+     /* ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -492,7 +494,7 @@ class _SeatListViewState extends State<SeatListView> {
 
             ],
           );
-        });
+        });*/
   }
 }
 
@@ -552,57 +554,58 @@ class _SeatViewState extends State<SeatView> {
   Widget build(BuildContext context) {
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.08, //MediaQuery.of(context).size.height * 0.1
+      height: MediaQuery.of(context).size.height, //MediaQuery.of(context).size.height * 0.1
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.seatVOList.length, // number of columns
-          mainAxisSpacing: 10, // vertical space between items
-          crossAxisSpacing: 10, // horizontal space between items
-          childAspectRatio:1//aspect ratio of each item
+          crossAxisCount: 18, // number of columns
+          mainAxisSpacing: 3.5, // vertical space between items
+          crossAxisSpacing: 3.5, // horizontal space between items
+          childAspectRatio:0.47//aspect ratio of each item
         ),
         // umber of items in the grid
         itemBuilder: (BuildContext context, int index) {
+            if (widget.seatVOList[index].type == SEAT_TYPE_TEXT) {
+              return Center(
+                child: Text(
+                  widget.seatVOList[index].symbol.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            } else if (widget.seatVOList[index].type == SEAT_TYPE_EMPTY) {
+              return SizedBox(
+                width: 10,
+              );
+            } else if (widget.seatVOList[index].type ==
+                SEAT_TYPE_AVAILABLE) {
 
-          if (widget.seatVOList[index].type == SEAT_TYPE_TEXT) {
-            return Text(
-              widget.seatVOList[index].symbol.toString(),
-              style: TextStyle(color: Colors.white),
-            );
-          } else if (widget.seatVOList[index].type == SEAT_TYPE_EMPTY) {
-            return SizedBox(
-              width: 10,
-            );
-          } else if (widget.seatVOList[index].type ==
-              SEAT_TYPE_AVAILABLE) {
+              return GestureDetector(
+                onTap: () {
+                  // Implement your click function here
 
-            return GestureDetector(
-              onTap: () {
-                // Implement your click function here
+                  print('Clicked item $index');
 
-                print('Clicked item $index');
-
-                //  chair_available_flag = !chair_available_flag;
-                //  widget.seatVOList[index].isSelected = !widget.seatVOList[index].isSelected;
+                  //  chair_available_flag = !chair_available_flag;
+                  //  widget.seatVOList[index].isSelected = !widget.seatVOList[index].isSelected;
 
                   if(widget.seatVOList[index].isSelected == true)
-                    {
-                      widget.seatVOList[index].isSelected = false;
-                    }else{
+                  {
+                    widget.seatVOList[index].isSelected = false;
+                  }else{
                     widget.seatVOList[index].isSelected = true;
                   }
-                 // print("AAA ${widget.seatVOList[index].isSelected}");
-                 var objId =  widget.seatVOList[index].id;
+                  // print("AAA ${widget.seatVOList[index].isSelected}");
+                  var objId =  widget.seatVOList[index].id;
 
                   if(selectedSeatVOList.isEmpty)
+                  {
+                    selectedSeatVOList.add(widget.seatVOList[index]);
+                  }else{
+                    // selectedSeatVOList.add(widget.seatVOList[index]);
+
+                    if(widget.seatVOList[index].isSelected == true)
                     {
                       selectedSeatVOList.add(widget.seatVOList[index]);
                     }else{
-                   // selectedSeatVOList.add(widget.seatVOList[index]);
-
-                    if(widget.seatVOList[index].isSelected == true)
-                      {
-                        selectedSeatVOList.add(widget.seatVOList[index]);
-                      }else{
                       for(int i = 0; i<selectedSeatVOList.length;i++)
                       {
                         if(selectedSeatVOList[i].id == objId &&
@@ -614,66 +617,64 @@ class _SeatViewState extends State<SeatView> {
                         }
                       }
                     }
-
-
-
-
                   }
 
-
-                setState(() {
-                  widget.onTapSeatView(index,selectedSeatVOList);
-                  //widget.seatVOList[index].isSelected = chair_available_flag;
-                });
-              },
-              child:
-              Container(
+                  setState(() {
+                    widget.onTapSeatView(index,selectedSeatVOList);
+                    //widget.seatVOList[index].isSelected = chair_available_flag;
+                  });
+                },
+                child:
+                Container(
+                  width: 30,
+                  height: 30,
+                  child: Image.asset("assets/icons/ic_chair_available.png",
+                    color: (widget.seatVOList[index].isSelected??false)? SECONDARY_COLOR : Colors.white,),
+                ),
+              );
+            } else if (widget.seatVOList[index].type == SEAT_TYPE_TAKEN) {
+              return Container(
+                width: 30,
+                height: 30,
+                child: Image.asset("assets/icons/ic_chair_taken.png"),
+              );
+            } else if (widget.seatVOList[index].type ==
+                SEAT_TYPE_SELECTION) {
+              print("selection condition");
+              return Container(
                 width: 30,
                 height: 30,
                 child: Image.asset("assets/icons/ic_chair_available.png",
-                  color: (widget.seatVOList[index].isSelected??false)? SECONDARY_COLOR : Colors.white,),
-              ),
-            );
-          } else if (widget.seatVOList[index].type == SEAT_TYPE_TAKEN) {
-            return Container(
-              width: 30,
-              height: 30,
-              child: Image.asset("assets/icons/ic_chair_taken.png"),
-            );
-          } else if (widget.seatVOList[index].type ==
-              SEAT_TYPE_SELECTION) {
-            print("selection condition");
-            return Container(
-              width: 30,
-              height: 30,
-              child: Image.asset("assets/icons/ic_chair_available.png",
-                color: SECONDARY_COLOR,),
-            );
-          }
-          //
-          // else if (widget.seatVOList[index].type ==
-          //     SEAT_TYPE_GOLD_AVAILABLE) {
-          //   return Container(
-          //     width: 30,
-          //     height: 30,
-          //     child: Image.asset("assets/icons/ic_couple_seat_available.png"),
-          //   );
-          // } else if (widget.seatVOList[index].type ==
-          //     SEAT_TYPE_GOLD_TAKEN) {
-          //   return Container(
-          //     width: 30,
-          //     height: 30,
-          //     child: Image.asset("assets/icons/ic_couple_seat_taken.png"),
-          //   );
-          // }
+                  color: SECONDARY_COLOR,),
+              );
+            }
+            //
+            // else if (widget.seatVOList[index].type ==
+            //     SEAT_TYPE_GOLD_AVAILABLE) {
+            //   return Container(
+            //     width: 30,
+            //     height: 30,
+            //     child: Image.asset("assets/icons/ic_couple_seat_available.png"),
+            //   );
+            // } else if (widget.seatVOList[index].type ==
+            //     SEAT_TYPE_GOLD_TAKEN) {
+            //   return Container(
+            //     width: 30,
+            //     height: 30,
+            //     child: Image.asset("assets/icons/ic_couple_seat_taken.png"),
+            //   );
+            // }
 
-          else {
-            return Container(
-              width: 30,
-              height: 30,
-              child: Image.asset("assets/icons/ic_chair_your_selection.png"),
-            );
-          }
+            else {
+              return Container(
+                width: 30,
+                height: 30,
+                child: Image.asset("assets/icons/ic_chair_your_selection.png"),
+              );
+            }
+         // }
+
+
 
         },
         itemCount: widget.seatVOList.length,

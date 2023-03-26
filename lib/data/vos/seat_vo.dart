@@ -25,8 +25,12 @@ class SeatVO{
   bool? isSelected;
 
 
-  SeatVO(this.id, this.type, this.seatName, this.symbol, this.price,
-      this.isSelected);
+  SeatVO(
+  {
+    required this.id, required this.type, required this.seatName, required this.symbol, required this.price,
+    required this.isSelected
+}
+      );
 
   factory SeatVO.fromJson(Map<String,dynamic> json) =>_$SeatVOFromJson(json);
   Map<String,dynamic> toJson()=> _$SeatVOToJson(this);
@@ -46,6 +50,12 @@ class SeatVO{
 
   bool isMovieSeatYourSelection(){
     return type == SEAT_TYPE_SELECTION;
+  }
+
+  @override
+  String toString() {
+
+    return "id: ${id} , type : ${type} , symbol: ${symbol} , seatName: ${seatName} , price: ${price}";
   }
 
 }

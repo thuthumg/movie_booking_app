@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/vos/banner_vo.dart';
 import 'package:movie_booking_app/data/vos/check_out_vo.dart';
@@ -202,33 +204,25 @@ class MovieBookingAppModelImpl extends MovieBookingAppModel{
   }
 
   @override
-  Future<List<List<SeatVO>>?> getSeatingPlanByShowTime(String tokenStr, String date, int cinemaDayTimeSlotId) {
+  Future <List<SeatVO>?> getSeatingPlanByShowTime(String tokenStr, String date, int cinemaDayTimeSlotId) {
     return _dataAgent.getSeatingPlanByShowTime(tokenStr, date, cinemaDayTimeSlotId).then((getSeatingPlanByShowTimeData) async{
-    //  List<List<SeatVO>>? changeSeatingPlanByShowTimeDataList=[];
-    //  List<SeatVO> changeSeatVOList=[];
-      List<List<SeatVO>> paramGetSeatingPlanByShowTimeData = getSeatingPlanByShowTimeData??[];
 
+      List<List<SeatVO>> paramGetSeatingPlanByShowTimeData = getSeatingPlanByShowTimeData??[];
+      var rng = new Random();
+      int randomInt = rng.nextInt(10);
+      SeatVO seatVO = SeatVO(id: randomInt, type: "space", seatName: "",symbol: "", price:0, isSelected: false);
       for(int i=0 ; i<paramGetSeatingPlanByShowTimeData.length; i++) {
         List<SeatVO> seatVOList = paramGetSeatingPlanByShowTimeData[i];
         for (int j = 0; j < seatVOList.length; j++) {
-          if(j == 3 || j == 4 || j== 9 || j == 10)
-          {
-            seatVOList[j].type = "space";
-
-          }
-          // else if(j == 9 || j == 10){
-          //   seatVOList[j].type = "space";
-          //
-          // }
-         // changeSeatVOList.add(seatVOList[j]);
-          }
-
-       // changeSeatingPlanByShowTimeDataList.add(changeSeatVOList);
-
+          if(j == 5 || j == 6 || j== 11 || j == 12)
+            {
+              seatVOList.insert(j, seatVO);
+            }
+        }
       }
+      List<SeatVO> oneDimArray = paramGetSeatingPlanByShowTimeData.expand((row) => row).toList();
 
-
-      return Future.value(paramGetSeatingPlanByShowTimeData);
+      return Future.value(oneDimArray);
     });
   }
 

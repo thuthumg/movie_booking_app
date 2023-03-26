@@ -352,14 +352,14 @@ class _TheMovieBookingApi implements TheMovieBookingApi {
   @override
   Future<GetCheckOutResponse> checkOut(
     PARAM_HEADER,
-    contentType,
+    PARAM_CONTENT_TYPE,
     checkOutRequest,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
       r'Authorization': PARAM_HEADER,
-      r'Content-Type': contentType,
+      r'Content-Type': PARAM_CONTENT_TYPE,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -369,7 +369,7 @@ class _TheMovieBookingApi implements TheMovieBookingApi {
       method: 'POST',
       headers: _headers,
       extra: _extra,
-      contentType: contentType,
+      contentType: PARAM_CONTENT_TYPE,
     )
             .compose(
               _dio.options,
