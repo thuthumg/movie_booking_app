@@ -51,6 +51,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   fluttertoast: ^8.0.7
+  pinch_zoom: ^1.0.0
+  #zoom_widget: ^2.0.0
+  #pinch_zoom_release_unzoom: ^0.0.12
   #flutter_libphonenumber: ^0.1.2
   #flick_video_player: ^0.3.1
  # video_player: ^2.5.1

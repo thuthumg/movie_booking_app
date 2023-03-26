@@ -14,6 +14,8 @@ import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
 import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
 import 'package:movie_booking_app/widgets/slider_view.dart';
+import 'package:movie_booking_app/widgets/sample_ui.dart';
+
 
 class SeatingPlanPage extends StatefulWidget {
 
@@ -40,7 +42,9 @@ class SeatingPlanPage extends StatefulWidget {
 }
 
 class _SeatingPlanPageState extends State<SeatingPlanPage> {
-
+ // final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController = TransformationController();
+  double _sliderValue = 0.5;
   ///State Variables
   UserDataVO? userVO;
   List<List<SeatVO>>? showMovieSeatList;
@@ -121,21 +125,86 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TitleImageView(),
-                      SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (selectIndex,selectedSeatVOList){
+                      // Zoom(
+                      //
+                      //   maxZoomWidth: 1000,
+                      //   maxZoomHeight: 1000,
+                      //   child: Container(
+                      //     height: MediaQuery.of(context).size.height,
+                      //     child:  Text("test")
+                      //   )),
+                    // InteractiveViewer(
+                    //  // transformationController: _transformationController,
+                    //   boundaryMargin: EdgeInsets.all(100),
+                    //   minScale: 0.5,
+                    //   maxScale: 4.0,
+                    //  // panEnabled: true,
+                    // //  boundaryMargin: EdgeInsets.all(100),
+                    //  // minScale: 0.5,
+                    // //  maxScale: 4.0,
+                    //  // zoomedBackgroundColor: Colors.grey[300],
+                    //   child:  SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (selectIndex,selectedSeatVOList){
+                    //
+                    //     setState(() {
+                    //       totalAmount = 0;
+                    //       totalCount = 0;
+                    //       for(int i = 0;i<selectedSeatVOList.length;i++)
+                    //
+                    //       {
+                    //         print("check selected VO list = ${selectedSeatVOList[i].seatName}");
+                    //         totalAmount += selectedSeatVOList[i].price??0;
+                    //         totalCount ++;
+                    //       }
+                    //     });
+                    //
+                    //   }),
+                    // )
+                    //   PinchZoomReleaseUnzoomWidget(
+                    //     child: Slider(
+                    //       value: _sliderValue,
+                    //       min: 0,
+                    //       max: 100,
+                    //       onChanged: (newValue) {
+                    //         setState(() {
+                    //           _sliderValue = newValue;
+                    //         });
+                    //       },
+                    //     ),
+                    //   ),
+                      InteractiveViewer(
+                        // boundaryMargin: EdgeInsets.all(20),
+                        // maxScale: 3.0,
+                        // minScale: 0.5,
+                        // panEnabled: true,
+                        // scaleEnabled: true,
+                        transformationController: _transformationController,
+                        child: SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (selectIndex,selectedSeatVOList){
 
-                        setState(() {
-                          totalAmount = 0;
-                          totalCount = 0;
-                          for(int i = 0;i<selectedSeatVOList.length;i++)
+                          setState(() {
+                            totalAmount = 0;
+                            totalCount = 0;
+                            for(int i = 0;i<selectedSeatVOList.length;i++)
 
-                          {
-                            print("check selected VO list = ${selectedSeatVOList[i].seatName}");
-                            totalAmount += selectedSeatVOList[i].price??0;
-                            totalCount ++;
-                          }
-                        });
+                            {
+                              print("check selected VO list = ${selectedSeatVOList[i].seatName}");
+                              totalAmount += selectedSeatVOList[i].price??0;
+                              totalCount ++;
+                            }
+                          });
 
-                      }),
+                        }),
+                      ),
+
+
+                      // Zoom(
+                      //     maxZoomWidth: 1000,
+                      //     maxZoomHeight: 1000,
+                      //     backgroundColor: Colors.black,
+                      //     doubleTapZoom: true,
+                      //   //  initZoom: _zoom,
+                      //     child:  )
+
+
                     ],
                   ),
                 ),
@@ -147,7 +216,7 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
             child: Column(
               children: [
                 SeatColorSpecificationsView(),
-                SeekBarView(),
+                SeekBarView(sliderValue: 0.5,transformationController: _transformationController,),
                 TotalTicketView(
                     totalAmount: totalAmount,
                     totalCount: totalCount,
@@ -337,13 +406,25 @@ class TotalTicketView extends StatelessWidget {
   }
 }
 
-class SeekBarView extends StatelessWidget {
-  const SeekBarView({
+class SeekBarView extends StatefulWidget {
+  double sliderValue;
+  TransformationController  transformationController;
+ // Function(double) onTapSeekBar;
+  SeekBarView({
     Key? key,
+    required this.sliderValue,
+    required this.transformationController
+   // required this.onTapSeekBar
   }) : super(key: key);
 
   @override
+  State<SeekBarView> createState() => _SeekBarViewState();
+}
+
+class _SeekBarViewState extends State<SeekBarView> {
+  @override
   Widget build(BuildContext context) {
+  //  double _sliderValue = 1.0;
     return Container(
       // height: 20,
       child: Row(
@@ -358,7 +439,7 @@ class SeekBarView extends StatelessWidget {
           const SizedBox(
             width: 5,
           ),
-          SliderView(),
+          SliderView(sliderValue: widget.sliderValue,transformationController: widget.transformationController,),
           const SizedBox(
             width: 5,
           ),

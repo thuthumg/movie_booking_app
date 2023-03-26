@@ -112,14 +112,25 @@ class _CheckOutPageState extends State<CheckOutPage> {
                             padding: const EdgeInsets.only(
                                 right: MARGIN_MEDIUM_2, left: MARGIN_MEDIUM_2),
                             //foodAndBeverageItemList
-                            child: SnackView(widget.selectedSnackVOList ?? [],
-                                (bool changeHeightParam) {
+                            child: SnackView(
+                                snackVOList: widget.selectedSnackVOList ?? [],
+                                onTapSnackViewShowHeight: (bool changeHeightParam) {
                               setState(() {
                                 this.changeHeight = changeHeightParam;
                                 print(
                                     "check height status = ${this.changeHeight}");
                               });
-                            }),
+                            },
+                              onTapDelete: (snackVO){
+                                  setState(() {
+                                  //  var indexId = snackIndex;
+                                    print("sanck delete set state = ${snackVO.name}");
+
+                                    widget.selectedSnackVOList?.remove(snackVO);
+                                  });
+                              },
+
+                            ),
                           ),
                           const SizedBox(
                             height: 30,
@@ -390,8 +401,12 @@ class SnackView extends StatefulWidget {
 
   List<SnackVO> snackVOList = [];
   Function onTapSnackViewShowHeight;
+  Function(SnackVO) onTapDelete;
 
-  SnackView(this.snackVOList, this.onTapSnackViewShowHeight);
+  SnackView(
+      {required this.snackVOList,
+      required this.onTapSnackViewShowHeight,
+      required this.onTapDelete});
 
   @override
   State<SnackView> createState() =>
@@ -427,12 +442,14 @@ class _SnackViewState extends State<SnackView> {
               itemCount: snackVOList.length,
               itemBuilder: (BuildContext context, int index) {
                 return FoodAndBeverageListItemView(
-                    foodAndBeverageItemObj: snackVOList[index],
-                onTapDelete: (snackId){
-                      setState(() {
-                        snackVOList.remove(snackId);
-                      });
-                },);
+                  foodAndBeverageItemObj: snackVOList[index],
+                  onTapDelete: (snackVO) {
+                    widget.onTapDelete(snackVOList[index]);
+                    // setState(() {
+                    //   snackVOList.remove(snackId);
+                    // });
+                  },
+                );
               },
             )),
         SizedBox(
@@ -447,7 +464,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
   // final FoodAndBeverageItemObj foodAndBeverageItemObj;
   final SnackVO foodAndBeverageItemObj;
 
-  Function(int?) onTapDelete;
+  Function(SnackVO) onTapDelete;
 
   FoodAndBeverageListItemView(
       {required this.foodAndBeverageItemObj, required this.onTapDelete});
@@ -460,7 +477,7 @@ class FoodAndBeverageListItemView extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            onTapDelete(foodAndBeverageItemObj.id);
+            onTapDelete(foodAndBeverageItemObj);
           },
           child: Container(
             padding: EdgeInsets.only(right: MARGIN_MEDIUM),
