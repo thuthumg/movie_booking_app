@@ -14,13 +14,10 @@ import 'package:movie_booking_app/widgets/booking_date_time_status_view.dart';
 import 'package:movie_booking_app/widgets/clip_button.dart';
 import 'package:movie_booking_app/widgets/my_clipper.dart';
 import 'package:movie_booking_app/widgets/slider_view.dart';
-import 'package:movie_booking_app/widgets/sample_ui.dart';
-
+// import 'package:movie_booking_app/widgets/sample_ui.dart';
 
 class SeatingPlanPage extends StatefulWidget {
-
   final String bookinig_date;
-
 
   ///data param for checkout function
   final int theater_show_timeslot_id;
@@ -29,22 +26,24 @@ class SeatingPlanPage extends StatefulWidget {
   String? dateString;
   MovieVO? movieDetailsObj;
 
-
-  SeatingPlanPage({required this.bookinig_date,
-    required this.theater_show_timeslot_id,
-    required this.cinemaName,
-    required this.timeslotTime,
-    required this.dateString,
-    required this.movieDetailsObj});
+  SeatingPlanPage(
+      {required this.bookinig_date,
+        required this.theater_show_timeslot_id,
+        required this.cinemaName,
+        required this.timeslotTime,
+        required this.dateString,
+        required this.movieDetailsObj});
 
   @override
   State<SeatingPlanPage> createState() => _SeatingPlanPageState();
 }
 
 class _SeatingPlanPageState extends State<SeatingPlanPage> {
- // final TransformationController _transformationController = TransformationController();
-  final TransformationController _transformationController = TransformationController();
+  // final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+  TransformationController();
   double _sliderValue = 0.5;
+
   ///State Variables
   UserDataVO? userVO;
 //  List<List<SeatVO>>? showMovieSeatList;
@@ -55,39 +54,32 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
 
   @override
   void initState() {
-
-
     selectedSeatVOList = [];
+
     ///uservo from Database
     movieBookingAppModel.getUserDataFromDatabase().then((paramUserVO) {
       setState(() {
         userVO = paramUserVO;
 
         ///get seat data from Network
-        movieBookingAppModel.getSeatingPlanByShowTime(
-            'Bearer ${userVO?.userToken??""}',
-            widget.bookinig_date,
-            widget.theater_show_timeslot_id).then((seatVOList){
-             setState(() {
-               showMovieSeatList =seatVOList;
-             });
-        })
-        .catchError((error){
+        movieBookingAppModel
+            .getSeatingPlanByShowTime('Bearer ${userVO?.userToken ?? ""}',
+            widget.bookinig_date, widget.theater_show_timeslot_id)
+            .then((seatVOList) {
+          setState(() {
+            showMovieSeatList = seatVOList;
+          });
+        }).catchError((error) {
           showToastMessage(error.toString());
         });
-
       });
-
-
-
     }).catchError((error) {
-      debugPrint("error = "+error.toString());
+      debugPrint("error = " + error.toString());
     });
-
-
 
     super.initState();
   }
+
   void showToastMessage(String msgString) {
     Fluttertoast.showToast(
         msg: msgString,
@@ -95,177 +87,92 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
         gravity: ToastGravity.CENTER,
         backgroundColor: Colors.grey,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      backgroundColor: PRIMARY_COLOR,
-      appBar: AppBar(
         backgroundColor: PRIMARY_COLOR,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Icon(Icons.chevron_left)),
-      ),
-      body: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height*0.65,
-             child: Container(
-                // height: MediaQuery.of(context).size.height,
-                color: PRIMARY_COLOR,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TitleImageView(),
-                      // Zoom(
-                      //
-                      //   maxZoomWidth: 1000,
-                      //   maxZoomHeight: 1000,
-                      //   child: Container(
-                      //     height: MediaQuery.of(context).size.height,
-                      //     child:  Text("test")
-                      //   )),
-                    // InteractiveViewer(
-                    //  // transformationController: _transformationController,
-                    //   boundaryMargin: EdgeInsets.all(100),
-                    //   minScale: 0.5,
-                    //   maxScale: 4.0,
-                    //  // panEnabled: true,
-                    // //  boundaryMargin: EdgeInsets.all(100),
-                    //  // minScale: 0.5,
-                    // //  maxScale: 4.0,
-                    //  // zoomedBackgroundColor: Colors.grey[300],
-                    //   child:  SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (selectIndex,selectedSeatVOList){
-                    //
-                    //     setState(() {
-                    //       totalAmount = 0;
-                    //       totalCount = 0;
-                    //       for(int i = 0;i<selectedSeatVOList.length;i++)
-                    //
-                    //       {
-                    //         print("check selected VO list = ${selectedSeatVOList[i].seatName}");
-                    //         totalAmount += selectedSeatVOList[i].price??0;
-                    //         totalCount ++;
-                    //       }
-                    //     });
-                    //
-                    //   }),
-                    // )
-                    //   PinchZoomReleaseUnzoomWidget(
-                    //     child: Slider(
-                    //       value: _sliderValue,
-                    //       min: 0,
-                    //       max: 100,
-                    //       onChanged: (newValue) {
-                    //         setState(() {
-                    //           _sliderValue = newValue;
-                    //         });
-                    //       },
-                    //     ),
-                    //   ),
-                      InteractiveViewer(
-                        // boundaryMargin: EdgeInsets.all(20),
-                        // maxScale: 3.0,
-                        // minScale: 0.5,
-                        // panEnabled: true,
-                        // scaleEnabled: true,
-                        transformationController: _transformationController,
-                        child: SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (selectIndex,selectedSeatVOList){
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR,
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Icon(Icons.chevron_left)),
+        ),
+        body: Column(
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height * 0.65,
+                child: Container(
+                  // height: MediaQuery.of(context).size.height,
+                  color: PRIMARY_COLOR,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TitleImageView(),
 
-                          setState(() {
-                            totalAmount = 0;
-                            totalCount = 0;
-                            for(int i = 0;i<selectedSeatVOList.length;i++)
+                        InteractiveViewer(
+                          transformationController: _transformationController,
+                          child: SeatListView(seatList: showMovieSeatList??[],onTapSeatView: (seatVO){
+                            setState(() {
+                              showMovieSeatList?.map((seatObj){
+                                if(seatObj.id == seatVO.id && seatObj.symbol == seatVO.symbol)
+                                {
+                                  seatObj.isSelected = !(seatVO.isSelected??false);
+                                }
+                              }).toList();
 
-                            {
-                              print("check selected VO list = ${selectedSeatVOList[i].seatName}");
-                              totalAmount += selectedSeatVOList[i].price??0;
-                              totalCount ++;
-                            }
-                          });
+                              showMovieSeatList = showMovieSeatList;
 
-                        }),
-                      ),
+                              List<SeatVO>? selectedData = showMovieSeatList?.where((seatObj)=> seatObj.isSelected == true).toList();
+                              totalCount = selectedData?.length??0;
+                              if(selectedData != null && selectedData.length > 1)
+                              {
+                                totalAmount = selectedData.map((seatObj) => seatObj.price).reduce((a, b) => (a?.toInt()??0)+ (b?.toInt()??0))??0;
 
+                              }else{
 
-                      // Zoom(
-                      //     maxZoomWidth: 1000,
-                      //     maxZoomHeight: 1000,
-                      //     backgroundColor: Colors.black,
-                      //     doubleTapZoom: true,
-                      //   //  initZoom: _zoom,
-                      //     child:  )
+                                 if(selectedData?.length == 1) {
+                                   totalAmount = selectedData?[0].price??0;
+                                 } else {
+                                   totalAmount = 0;
+                                 }
+                              }
+                            });
 
+                          }),
+                        ),
 
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
-          ),
-          Container(
-           // height: MediaQuery.of(context).size.height*0.35,
-           // color: PRIMARY_COLOR,
-            child: Column(
-              children: [
-                SeatColorSpecificationsView(),
-                SeekBarView(sliderValue: 0.5,transformationController: _transformationController,),
-                TotalTicketView(
-                    totalAmount: totalAmount,
-                    totalCount: totalCount,
-                cinemaName: widget.cinemaName,
-                    timeslotTime: widget.timeslotTime,
-                    dateString: widget.dateString,
-                    movieDetailsObj: widget.movieDetailsObj,
-                    selectedSeatedVOList:selectedSeatVOList,
-                    timeslotId: widget.theater_show_timeslot_id)
-              ],
-            ),
-          )
-        ],
-      )
-
-      // Stack(
-      //   children: [
-      //     Positioned(
-      //       top: 0,
-      //       left: 0,
-      //       right: 0,
-      //       bottom: 0,
-      //       child: Container(
-      //         // height: MediaQuery.of(context).size.height,
-      //         color: PRIMARY_COLOR,
-      //         child: SingleChildScrollView(
-      //           child: Column(
-      //             mainAxisSize: MainAxisSize.min,
-      //             children: [
-      //               TitleImageView(),
-      //               SeatListView(),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //     Positioned(
-      //       bottom: 0,
-      //       left: 0,
-      //       right: 0,
-      //       child: Column(
-      //         children: [
-      //           SeatColorSpecificationsView(),
-      //           SeekBarView(),
-      //           TotalTicketView()
-      //         ],
-      //       ),
-      //     )
-      //   ],
-      // ),
+                )),
+            Container(
+              child: Column(
+                children: [
+                  SeatColorSpecificationsView(),
+                  SeekBarView(
+                    sliderValue: 1,
+                    transformationController: _transformationController,
+                  ),
+                  TotalTicketView(
+                      totalAmount: totalAmount,
+                      totalCount: totalCount,
+                      cinemaName: widget.cinemaName,
+                      timeslotTime: widget.timeslotTime,
+                      dateString: widget.dateString,
+                      movieDetailsObj: widget.movieDetailsObj,
+                      selectedSeatedVOList: selectedSeatVOList,
+                      timeslotId: widget.theater_show_timeslot_id)
+                ],
+              ),
+            )
+          ],
+        )
     );
   }
 }
@@ -294,8 +201,7 @@ class SeatColorSpecificationsView extends StatelessWidget {
 }
 
 class TotalTicketView extends StatelessWidget {
-
-  final int totalAmount,totalCount;
+  final int totalAmount, totalCount;
 
   ///data param for checkout function
   String? cinemaName;
@@ -305,17 +211,17 @@ class TotalTicketView extends StatelessWidget {
   List<SeatVO>? selectedSeatedVOList;
   int timeslotId;
 
-  TotalTicketView({
-    Key? key,
-    required this.totalAmount,
-    required this.totalCount,
-    required this.cinemaName,
-    required this.timeslotTime,
-    required this.dateString,
-    required this.movieDetailsObj,
-    required this.selectedSeatedVOList,
-    required this.timeslotId
-  }) : super(key: key);
+  TotalTicketView(
+      {Key? key,
+        required this.totalAmount,
+        required this.totalCount,
+        required this.cinemaName,
+        required this.timeslotTime,
+        required this.dateString,
+        required this.movieDetailsObj,
+        required this.selectedSeatedVOList,
+        required this.timeslotId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -331,7 +237,7 @@ class TotalTicketView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "$totalCount ${(totalCount==0 || totalCount == 1)? 'Ticket': 'Tickets'}",
+                    "$totalCount ${(totalCount == 0 || totalCount == 1) ? 'Ticket' : 'Tickets'}",
                     style: const TextStyle(
                         fontSize: TEXT_REGULAR_2X,
                         fontWeight: FontWeight.w600,
@@ -355,14 +261,14 @@ class TotalTicketView extends StatelessWidget {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  _navigateToSnackPage(context,
+                  _navigateToSnackPage(
+                      context,
                       cinemaName,
                       timeslotTime,
                       dateString,
                       movieDetailsObj,
-                    selectedSeatedVOList,
-                      timeslotId
-                  );
+                      selectedSeatedVOList,
+                      timeslotId);
                 },
                 child: Container(
                   height: 50,
@@ -407,14 +313,15 @@ class TotalTicketView extends StatelessWidget {
 
 class SeekBarView extends StatefulWidget {
   double sliderValue;
-  TransformationController  transformationController;
- // Function(double) onTapSeekBar;
-  SeekBarView({
-    Key? key,
-    required this.sliderValue,
-    required this.transformationController
-   // required this.onTapSeekBar
-  }) : super(key: key);
+  TransformationController transformationController;
+  // Function(double) onTapSeekBar;
+  SeekBarView(
+      {Key? key,
+        required this.sliderValue,
+        required this.transformationController
+        // required this.onTapSeekBar
+      })
+      : super(key: key);
 
   @override
   State<SeekBarView> createState() => _SeekBarViewState();
@@ -423,44 +330,26 @@ class SeekBarView extends StatefulWidget {
 class _SeekBarViewState extends State<SeekBarView> {
   @override
   Widget build(BuildContext context) {
-  //  double _sliderValue = 1.0;
+    //  double _sliderValue = 1.0;
     return Container(
       // height: 20,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          SliderView(sliderValue: widget.sliderValue,transformationController: widget.transformationController,),
-          const SizedBox(
-            width: 5,
-          ),
-          const Icon(
-            Icons.remove,
-            color: Colors.white,
-          )
-        ],
-      ),
+        child: SliderView(
+          sliderValue: widget.sliderValue,
+          transformationController: widget.transformationController,
+        )
     );
   }
 }
 
 class SeatListView extends StatefulWidget {
-  final Function(int,List<SeatVO>) onTapSeatView;
+  final Function(SeatVO) onTapSeatView;
   final List<SeatVO> seatList;
 
   SeatListView({
     Key? key,
     required this.seatList,
-    required this.onTapSeatView
-  }) : super(key: key);
+    required this.onTapSeatView})
+      : super(key: key);
 
   @override
   State<SeatListView> createState() => _SeatListViewState();
@@ -469,32 +358,14 @@ class SeatListView extends StatefulWidget {
 class _SeatListViewState extends State<SeatListView> {
   @override
   Widget build(BuildContext context) {
-    return
-      SeatView(seatVOList: widget.seatList,onTapSeatView:widget.onTapSeatView);
+    return  SeatView(seatVOList: widget.seatList,onTapSeatView:(seatVO){
 
-     /* ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2),
-        itemCount: widget.seatList.length,
-        itemBuilder: (BuildContext context, int index) {
-          //
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // SizedBox(
-              //   height: MARGIN_CARD_MEDIUM_2,
-              // ),
-             // PriceTextView( widget.seatList[index].seatingArrangement),
-             //  SizedBox(
-             //    height: MARGIN_CARD_MEDIUM_2,
-             //  ),
-              SeatView(seatVOList: widget.seatList[index],onTapSeatView:widget.onTapSeatView)
-
-            ],
-          );
-        });*/
+      print("change state seat 2");
+      setState(() {
+        print("change state seat 2-1");
+        widget.onTapSeatView(seatVO);
+      });
+    });
   }
 }
 
@@ -533,152 +404,129 @@ class TitleImageView extends StatelessWidget {
 }
 
 class SeatView extends StatefulWidget {
-  // List<MovieSeatGridListViewObject> movieSeatGridListViewObj =
-  //     <MovieSeatGridListViewObject>[];
-  final Function(int,List<SeatVO>) onTapSeatView;
+  final Function(SeatVO) onTapSeatView;
   final List<SeatVO> seatVOList;
 
-
-  SeatView({required this.seatVOList,required this.onTapSeatView});
+  SeatView({required this.seatVOList, required this.onTapSeatView});
 
   @override
   State<SeatView> createState() => _SeatViewState();
 }
 
 class _SeatViewState extends State<SeatView> {
-
   bool chair_available_flag = false;
- // int ticketCount = 0;
+  // int ticketCount = 0;
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      height: MediaQuery.of(context).size.height, //MediaQuery.of(context).size.height * 0.1
+      height: MediaQuery.of(context)
+          .size
+          .height, //MediaQuery.of(context).size.height * 0.1
       child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 18, // number of columns
-          mainAxisSpacing: 3.5, // vertical space between items
-          crossAxisSpacing: 3.5, // horizontal space between items
-          childAspectRatio:0.47//aspect ratio of each item
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 18, // number of columns
+            mainAxisSpacing: 3.5, // vertical space between items
+            crossAxisSpacing: 3.5, // horizontal space between items
+            childAspectRatio: 0.47 //aspect ratio of each item
         ),
         // umber of items in the grid
         itemBuilder: (BuildContext context, int index) {
-            if (widget.seatVOList[index].type == SEAT_TYPE_TEXT) {
-              return Center(
-                child: Text(
-                  widget.seatVOList[index].symbol.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
-              );
-            } else if (widget.seatVOList[index].type == SEAT_TYPE_EMPTY) {
-              return SizedBox(
-                width: 10,
-              );
-            } else if (widget.seatVOList[index].type ==
-                SEAT_TYPE_AVAILABLE) {
+          if (widget.seatVOList[index].type == SEAT_TYPE_TEXT) {
+            return Center(
+              child: Text(
+                widget.seatVOList[index].symbol.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          } else if (widget.seatVOList[index].type == SEAT_TYPE_EMPTY) {
+            return const SizedBox(
+              width: 10,
+            );
+          } else if (widget.seatVOList[index].type == SEAT_TYPE_AVAILABLE) {
+            return GestureDetector(
+              onTap: () {
+                // Implement your click function here
+                setState(() {
+                  print("change state seat");
+                  widget.onTapSeatView(widget.seatVOList[index]);
+                });
+               /* print('Clicked item $index');
 
-              return GestureDetector(
-                onTap: () {
-                  // Implement your click function here
+                //  chair_available_flag = !chair_available_flag;
+                //  widget.seatVOList[index].isSelected = !widget.seatVOList[index].isSelected;
 
-                  print('Clicked item $index');
+                if (widget.seatVOList[index].isSelected == true) {
+                  widget.seatVOList[index].isSelected = false;
+                } else {
+                  widget.seatVOList[index].isSelected = true;
+                }
+                // print("AAA ${widget.seatVOList[index].isSelected}");
+                var objId = widget.seatVOList[index].id;
 
-                  //  chair_available_flag = !chair_available_flag;
-                  //  widget.seatVOList[index].isSelected = !widget.seatVOList[index].isSelected;
+                if (selectedSeatVOList.isEmpty) {
+                  selectedSeatVOList.add(widget.seatVOList[index]);
+                } else {
+                  // selectedSeatVOList.add(widget.seatVOList[index]);
 
-                  if(widget.seatVOList[index].isSelected == true)
-                  {
-                    widget.seatVOList[index].isSelected = false;
-                  }else{
-                    widget.seatVOList[index].isSelected = true;
-                  }
-                  // print("AAA ${widget.seatVOList[index].isSelected}");
-                  var objId =  widget.seatVOList[index].id;
-
-                  if(selectedSeatVOList.isEmpty)
-                  {
+                  if (widget.seatVOList[index].isSelected == true) {
                     selectedSeatVOList.add(widget.seatVOList[index]);
-                  }else{
-                    // selectedSeatVOList.add(widget.seatVOList[index]);
-
-                    if(widget.seatVOList[index].isSelected == true)
-                    {
-                      selectedSeatVOList.add(widget.seatVOList[index]);
-                    }else{
-                      for(int i = 0; i<selectedSeatVOList.length;i++)
-                      {
-                        if(selectedSeatVOList[i].id == objId &&
-                            selectedSeatVOList[i].symbol == widget.seatVOList[index].symbol)
-                        {
-                          print("remove condition");
-                          selectedSeatVOList.removeAt(i);
-                          break;
-                        }
+                  } else {
+                    for (int i = 0; i < selectedSeatVOList.length; i++) {
+                      if (selectedSeatVOList[i].id == objId &&
+                          selectedSeatVOList[i].symbol ==
+                              widget.seatVOList[index].symbol) {
+                        print("remove condition");
+                        selectedSeatVOList.removeAt(i);
+                        break;
                       }
                     }
                   }
+                }
 
-                  setState(() {
-                    widget.onTapSeatView(index,selectedSeatVOList);
-                    //widget.seatVOList[index].isSelected = chair_available_flag;
-                  });
-                },
-                child:
-                Container(
-                  width: 30,
-                  height: 30,
-                  child: Image.asset("assets/icons/ic_chair_available.png",
-                    color: (widget.seatVOList[index].isSelected??false)? SECONDARY_COLOR : Colors.white,),
+                setState(() {
+                  widget.onTapSeatView(index, selectedSeatVOList);
+                  //widget.seatVOList[index].isSelected = chair_available_flag;
+                });*/
+              },
+              child: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  "assets/icons/ic_chair_available.png",
+                  color: (widget.seatVOList[index].isSelected ?? false)
+                      ? SECONDARY_COLOR
+                      : Colors.white,
                 ),
-              );
-            } else if (widget.seatVOList[index].type == SEAT_TYPE_TAKEN) {
-              return Container(
-                width: 30,
-                height: 30,
-                child: Image.asset("assets/icons/ic_chair_taken.png"),
-              );
-            } else if (widget.seatVOList[index].type ==
-                SEAT_TYPE_SELECTION) {
-              print("selection condition");
-              return Container(
-                width: 30,
-                height: 30,
-                child: Image.asset("assets/icons/ic_chair_available.png",
-                  color: SECONDARY_COLOR,),
-              );
-            }
-            //
-            // else if (widget.seatVOList[index].type ==
-            //     SEAT_TYPE_GOLD_AVAILABLE) {
-            //   return Container(
-            //     width: 30,
-            //     height: 30,
-            //     child: Image.asset("assets/icons/ic_couple_seat_available.png"),
-            //   );
-            // } else if (widget.seatVOList[index].type ==
-            //     SEAT_TYPE_GOLD_TAKEN) {
-            //   return Container(
-            //     width: 30,
-            //     height: 30,
-            //     child: Image.asset("assets/icons/ic_couple_seat_taken.png"),
-            //   );
-            // }
-
-            else {
-              return Container(
-                width: 30,
-                height: 30,
-                child: Image.asset("assets/icons/ic_chair_your_selection.png"),
-              );
-            }
-         // }
-
-
-
+              ),
+            );
+          } else if (widget.seatVOList[index].type == SEAT_TYPE_TAKEN) {
+            return Container(
+              width: 30,
+              height: 30,
+              child: Image.asset("assets/icons/ic_chair_taken.png"),
+            );
+          } else if (widget.seatVOList[index].type == SEAT_TYPE_SELECTION) {
+            print("selection condition");
+            return Container(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                "assets/icons/ic_chair_available.png",
+                color: SECONDARY_COLOR,
+              ),
+            );
+          }
+          else {
+            return Container(
+              width: 30,
+              height: 30,
+              child: Image.asset("assets/icons/ic_chair_your_selection.png"),
+            );
+          }
+          // }
         },
         itemCount: widget.seatVOList.length,
-        // n
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
       ),
@@ -732,23 +580,25 @@ class SelectionView extends StatelessWidget {
   }
 }
 
-Future<dynamic> _navigateToSnackPage(BuildContext context ,
+Future<dynamic> _navigateToSnackPage(
+    BuildContext context,
     String? cinemaName,
-String? timeslotTime,
-String? dateString,
-MovieVO? movieDetailsObj, List<SeatVO>? selectedSeatedVOList, int theaterShowTimeslotId,) {
+    String? timeslotTime,
+    String? dateString,
+    MovieVO? movieDetailsObj,
+    List<SeatVO>? selectedSeatedVOList,
+    int theaterShowTimeslotId,
+    ) {
   return Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => SnackPage(
-        cinemaName: cinemaName,
-        timeslotTime: timeslotTime,
-        dateString: dateString,
-        movieDetailsObj: movieDetailsObj,
-        selectedSeatedVOList: selectedSeatedVOList,
-          theaterShowTimeslotId: theaterShowTimeslotId
-
-      ),
+          cinemaName: cinemaName,
+          timeslotTime: timeslotTime,
+          dateString: dateString,
+          movieDetailsObj: movieDetailsObj,
+          selectedSeatedVOList: selectedSeatedVOList,
+          theaterShowTimeslotId: theaterShowTimeslotId),
     ),
   );
 }
