@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/check_out_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
 import 'package:movie_booking_app/data/vos/payment_type_vo.dart';
 import 'package:movie_booking_app/data/vos/seat_vo.dart';
 import 'package:movie_booking_app/data/vos/snack_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
+import 'package:movie_booking_app/network/requests/check_out_request.dart';
+import 'package:movie_booking_app/network/requests/check_out_request_snack_vo.dart';
 import 'package:movie_booking_app/pages/ticket_confirmation_page.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -130,7 +134,9 @@ class _TicketPageState extends State<TicketPage> {
                           widget.selectedSeatedVOList,
                           widget.selectedSnackVOList,
                           widget.theaterShowTimeslotId,
-                          paymentId)
+                          paymentId,
+                      movieBookingAppModel,
+                      userDataVO)
                     }
                 ),
               )
@@ -177,7 +183,7 @@ class PaymentTypeListView extends StatelessWidget {
     );
   }
 }
-Future<dynamic> _navigateToTicketConfirmPage(BuildContext context,
+Future<dynamic>? _navigateToTicketConfirmPage(BuildContext context,
     String? cinemaName,
 String? timeslotTime,
 String? dateString,
@@ -185,22 +191,62 @@ MovieVO? movieDetailsObj,
 List<SeatVO>? selectedSeatedVOList,
 List<SnackVO>? selectedSnackVOList,
 int theaterShowTimeslotId,
- int paymentId) {
-  return Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => TicketConfirmationPage(
-          cinemaName : cinemaName,
-          timeslotTime : timeslotTime,
-          dateString : dateString,
-          movieDetailsObj:movieDetailsObj,
-          selectedSeatedVOList:selectedSeatedVOList,
-          selectedSnackVOList:selectedSnackVOList,
-          theaterShowTimeslotId:theaterShowTimeslotId,
-          paymentId: paymentId
+ int paymentId, MovieBookingAppModel movieBookingAppModel, UserDataVO? userDataVO) {
+  ///State Variables
+  CheckOutVO? checkOutVO;
+
+  List<CheckOutRequestSnackVO> checkoutRequestSnackVO=[];
+  selectedSnackVOList?.map((snackVO){
+    checkoutRequestSnackVO.add(CheckOutRequestSnackVO(snackVO.id,
+        snackVO.quantity));
+  }).toString();
+
+  movieBookingAppModel
+      .checkOut("Bearer ${userDataVO?.userToken ?? ""}",
+      CheckOutRequest(
+          cinemaDayTimeslotId: theaterShowTimeslotId,
+          seatNumber: getSeatVOAsCommaSeparatedString(selectedSeatedVOList??[]),
+          bookingDate: dateString,
+          movieId: movieDetailsObj?.id,
+          paymentTypeId: paymentId,
+          snacks: checkoutRequestSnackVO)
+  )
+      .then((paramCheckoutVO) {
+
+    checkOutVO = paramCheckoutVO;
+
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TicketConfirmationPage(
+            cinemaName : cinemaName,
+            timeslotTime : timeslotTime,
+            dateString : dateString,
+            movieDetailsObj:movieDetailsObj,
+            selectedSeatedVOList:selectedSeatedVOList,
+            selectedSnackVOList:selectedSnackVOList,
+            theaterShowTimeslotId:theaterShowTimeslotId,
+            paymentId: paymentId,
+          checkOutVO: checkOutVO
+        ),
       ),
-    ),
-  );
+    );
+
+  }).catchError((error) {
+    debugPrint(error.toString());
+
+    return Fluttertoast.showToast(
+        msg: "Fail!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  });
+
+
+
 }
 
 class ChooseYourPaymentTypeTitleView extends StatelessWidget {

@@ -44,13 +44,14 @@ class _SnackPageState extends State<SnackPage> {
   List<SnackCategoryVO>? snackTabList;
   UserDataVO? userDataVO;
   List<SnackVO>? snacksByCategoryId;
+  List<SnackVO>? selectedSnacksList = [];
 
   int snackTotalAmt = 0;
 
   @override
   void initState() {
     snackTotalAmt = 0;
-
+    selectedSnacksList = [];
     ///userdata from Database
     movieBookingAppModel.getUserDataFromDatabase().then((paramUserDataVO) {
       setState(() {
@@ -136,17 +137,19 @@ class _SnackPageState extends State<SnackPage> {
                   snackTotalAmt: snackTotalAmt,
                   onTapAddButton: (snackId) {
                     setState(() {
-                      print("page level set state");
+                     // print("page level set state");
+
+                     
                       var snacksListByCategoryId =
                           this.snacksByCategoryId ?? [];
                       for (int i = 0; i < snacksListByCategoryId.length; i++) {
-                        print(
-                            "page level set state for loop ------${snacksListByCategoryId[i].id} ${snackId}");
+                        // print(
+                        //     "page level set state for loop ------${snacksListByCategoryId[i].id} ${snackId}");
                         if (snacksListByCategoryId[i].id == snackId) {
-                          print("page level set state for loop ------");
+                          // print("page level set state for loop ------");
                           int? nullableInteger = snacksListByCategoryId[i].quantity;
-                          print(
-                              "page level set state for loop qty null case ------ ${nullableInteger}");
+                          // print(
+                          //     "page level set state for loop qty null case ------ ${nullableInteger}");
                           if (nullableInteger != null) {
                             // add one to the integer value using the null-aware operator
                             nullableInteger += 1;
@@ -154,16 +157,21 @@ class _SnackPageState extends State<SnackPage> {
                           } else {
                             snacksListByCategoryId[i].quantity = 1;
                           }
-
+                          selectedSnacksList?.add(snacksListByCategoryId[i]);
                           break;
                         }
                       }
-                      print(
-                          "page level set state ${snacksListByCategoryId[0].quantity}");
-                      for (var snackVO in snacksListByCategoryId) {
-                        if ((snackVO.quantity ?? 0).toInt() >= 1)
-                          snackTotalAmt += snackVO.calculateSnackItemAmt();
-                      }
+                      // print(
+                      //     "page level set state ${snacksListByCategoryId[0].quantity}");
+                      // for (var snackVO in snacksListByCategoryId) {
+                      //   if ((snackVO.quantity ?? 0).toInt() >= 1)
+                      //     snackTotalAmt += snackVO.calculateSnackItemAmt();
+                      // }
+                      //
+                     snackTotalAmt = snacksListByCategoryId
+                      ?.where((snackObj) => (snackObj.quantity ?? 0).toInt() >= 1 ).toList()
+                      .map((snackObj) => snackObj.calculateSnackItemAmt())
+                      .reduce((a, b)  => (a.toInt())+ (b.toInt()))??0;
 
                       this.snacksByCategoryId = snacksListByCategoryId;
                     });
@@ -266,11 +274,57 @@ class _SnackPageState extends State<SnackPage> {
         .getSnacksList("Bearer ${this.userDataVO?.userToken}", categoryId)
         .then((snackList) {
       setState(() {
-        this.snacksByCategoryId = snackList ?? [];
+        this.snacksByCategoryId =  syncSnackArrayListFunction(snackList??[],selectedSnacksList);
+       // this.snacksByCategoryId = snackList ?? [];
       });
     }).catchError((error) {
       debugPrint(error.toString());
     });
+  }
+
+  List<SnackVO> syncSnackArrayListFunction(List<SnackVO> snackList, List<SnackVO>? selectedSnacksList) {
+
+    if(selectedSnacksList != null && selectedSnacksList.isNotEmpty)
+      {
+        for (SnackVO snackVO in selectedSnacksList) {
+            for(SnackVO networkSnackVO in snackList)
+              {
+                if(snackVO.id == networkSnackVO.id)
+                  {
+                    networkSnackVO.quantity = snackVO.quantity;
+                  }
+               // break;
+              }
+        }
+
+      }
+    var greaterThanOneArrayList = snackList
+        .where((snackObj) => (snackObj.quantity ?? 0).toInt() >= 1 ).toList();
+    if(greaterThanOneArrayList.isNotEmpty && (greaterThanOneArrayList.length > 1) )
+      {
+        snackTotalAmt = greaterThanOneArrayList
+            .map((snackObj) => snackObj.calculateSnackItemAmt())
+            .reduce((a, b)  => (a.toInt())+ (b.toInt()))??0;
+
+      }else{
+      if(greaterThanOneArrayList.length == 1) {
+        snackTotalAmt = snackList[0].calculateSnackItemAmt();
+      } else {
+        snackTotalAmt = 0;
+      }
+    }
+
+    return snackList;
+
+    //
+    // if (snackList.contains(selectedSnacksList)) {
+    //   print("Second array is included in the first array.");
+    //
+    //   snackList.replaceRange(0, firstArray.length, secondArray);
+    //
+    // } else {
+    //   print("Second array is not included in the first array.");
+    // }
   }
 }
 

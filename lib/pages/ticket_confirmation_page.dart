@@ -33,6 +33,7 @@ class TicketConfirmationPage extends StatefulWidget {
   List<SnackVO>? selectedSnackVOList;
   int theaterShowTimeslotId;
   int paymentId;
+  CheckOutVO? checkOutVO;
 
 
   TicketConfirmationPage({Key? key,
@@ -43,7 +44,8 @@ class TicketConfirmationPage extends StatefulWidget {
     required this.selectedSeatedVOList,
     required this.selectedSnackVOList,
     required this.theaterShowTimeslotId,
-    required this.paymentId
+    required this.paymentId,
+    required this.checkOutVO
   }) : super(key: key);
 
   @override
@@ -51,11 +53,11 @@ class TicketConfirmationPage extends StatefulWidget {
 }
 
 class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
-  MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
-
-  ///State Variables
-  CheckOutVO? checkOutVO;
-  UserDataVO? userDataVO;
+  // MovieBookingAppModel movieBookingAppModel = MovieBookingAppModelImpl();
+  //
+  // ///State Variables
+  // CheckOutVO? checkOutVO;
+  // UserDataVO? userDataVO;
 
  // final String data = 'https://www.example.com';
   bool _taskLoadingCompleted = true;
@@ -64,42 +66,42 @@ class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
   @override
   void initState() {
     ///userdata from Database
-    movieBookingAppModel.getUserDataFromDatabase().then((paramUserDataVO) {
-      setState(() {
-        userDataVO = paramUserDataVO;
-        print("user token from snack page= ${userDataVO?.userToken}");
-
-        List<CheckOutRequestSnackVO> checkoutRequestSnackVO=[];
-        widget.selectedSnackVOList?.map((snackVO){
-          checkoutRequestSnackVO.add(CheckOutRequestSnackVO(snackVO.id,
-              snackVO.quantity));
-        }).toString();
-        ///snack category from Network
-        movieBookingAppModel
-            .checkOut("Bearer ${userDataVO?.userToken ?? ""}",
-        CheckOutRequest(
-            cinemaDayTimeslotId: widget.theaterShowTimeslotId,
-            seatNumber: getSeatVOAsCommaSeparatedString(widget.selectedSeatedVOList??[]),
-            bookingDate: widget.dateString,
-            movieId: widget.movieDetailsObj?.id,
-            paymentTypeId: widget.paymentId,
-            snacks: checkoutRequestSnackVO)
-        )
-            .then((paramCheckoutVO) {
-
-          checkOutVO = paramCheckoutVO;
-
-          setState(() {
-           //
-          });
-        }).catchError((error) {
-          debugPrint(error.toString());
-        });
-
-      });
-    }).catchError((error) {
-      debugPrint(error.toString());
-    });
+    // movieBookingAppModel.getUserDataFromDatabase().then((paramUserDataVO) {
+    //   setState(() {
+    //     userDataVO = paramUserDataVO;
+    //     print("user token from snack page= ${userDataVO?.userToken}");
+    //
+    //     List<CheckOutRequestSnackVO> checkoutRequestSnackVO=[];
+    //     widget.selectedSnackVOList?.map((snackVO){
+    //       checkoutRequestSnackVO.add(CheckOutRequestSnackVO(snackVO.id,
+    //           snackVO.quantity));
+    //     }).toString();
+    //
+    //     movieBookingAppModel
+    //         .checkOut("Bearer ${userDataVO?.userToken ?? ""}",
+    //     CheckOutRequest(
+    //         cinemaDayTimeslotId: widget.theaterShowTimeslotId,
+    //         seatNumber: getSeatVOAsCommaSeparatedString(widget.selectedSeatedVOList??[]),
+    //         bookingDate: widget.dateString,
+    //         movieId: widget.movieDetailsObj?.id,
+    //         paymentTypeId: widget.paymentId,
+    //         snacks: checkoutRequestSnackVO)
+    //     )
+    //         .then((paramCheckoutVO) {
+    //
+    //       checkOutVO = paramCheckoutVO;
+    //
+    //       setState(() {
+    //        //
+    //       });
+    //     }).catchError((error) {
+    //       debugPrint(error.toString());
+    //     });
+    //
+    //   });
+    // }).catchError((error) {
+    //   debugPrint(error.toString());
+    // });
     super.initState();
     _runDelayedTask();
   }
@@ -141,7 +143,7 @@ class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
                         height: 20,
                       ),
                      TicketListInfoItem(
-                         checkOutVO: checkOutVO,
+                         checkOutVO: widget.checkOutVO,
                          cinemaName: widget.cinemaName,
                          timeslotTime:  widget.timeslotTime,
                          dateString:  widget.dateString,
@@ -155,7 +157,7 @@ class _TicketConfirmationPageState extends State<TicketConfirmationPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      QRSectionView(qrStr: "${IMAGE_BASE_URL}${checkOutVO?.qrCode}"),
+                      QRSectionView(qrStr: "${IMAGE_BASE_URL}${widget.checkOutVO?.qrCode}"),
                       DoneButtonView(),
                     ],
                   ),
