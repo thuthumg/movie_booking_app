@@ -2,7 +2,7 @@
 const String BASE_URL = "https://tmba.padc.com.mm";
 const String IMAGE_BASE_URL = "https://tmba.padc.com.mm";
 const String MOVIE_LIST_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w400/";
-
+const String BASE_URL_FOR_MOVIE_VIDEO = "https://api.themoviedb.org";
 
 ///End Points
 const String ENDPOINT_GET_CITIES = "/api/v2/cities";

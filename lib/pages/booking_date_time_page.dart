@@ -93,7 +93,7 @@ class _BookingDateTimePageState extends State<BookingDateTimePage> {
             onTap: (){
               Navigator.of(context).pop();
             },
-            child: Icon(Icons.chevron_left)),
+            child: Icon(Icons.chevron_left,color: Colors.white,)),
         actions: [
           Row(
             children: [

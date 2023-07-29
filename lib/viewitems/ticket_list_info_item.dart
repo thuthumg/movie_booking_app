@@ -168,7 +168,7 @@ class BookingDateTimeAndLocationView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "${convertDateFunction(dateString??currentDate())}",
+                    "Sat,18 Jun, 2022",//${convertDateFunction(dateString??currentDate())}
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                     softWrap: false,
@@ -200,7 +200,7 @@ class BookingDateTimeAndLocationView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "${timeslotTime}",
+                    "3:30PM",//${timeslotTime}
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: TEXT_REGULAR,
@@ -283,8 +283,11 @@ class TicketConfirmationInfoView extends StatelessWidget {
                 Container(
                   width: 100,
                   height: 100,
-                  child: Image.network(
-                      "${MOVIE_LIST_IMAGE_BASE_URL}${movieVO?.posterPath}"),
+                  child:
+                  Image.asset(
+                      "assets/images/ticket_confirm_sample_img.png"),
+                  // Image.network(
+                  //     "${MOVIE_LIST_IMAGE_BASE_URL}${movieVO?.posterPath}"),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -294,7 +297,7 @@ class TicketConfirmationInfoView extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
                       child: RichText(
                         text: TextSpan(
-                          text:movieVO?.originalTitle.toString()??"",
+                          text:movieVO?.originalTitle.toString()??"Black Widow",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: TEXT_REGULAR_2X,
@@ -314,7 +317,7 @@ class TicketConfirmationInfoView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: MARGIN_MEDIUM),
                       child: Text(
-                        cinemaName??"",
+                        cinemaName??"JCGV:Junction City",
                         style: TextStyle(
                             color: SECONDARY_COLOR,
                             fontSize: TEXT_REGULAR_2X,
@@ -332,7 +335,7 @@ class TicketConfirmationInfoView extends StatelessWidget {
                               fontWeight: FontWeight.w400),
                           children: <TextSpan>[
                             TextSpan(
-                              text: "${checkOutVO?.totalSeat}",
+                              text: "${checkOutVO?.totalSeat??"2"}",
                               style: TextStyle(
                                   color: SECONDARY_COLOR,
                                   fontSize: TEXT_REGULAR,
@@ -351,7 +354,7 @@ class TicketConfirmationInfoView extends StatelessWidget {
                     ),
                     RichText(
                       text: TextSpan(
-                        text: "${checkOutVO?.seat}",
+                        text: "${checkOutVO?.seat??"Gold-G8,G7"}",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: TEXT_REGULAR_1X,

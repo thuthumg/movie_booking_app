@@ -301,7 +301,9 @@ class _BannerSectionViewState extends State<BannerSectionView> {
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height / 4,
-          child: CarouselSlider(
+          child:
+          (widget.bannersList != null )?
+          CarouselSlider(
             options: CarouselOptions(
               height: 170.0,
               enlargeCenterPage: true,
@@ -325,7 +327,7 @@ class _BannerSectionViewState extends State<BannerSectionView> {
                 },
               );
             }).toList(),
-          ),
+          ): Container(),
         ),
         SizedBox(
           height: MARGIN_SMALL,
@@ -529,10 +531,13 @@ class BannerItemView extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        image: DecorationImage(
-          image: NetworkImage(bannerVO?.url.toString() ?? ""),
+        image: (bannerVO?.url.toString() == "")?DecorationImage(
+          image: AssetImage("assets/images/profile_bg.png"),
           fit: BoxFit.cover,
-        ),
+        ):DecorationImage(
+      image: NetworkImage(bannerVO?.url.toString() ?? ""),
+    fit: BoxFit.cover,
+    ),
       ),
       child: Stack(
         children: [

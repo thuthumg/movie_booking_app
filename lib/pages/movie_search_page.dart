@@ -61,7 +61,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
             onTap: (){
               Navigator.pop(context);
             },
-            child: Icon(Icons.chevron_left)),
+            child: Icon(Icons.chevron_left,color: Colors.white,)),
         title: Row(
           children: [
             SearchBoxView(onSearch: (String paramString){

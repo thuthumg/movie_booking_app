@@ -18,7 +18,7 @@ class _SearchBoxViewState extends State<SearchBoxView> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Icon(Icons.search_rounded),
+        const Icon(Icons.search_rounded,color: Colors.white,),
         Container(
           width: MediaQuery.of(context).size.width * 0.5,
           child: Padding(

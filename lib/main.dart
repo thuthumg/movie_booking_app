@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:movie_booking_app/config/config_values.dart';
+import 'package:movie_booking_app/config/environment_config.dart';
 import 'package:movie_booking_app/data/vos/cinema_timeslot_status_color_vo.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
 import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/pages/loading_page.dart';
 import 'package:movie_booking_app/persistence/hive_constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:movie_booking_app/resources/colors.dart';
 
 void main()  async{
 
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,//THEME_COLORS[EnvironmentConfig.CONFIG_THEME_COLOR]
       ),
       home: LoadingPage()
 

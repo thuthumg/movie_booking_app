@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
+import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
+import 'package:movie_booking_app/data/vos/cinema_and_show_time_by_date_vo.dart';
 import 'package:movie_booking_app/data/vos/movie_vo.dart';
+import 'package:movie_booking_app/data/vos/user_data_vo.dart';
 import 'package:movie_booking_app/widgets/time_range_slider_view.dart';
 import 'package:movie_booking_app/resources/colors.dart';
 import 'package:movie_booking_app/resources/dimens.dart';
@@ -20,12 +25,61 @@ class CinemaSearchPage extends StatefulWidget {
 class _CinemaSearchPageState extends State<CinemaSearchPage> {
   String _searchText = '';
 
+
+  ///Model
+  MovieBookingAppModel _movieBookingAppModel = MovieBookingAppModelImpl();
+
+  ///State Variables
+  UserDataVO? userVO;
+
+  List<CinemaAndShowTimeByDateVO>? cinemaAndShowTimeByDateVO;
+  String? selectedDateStr;
+
   void _onSearch(String text) {
     setState(() {
       _searchText = text;
     });
   }
+  @override
+  void initState() {
 
+    ///userdata from Network
+    _movieBookingAppModel.getUserDataFromDatabase().then((paramUserVO) {
+      print("check user VO from timeslot page ${paramUserVO?.userToken}");
+      setState(() {
+        userVO = paramUserVO;
+        selectedDateStr = currentDate();
+        ///cinema date time list from Network
+        _movieBookingAppModel.getCinemaAndShowTimeByDate(
+            'Bearer ${userVO?.userToken??""}',
+            currentDate()).then((paramCinemaAndShowTimeByDateVO){
+          setState(() {
+            cinemaAndShowTimeByDateVO = paramCinemaAndShowTimeByDateVO;
+          });
+
+        }).catchError((error) {
+          showToastMessage(error.toString());
+        });
+
+
+      });
+      print("check user VO from timeslot page 2 ${userVO?.userToken}");
+    }).catchError((error) {
+      showToastMessage(error.toString());
+    });
+
+    super.initState();
+  }
+  void showToastMessage(String msgString) {
+    Fluttertoast.showToast(
+        msg: msgString,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -38,7 +92,7 @@ class _CinemaSearchPageState extends State<CinemaSearchPage> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: const Icon(Icons.chevron_left)),
+            child: const Icon(Icons.chevron_left,color: Colors.white,)),
         title: SearchBoxView(onSearch: (String paramString){
           setState(() {
             _onSearch(paramString);
@@ -67,7 +121,7 @@ class _CinemaSearchPageState extends State<CinemaSearchPage> {
                 height: 20,
               ),
                   _searchText.toString().isNotEmpty?
-                  CinemaFilterListSectionView() :  Container()
+                  CinemaFilterListSectionView(cinemaAndShowTimeByDateVO:cinemaAndShowTimeByDateVO) :  Container()
             ],),),
           ],
         ),
@@ -77,6 +131,9 @@ class _CinemaSearchPageState extends State<CinemaSearchPage> {
 }
 
 class CinemaFilterListSectionView extends StatelessWidget {
+  List<CinemaAndShowTimeByDateVO>? cinemaAndShowTimeByDateVO;
+
+  CinemaFilterListSectionView({required this.cinemaAndShowTimeByDateVO});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +141,7 @@ class CinemaFilterListSectionView extends StatelessWidget {
       margin: const EdgeInsets.only(left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
       child: Column(
         children: [
-          BookingMovieTheatersView(cinemaAndShowTimeByDateVO:[],selectedDateStr: '',movieDetailsObj:  null,),
+          BookingMovieTheatersView(cinemaAndShowTimeByDateVO:cinemaAndShowTimeByDateVO??[],selectedDateStr: '',movieDetailsObj:  null,),
         ],
       ),
     );

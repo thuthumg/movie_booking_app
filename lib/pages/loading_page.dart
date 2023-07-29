@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/config/config_values.dart';
+import 'package:movie_booking_app/config/environment_config.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
 import 'package:movie_booking_app/data/vos/city_vo.dart';
@@ -110,7 +112,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: PRIMARY_COLOR,
+      color: THEME_COLORS[EnvironmentConfig.CONFIG_THEME_COLOR],
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

@@ -1,5 +1,7 @@
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_booking_app/config/config_values.dart';
+import 'package:movie_booking_app/config/environment_config.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model.dart';
 import 'package:movie_booking_app/data/models/movie_booking_app_model_impl.dart';
 import 'package:movie_booking_app/data/vos/cast_vo.dart';
@@ -123,7 +125,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           left: MARGIN_MEDIUM_2, right: MARGIN_MEDIUM_2),
                       child: CastSectionView(castVOList:movieDetails?.casts)),
                   const SizedBox(
-                    height: MARGIN_MEDIUM_2,
+                    height: MARGIN_XXLARGE,
                   ),
                 ]))
               ],
@@ -313,7 +315,17 @@ class CastSectionView extends StatelessWidget {
               fontSize: TEXT_REGULAR_1X,
               fontWeight: FontWeight.bold),
         ),
-        HorizontalCastListView(castVOList: castVOList),
+        (MOVIE_DETAIL_ACTOR_UI[EnvironmentConfig.CONFIG_MOVIE_DETAIL_ACTORS_UI] == "List")?
+        HorizontalCastListView(castVOList: castVOList):
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Wrap(
+            children: (castVOList??[]).map((value) {
+              return CircleImageView(strProfile:value.profilePath);
+            }).toList(),
+          ),
+        )
+
       ],
     ));
   }

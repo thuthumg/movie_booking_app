@@ -96,7 +96,7 @@ class _SnackPageState extends State<SnackPage> {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              child: Icon(Icons.chevron_left)),
+              child: Icon(Icons.chevron_left,color: Colors.white,)),
           actions: [
             Image.asset(
               "assets/icons/ic_search.png",
@@ -116,6 +116,7 @@ class _SnackPageState extends State<SnackPage> {
           ],
         ),
         body: Container(
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -349,6 +350,7 @@ class SnackTabBar extends StatelessWidget {
           child: TabBar(
             isScrollable: true,
             indicatorColor: SECONDARY_COLOR,
+            labelColor: SECONDARY_COLOR,
             unselectedLabelColor: Colors.white,
             tabs: snackTabList
                 .map(
@@ -408,15 +410,16 @@ class _SnackListViewAndTotalAmountViewState
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-            Color.fromRGBO(34, 34, 34, 1),
-            Color.fromRGBO(17, 17, 17, 0.1),
-            Color.fromRGBO(17, 17, 17, 1)
-          ])),
+      color: Color.fromRGBO(34, 34, 34, 1),
+      // decoration: const BoxDecoration(
+      //     gradient: LinearGradient(
+      //         begin: Alignment.topCenter,
+      //         end: Alignment.bottomCenter,
+      //         colors: [
+      //       Color.fromRGBO(34, 34, 34, 1),
+      //       Color.fromRGBO(17, 17, 17, 0.1),
+      //       Color.fromRGBO(17, 17, 17, 1)
+      //     ])),
 
       // color: Color.fromRGBO(17, 17, 17, 0.2),
       height: MediaQuery.of(context).size.height,

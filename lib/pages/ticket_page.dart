@@ -235,14 +235,14 @@ int theaterShowTimeslotId,
   }).catchError((error) {
     debugPrint(error.toString());
 
-    return Fluttertoast.showToast(
-        msg: "Fail!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.grey,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
+    // return Fluttertoast.showToast(
+    //     msg: "Fail!",
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     backgroundColor: Colors.grey,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0
+    // );
   });
 
 

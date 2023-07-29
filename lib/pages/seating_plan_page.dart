@@ -100,7 +100,7 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              child: Icon(Icons.chevron_left)),
+              child: Icon(Icons.chevron_left,color: Colors.white,)),
         ),
         body: Column(
           children: [
@@ -129,6 +129,13 @@ class _SeatingPlanPageState extends State<SeatingPlanPage> {
                               showMovieSeatList = showMovieSeatList;
 
                               List<SeatVO>? selectedData = showMovieSeatList?.where((seatObj)=> seatObj.isSelected == true).toList();
+
+                              selectedSeatVOList = [];
+                              selectedData?.forEach((element) {
+                                selectedSeatVOList.add(element);
+                              });
+
+
                               totalCount = selectedData?.length??0;
                               if(selectedData != null && selectedData.length > 1)
                               {
@@ -261,6 +268,9 @@ class TotalTicketView extends StatelessWidget {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
+
+                  print("selectedSeatedVOList ${selectedSeatedVOList.toString()}");
+
                   _navigateToSnackPage(
                       context,
                       cinemaName,
